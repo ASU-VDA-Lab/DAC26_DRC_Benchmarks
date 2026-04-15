@@ -58,8 +58,8 @@ set -euo pipefail
 
 
 TASK_TYPES=(
+    repair
     detection
-    
 )
 
 MODEL_NAMES=(
@@ -68,7 +68,12 @@ MODEL_NAMES=(
 )
 
 CASES=(
+    "Polygon69 polygon"
+    "Polygon263 polygon"
+    "Cell1 cell"
+    "Cell228 cell"
     "Block5 block"
+    "Block7 block"
 )
 
 AGENT_INITIAL_BUDGET="${AGENT_INITIAL_BUDGET:-600}"
