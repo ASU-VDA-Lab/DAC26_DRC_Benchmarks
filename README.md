@@ -6,7 +6,7 @@ A benchmark framework for evaluating LLM models on chip physical design tasks --
 
 This benchmark runs inside a self-contained Docker container. KLayout 0.30.1 and the Cursor/Claude Code CLIs are pre-installed in the image. No host KLayout installation or commercial EDA licenses are required.
 
-Shortcut: [Table of Contents](#table-of-contents) | [Benchmark Tasks](#benchmark-tasks) | [Quick Start](#quick-start) | [Pipeline Architecture](#pipeline-architecture) | [Scoring Methodology](#scoring-methodology) | [Processed DRC Reports](#processed-drc-reports) | [Score Output](#score-output) | [Design Types](#design-types)
+Shortcut: [Table of Contents](#table-of-contents) | [Benchmark Tasks](#benchmark-tasks) | [Quick Start](#quick-start) | [Pipeline Architecture](#pipeline-architecture) | [Detection Isolation](#detection-isolation) | [Scoring Methodology](#scoring-methodology) | [Processed DRC Reports](#processed-drc-reports) | [Detection Output Format](#detection-output-format) | [Score Output](#score-output) | [Design Types](#design-types)
 
 ---
 
@@ -14,16 +14,17 @@ Shortcut: [Table of Contents](#table-of-contents) | [Benchmark Tasks](#benchmark
 
 - *[Dockerfile.repair](./Dockerfile.repair)*: Repair-task image (AlmaLinux 8.10 + KLayout 0.30.1 + Cursor Agent CLI + Claude Code CLI).
 - *[Dockerfile.detection](./Dockerfile.detection)*: Detection-task image -- no KLayout, runtime iptables blocklist on klayout/package-index domains to prevent the agent from invoking or installing DRC tools.
+- *[CLAUDE.md](./CLAUDE.md)*: Agent behavior contract read by the LLM inside the container (unattended-Docker rules: never ask, never wait, never abort).
 - *[docker/](./docker)*: Build-time helpers for the detection image (`entrypoint-blocklist.sh`).
 - *[case_stat.md](./case_stat.md)*: Test case statistics -- polygon target rules, block design details, and cell DRC violations.
 - *[example/](./example)*: Customizable files -- modify here and copy to *[src/](./src)* to use.
-- *[src/](./src)*: Pipeline source code and agent scripts.
+- *[src/](./src)*: Pipeline source code and agent scripts (incl. `skill.md`, the ASAP7 DRC reference fed to agents via `path_to_skill`).
 - *[testcase/](./testcase)*: Test case assets and ASAP7 technology files.
-- *[result/](./result)*: LLM outputs, stored at `result/<model_name>/<design_type>/<task_type>/<case_name>/`.
-- *[score/](./score)*: Evaluation scores, stored at `score/<model_name>/<design_type>/<task_type>/`.
-- *[task/](./task)*: Formatted prompts.
-- *[temp/](./temp)*: Intermediate/scratch files written by LLM agents (cleaned up after each run).
-- *[logs/](./logs)*: Full pipeline console logs (`<model>_<design>_<task>_<case>.log`) and `runtime.csv`.
+- *[result/](./result)*: LLM outputs, stored at `result/<model_name>/<design_type>/<task_type>/<case_name>/` (auto-created on first run).
+- *[score/](./score)*: Evaluation scores, stored at `score/<model_name>/<design_type>/<task_type>/` (auto-created on first run).
+- *[task/](./task)*: Formatted prompts (auto-created on first run).
+- *[temp/](./temp)*: Intermediate/scratch files written by LLM agents; cleaned up after each run (auto-created on first run).
+- *[logs/](./logs)*: Full pipeline console logs (`<model>_<design>_<task>_<case>.log`) and `runtime.csv` (auto-created on first run).
 
 ---
 
@@ -142,32 +143,75 @@ Both images are AlmaLinux 8.10 with Cursor CLI + Claude Code CLI pre-installed. 
 
 Use `drc-benchmark-repair` for repair tasks and `drc-benchmark-detection` for detection tasks. Detection additionally requires `--cap-add=NET_ADMIN` so the container entrypoint can program its iptables blocklist.
 
+Both examples mirror what `evaluate_cursor.sh` / `evaluate_claude.sh` do per case: bind-mount only the single credential file (not the whole credential directory), bind-mount the four runtime I/O directories (`result`, `score`, `logs`, `temp`), and inject the golden DRC report via `docker cp` rather than a volume mount so detection runs never see it on the filesystem before the scoring phase.
+
 **Cursor Agent CLI (repair example):**
 
 ```bash
-docker run --rm \
-    -v ~/.config/cursor:/root/.config/cursor:ro \
-    -v $(pwd)/result:/workspace/result \
-    -v $(pwd)/score:/workspace/score \
-    -v $(pwd)/logs:/workspace/logs \
-    -v $(pwd)/testcase/asap7/cell/drc_report:/workspace/testcase/asap7/cell/drc_report:ro \
+CASE=Cell1
+DESIGN=cell
+CONTAINER=drc-bench-$CASE
+
+docker create --name "$CONTAINER" \
+    -v "$HOME/.config/cursor/auth.json:/root/.config/cursor/auth.json:ro" \
+    -v "$(pwd)/result:/workspace/result" \
+    -v "$(pwd)/score:/workspace/score" \
+    -v "$(pwd)/logs:/workspace/logs" \
+    -v "$(pwd)/temp:/workspace/temp" \
     drc-benchmark-repair \
-    bash src/run_pipeline_cursor.sh /workspace/task/info.json
+    sleep infinity
+docker start "$CONTAINER"
+
+docker cp info.json "$CONTAINER:/workspace/task/info.json"
+docker exec "$CONTAINER" mkdir -p "/workspace/testcase/asap7/$DESIGN/drc_report"
+docker cp "testcase/asap7/$DESIGN/drc_report/$CASE.drc.json" \
+    "$CONTAINER:/workspace/testcase/asap7/$DESIGN/drc_report/"
+
+docker exec \
+    -e AGENT_INITIAL_BUDGET=600 -e AGENT_REMINDER_BUDGET=300 \
+    "$CONTAINER" bash src/run_pipeline_cursor.sh /workspace/task/info.json
+
+docker rm -f "$CONTAINER"
 ```
 
 **Claude Code CLI (detection example):**
 
+Detection runs `--agent-only` first (no golden report visible), then `docker cp` injects the golden report, then `--score-only`. Detection additionally requires `--cap-add=NET_ADMIN` so the entrypoint can program its iptables blocklist.
+
 ```bash
-docker run --rm --cap-add=NET_ADMIN \
-    -v ~/.claude:/root/.claude:ro \
-    -v $(pwd)/result:/workspace/result \
-    -v $(pwd)/score:/workspace/score \
-    -v $(pwd)/logs:/workspace/logs \
+CASE=Cell1
+DESIGN=cell
+CONTAINER=drc-bench-$CASE
+
+docker create --name "$CONTAINER" --cap-add=NET_ADMIN \
+    -v "$HOME/.claude/.credentials.json:/root/.claude/.credentials.json:ro" \
+    -v "$(pwd)/result:/workspace/result" \
+    -v "$(pwd)/score:/workspace/score" \
+    -v "$(pwd)/logs:/workspace/logs" \
+    -v "$(pwd)/temp:/workspace/temp" \
     drc-benchmark-detection \
-    bash src/run_pipeline_claude.sh --agent-only /workspace/task/info.json
+    sleep infinity
+docker start "$CONTAINER"
+
+docker cp info.json "$CONTAINER:/workspace/task/info.json"
+
+# Phase 1: agent-only (golden report NOT yet in container)
+docker exec \
+    -e AGENT_INITIAL_BUDGET=600 -e AGENT_REMINDER_BUDGET=300 \
+    "$CONTAINER" bash src/run_pipeline_claude.sh --agent-only /workspace/task/info.json
+
+# Phase 2: inject golden report, then score
+docker exec "$CONTAINER" mkdir -p "/workspace/testcase/asap7/$DESIGN/drc_report"
+docker cp "testcase/asap7/$DESIGN/drc_report/$CASE.drc.json" \
+    "$CONTAINER:/workspace/testcase/asap7/$DESIGN/drc_report/"
+docker exec \
+    -e AGENT_INITIAL_BUDGET=1800 -e AGENT_REMINDER_BUDGET=120 \
+    "$CONTAINER" bash src/run_pipeline_claude.sh --score-only /workspace/task/info.json
+
+docker rm -f "$CONTAINER"
 ```
 
-For detection tasks, `--agent-only` and `--score-only` phase flags control when the golden DRC report is visible to the agent (see [Pipeline Architecture](#pipeline-architecture)).
+The `--agent-only` / `--score-only` phase flags exist exactly to gate when the golden DRC report becomes visible to the agent (see [Pipeline Architecture](#pipeline-architecture)).
 
 ### 3. Reproduce Paper Experiments
 
@@ -207,7 +251,7 @@ run_pipeline_cursor.sh <info.json>                                      [CONTAIN
   |
   +-- Step 3: Call LLM model (agent_cursor.py or agent_claude.py --model <model_name>)
   |            Global budget: 10-min total across all repair iterations (timer paused during KLayout DRC and scoring)
-  |            Reminder: when budget exhausted, agent gets 2 min to write final output
+  |            Reminder: when budget exhausted, agent gets 5 min to write final output
   |            Force-kill if reminder also times out
   |
   +-- [Repair only -- repeated up to MAX_ITERATIONS times (default: 5)]:
@@ -252,17 +296,17 @@ See [Cursor Models and Pricing](https://cursor.com/docs/models-and-pricing) for 
 
 ### Agent Timeout Behavior
 
-The agent uses a **two-phase timeout** to ensure the pipeline always completes. For repair tasks, the budget is **global across all iterations** (not per-iteration). **Detection tasks** are unchanged: single-shot with 10 min + 2 min reminder.
+The agent uses a **two-phase timeout** to ensure the pipeline always completes. For repair tasks, the budget is **global across all iterations** (not per-iteration). **Detection tasks** are unchanged: single-shot with 10 min + 5 min reminder.
 
 
 | Phase              | Duration            | Behavior                                                                        |
 | ------------------ | ------------------- | ------------------------------------------------------------------------------- |
 | **Initial budget** | 10 min (600s) total | Agent works across all iterations; timer paused during KLayout DRC and scoring  |
-| **Reminder**       | 2 min (120s)        | When initial budget is exhausted, agent is given 2 min to write its best output |
+| **Reminder**       | 5 min (300s)        | When initial budget is exhausted, agent is given 5 min to write its best output |
 | **Force-kill**     | --                  | If reminder also times out, agent is killed and iteration recorded as failed    |
 
 
-Configurable via environment variables: `AGENT_INITIAL_BUDGET` (default `600`), `AGENT_REMINDER_BUDGET` (default `120`). Also configurable via `agent_cursor.py` flags: `--reminder_timeout 600`, `--final_timeout 120`, and `--temp_dir <path>`.
+Configurable via environment variables: `AGENT_INITIAL_BUDGET` (default `600`), `AGENT_REMINDER_BUDGET` (default `300`, as set by `evaluate_cursor.sh` / `evaluate_claude.sh`). These env vars are the canonical knobs. The underlying Python flags `agent_cursor.py --reminder_timeout` / `--final_timeout` / `--temp_dir` exist for direct invocation and carry their own Python-level defaults (`600` / `120`), which `evaluate_*.sh` overrides via the env vars above.
 
 ### Intermediate Files
 
@@ -283,7 +327,7 @@ Running the image requires `--cap-add=NET_ADMIN` (both `evaluate_*.sh` scripts a
 Every pipeline run appends a row to `logs/runtime.csv` with columns:
 
 ```
-model, task_type, design_type, case_name, agent_runtime_seconds, total_runtime_seconds, timestamp
+model, task_type, design_type, case_name, agent_runtime_seconds, total_runtime_seconds, agent_initial_budget, timestamp
 ```
 
 The `runtime_seconds` field is also embedded in each score JSON file.
