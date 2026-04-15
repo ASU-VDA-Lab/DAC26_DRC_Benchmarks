@@ -1,0 +1,41 @@
+{
+  "case_name": "Polygon17",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "FIN.W.1": {
+      "violation_count": 1,
+      "description": "FIN.W.1 : Exact vertical FIN width is 7 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              40
+            ],
+            [
+              800,
+              40
+            ],
+            [
+              800,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            800,
+            40
+          ]
+        }
+      ]
+    }
+  }
+}

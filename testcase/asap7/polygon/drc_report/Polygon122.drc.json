@@ -1,0 +1,37 @@
+{
+  "case_name": "Polygon122",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "M5.W.5": {
+      "violation_count": 1,
+      "description": "M5.W.5 : Minimum vertical width of M5 is 44 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              96,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              160,
+              96,
+              160
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            96,
+            160
+          ]
+        }
+      ]
+    }
+  }
+}

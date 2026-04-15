@@ -1,0 +1,219 @@
+{
+  "case_name": "Cell27",
+  "design_type": "cell",
+  "total_violations": 11,
+  "total_rules_violated": 2,
+  "rules": {
+    "V0.M0.EN.5": {
+      "violation_count": 9,
+      "description": "V0.M0.EN.5 : Minimum enclosure of V0 by M0 on two opposite sides is 5 & 5 nm or 5 & 0 nm.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              832,
+              212,
+              832,
+              140
+            ]
+          ],
+          "bbox": [
+            832,
+            140,
+            832,
+            212
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              544,
+              356,
+              544,
+              284
+            ]
+          ],
+          "bbox": [
+            544,
+            284,
+            544,
+            356
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              976,
+              500,
+              976,
+              428
+            ]
+          ],
+          "bbox": [
+            976,
+            428,
+            976,
+            500
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              688,
+              500,
+              688,
+              428
+            ]
+          ],
+          "bbox": [
+            688,
+            428,
+            688,
+            500
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1120,
+              644,
+              1120,
+              572
+            ]
+          ],
+          "bbox": [
+            1120,
+            572,
+            1120,
+            644
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              256,
+              788,
+              256,
+              716
+            ]
+          ],
+          "bbox": [
+            256,
+            716,
+            256,
+            788
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              832,
+              788,
+              832,
+              716
+            ]
+          ],
+          "bbox": [
+            832,
+            716,
+            832,
+            788
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1264,
+              932,
+              1264,
+              860
+            ]
+          ],
+          "bbox": [
+            1264,
+            860,
+            1264,
+            932
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              976,
+              932,
+              976,
+              860
+            ]
+          ],
+          "bbox": [
+            976,
+            860,
+            976,
+            932
+          ]
+        }
+      ]
+    },
+    "M1.S.4": {
+      "violation_count": 2,
+      "description": "M1.S.4 : Minimum (tip-to-tip) spacing between two M1 layer polygons' edges, when both edges are < 24 nm, is 31 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              904,
+              256,
+              976,
+              256
+            ],
+            [
+              976,
+              368,
+              904,
+              368
+            ]
+          ],
+          "bbox": [
+            904,
+            256,
+            976,
+            368
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              40,
+              688,
+              112,
+              688
+            ],
+            [
+              112,
+              800,
+              40,
+              800
+            ]
+          ],
+          "bbox": [
+            40,
+            688,
+            112,
+            800
+          ]
+        }
+      ]
+    }
+  }
+}

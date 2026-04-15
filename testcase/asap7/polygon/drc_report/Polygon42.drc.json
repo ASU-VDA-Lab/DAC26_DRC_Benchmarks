@@ -1,0 +1,244 @@
+{
+  "case_name": "Polygon42",
+  "design_type": "polygon",
+  "total_violations": 8,
+  "total_rules_violated": 6,
+  "rules": {
+    "GATE.S.1": {
+      "violation_count": 1,
+      "description": "GATE.S.1 : Exact horizontal GATE pitch is 54 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              240,
+              -80
+            ],
+            [
+              240,
+              400
+            ],
+            [
+              400,
+              400
+            ],
+            [
+              400,
+              -80
+            ]
+          ],
+          "bbox": [
+            240,
+            -80,
+            400,
+            400
+          ]
+        }
+      ]
+    },
+    "GATE.S.3": {
+      "violation_count": 2,
+      "description": "GATE.S.3 : Every GATE (not cut by GCUT and not interacting with the layer SRAMDRC) must have at least one other GATE within 54 nm of its surrounding along the horizontal axis. The spacing being the distance between centers of the two GATE layer polygons.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              160,
+              -80
+            ],
+            [
+              160,
+              400
+            ],
+            [
+              240,
+              400
+            ],
+            [
+              240,
+              -80
+            ]
+          ],
+          "bbox": [
+            160,
+            -80,
+            240,
+            400
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              400,
+              -80
+            ],
+            [
+              400,
+              400
+            ],
+            [
+              480,
+              400
+            ],
+            [
+              480,
+              -80
+            ]
+          ],
+          "bbox": [
+            400,
+            -80,
+            480,
+            400
+          ]
+        }
+      ]
+    },
+    "GCUT.GATE.S.2": {
+      "violation_count": 1,
+      "description": "GCUT.GATE.S.2 : Minimum spacing of GCUT to GATE, when the former is not being used to cut a particular polygon drawn using the latter, is 17 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              380,
+              465,
+              380,
+              420
+            ],
+            [
+              400,
+              355,
+              400,
+              400
+            ]
+          ],
+          "bbox": [
+            380,
+            355,
+            400,
+            465
+          ]
+        }
+      ]
+    },
+    "GCUT.AUX.1": {
+      "violation_count": 1,
+      "description": "GCUT.AUX.1 : GCUT layer may not exist without the layer GATE.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              100,
+              420
+            ],
+            [
+              100,
+              520
+            ],
+            [
+              380,
+              520
+            ],
+            [
+              380,
+              420
+            ]
+          ],
+          "bbox": [
+            100,
+            420,
+            380,
+            520
+          ]
+        }
+      ]
+    },
+    "NSELECT.ACTIVE.EN.1": {
+      "violation_count": 2,
+      "description": "NSELECT.ACTIVE.EN.1 : Minimum horizontal enclosure of ACTIVE (not interacting with SRAMDRC) by NSELECT is 46 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              -120,
+              0,
+              -120,
+              216
+            ],
+            [
+              40,
+              0,
+              40,
+              216
+            ]
+          ],
+          "bbox": [
+            -120,
+            0,
+            40,
+            216
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              720,
+              216,
+              720,
+              0
+            ],
+            [
+              600,
+              216,
+              600,
+              0
+            ]
+          ],
+          "bbox": [
+            600,
+            0,
+            720,
+            216
+          ]
+        }
+      ]
+    },
+    "LIG.GATE.S.10": {
+      "violation_count": 1,
+      "description": "LIG.GATE.S.10 : Minimum spacing between LIG and GATE (not cut using GCUT) forming a channel (GATE layer polygon over ACTIVE) is 5 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              256,
+              228,
+              144,
+              228
+            ],
+            [
+              160,
+              216,
+              240,
+              216
+            ]
+          ],
+          "bbox": [
+            144,
+            216,
+            256,
+            228
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "case_name": "Polygon298",
+  "design_type": "polygon",
+  "total_violations": 3,
+  "total_rules_violated": 3,
+  "rules": {
+    "V6.M7.AUX.2": {
+      "violation_count": 1,
+      "description": "V6.M7.AUX.2 : V6 must exactly be the same width as M7 along the direction perpendicular to the M7 length.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              64
+            ],
+            [
+              0,
+              192
+            ],
+            [
+              128,
+              192
+            ],
+            [
+              128,
+              64
+            ]
+          ],
+          "bbox": [
+            0,
+            64,
+            128,
+            192
+          ]
+        }
+      ]
+    },
+    "M6.AUX.1": {
+      "violation_count": 1,
+      "description": "M6.AUX.1 : M6 horizontal edges must be at a grid of 32 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            -44,
+            20,
+            172,
+            236
+          ],
+          "vertices": [
+            [
+              -44,
+              20
+            ],
+            [
+              -44,
+              236
+            ],
+            [
+              172,
+              236
+            ],
+            [
+              172,
+              20
+            ]
+          ]
+        }
+      ]
+    },
+    "M7.AUX.1": {
+      "violation_count": 1,
+      "description": "M7.AUX.1 : M7 vertical edges must be at a grid of 32 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            -44,
+            0,
+            400,
+            256
+          ],
+          "vertices": [
+            [
+              -44,
+              0
+            ],
+            [
+              -44,
+              256
+            ],
+            [
+              400,
+              256
+            ],
+            [
+              400,
+              0
+            ]
+          ]
+        }
+      ]
+    }
+  }
+}

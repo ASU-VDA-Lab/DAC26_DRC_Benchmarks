@@ -1,0 +1,180 @@
+{
+  "case_name": "Polygon268",
+  "design_type": "polygon",
+  "total_violations": 6,
+  "total_rules_violated": 3,
+  "rules": {
+    "M3.A.1": {
+      "violation_count": 2,
+      "description": "M3.A.1 : Minimum M3 area is 504 nm-sq.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              72
+            ],
+            [
+              72,
+              72
+            ],
+            [
+              72,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            72,
+            72
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              152,
+              120
+            ],
+            [
+              152,
+              192
+            ],
+            [
+              224,
+              192
+            ],
+            [
+              224,
+              120
+            ]
+          ],
+          "bbox": [
+            152,
+            120,
+            224,
+            192
+          ]
+        }
+      ]
+    },
+    "V2.S.3": {
+      "violation_count": 2,
+      "description": "V2.S.3 : Minimum corner-to-corner spacing between two V2 instances\u2014\u2014both without a 5 nm M3 end-cap\u2014\u2014is 30 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              92,
+              92,
+              92,
+              50
+            ],
+            [
+              132,
+              100,
+              132,
+              142
+            ]
+          ],
+          "bbox": [
+            92,
+            50,
+            132,
+            142
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              69,
+              92,
+              92,
+              92
+            ],
+            [
+              155,
+              100,
+              132,
+              100
+            ]
+          ],
+          "bbox": [
+            69,
+            92,
+            155,
+            100
+          ]
+        }
+      ]
+    },
+    "V2.M3.EN.2": {
+      "violation_count": 2,
+      "description": "V2.M3.EN.2 : Minimum enclosure of V2 by M3 on two opposite sides is 5 & 5 nm or 5 & 0 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              72
+            ],
+            [
+              72,
+              72
+            ],
+            [
+              72,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            72,
+            72
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              152,
+              120
+            ],
+            [
+              152,
+              192
+            ],
+            [
+              224,
+              192
+            ],
+            [
+              224,
+              120
+            ]
+          ],
+          "bbox": [
+            152,
+            120,
+            224,
+            192
+          ]
+        }
+      ]
+    }
+  }
+}

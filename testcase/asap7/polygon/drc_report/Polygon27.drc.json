@@ -1,0 +1,41 @@
+{
+  "case_name": "Polygon27",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "GATE.S.3": {
+      "violation_count": 1,
+      "description": "GATE.S.3 : Every GATE (not cut by GCUT and not interacting with the layer SRAMDRC) must have at least one other GATE within 54 nm of its surrounding along the horizontal axis. The spacing being the distance between centers of the two GATE layer polygons.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              216
+            ],
+            [
+              80,
+              216
+            ],
+            [
+              80,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            80,
+            216
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "case_name": "Polygon253",
+  "design_type": "polygon",
+  "total_violations": 3,
+  "total_rules_violated": 3,
+  "rules": {
+    "V1.M1.EN.1": {
+      "violation_count": 1,
+      "description": "V1.M1.EN.1 : Minimum enclosure of V1 by M1 on two opposite sides is 5 & 2 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              72
+            ],
+            [
+              72,
+              72
+            ],
+            [
+              72,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            72,
+            72
+          ]
+        }
+      ]
+    },
+    "V1.AUX.1": {
+      "violation_count": 1,
+      "description": "V1.AUX.1 : V1 must be inside M1 and M2.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              72
+            ],
+            [
+              72,
+              72
+            ],
+            [
+              72,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            72,
+            72
+          ]
+        }
+      ]
+    },
+    "V1.M2.AUX.2": {
+      "violation_count": 1,
+      "description": "V1.M2.AUX.2 : V1 must exactly be the same width as M2 along the direction perpendicular to the M2 length.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              72
+            ],
+            [
+              72,
+              72
+            ],
+            [
+              72,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            72,
+            72
+          ]
+        }
+      ]
+    }
+  }
+}

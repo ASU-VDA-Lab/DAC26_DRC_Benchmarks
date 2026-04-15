@@ -1,0 +1,37 @@
+{
+  "case_name": "Polygon7",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "ACTIVE.S.1": {
+      "violation_count": 1,
+      "description": "ACTIVE.S.1 : Minimum vertical spacing of ACTIVE is 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              108,
+              800,
+              108
+            ],
+            [
+              800,
+              188,
+              0,
+              188
+            ]
+          ],
+          "bbox": [
+            0,
+            108,
+            800,
+            188
+          ]
+        }
+      ]
+    }
+  }
+}

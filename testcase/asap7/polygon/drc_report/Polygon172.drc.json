@@ -1,0 +1,37 @@
+{
+  "case_name": "Polygon172",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "M9.S.5": {
+      "violation_count": 1,
+      "description": "M9.S.5 : Minimum spacing between two M9 layer polygons, when the minimum width of one polygon is >= 80 nm and < 120 nm, is 80 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              360,
+              800,
+              360,
+              0
+            ],
+            [
+              640,
+              0,
+              640,
+              800
+            ]
+          ],
+          "bbox": [
+            360,
+            0,
+            640,
+            800
+          ]
+        }
+      ]
+    }
+  }
+}

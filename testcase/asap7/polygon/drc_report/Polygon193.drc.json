@@ -1,0 +1,89 @@
+{
+  "case_name": "Polygon193",
+  "design_type": "polygon",
+  "total_violations": 3,
+  "total_rules_violated": 2,
+  "rules": {
+    "PSELECT.W.2": {
+      "violation_count": 1,
+      "description": "PSELECT.W.2 : Minimum vertical width of PSELECT is 54 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              800,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              200,
+              800,
+              200
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            800,
+            200
+          ]
+        }
+      ]
+    },
+    "PSELECT.ACTIVE.EN.2": {
+      "violation_count": 2,
+      "description": "PSELECT.ACTIVE.EN.2 : Minimum vertical enclosure of ACTIVE (not interacting with SRAMDRC) by PSELECT is 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              320,
+              200,
+              480,
+              200
+            ],
+            [
+              320,
+              152,
+              480,
+              152
+            ]
+          ],
+          "bbox": [
+            320,
+            152,
+            480,
+            200
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              480,
+              0,
+              320,
+              0
+            ],
+            [
+              480,
+              44,
+              320,
+              44
+            ]
+          ],
+          "bbox": [
+            320,
+            0,
+            480,
+            44
+          ]
+        }
+      ]
+    }
+  }
+}

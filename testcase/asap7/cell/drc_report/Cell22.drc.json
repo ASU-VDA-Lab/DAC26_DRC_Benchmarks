@@ -1,0 +1,264 @@
+{
+  "case_name": "Cell22",
+  "design_type": "cell",
+  "total_violations": 14,
+  "total_rules_violated": 2,
+  "rules": {
+    "V0.M0.EN.5": {
+      "violation_count": 13,
+      "description": "V0.M0.EN.5 : Minimum enclosure of V0 by M0 on two opposite sides is 5 & 5 nm or 5 & 0 nm.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1264,
+              68,
+              1264,
+              -4
+            ]
+          ],
+          "bbox": [
+            1264,
+            -4,
+            1264,
+            68
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              256,
+              68,
+              256,
+              -4
+            ]
+          ],
+          "bbox": [
+            256,
+            -4,
+            256,
+            68
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              976,
+              68,
+              976,
+              -4
+            ]
+          ],
+          "bbox": [
+            976,
+            -4,
+            976,
+            68
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              688,
+              212,
+              688,
+              140
+            ]
+          ],
+          "bbox": [
+            688,
+            140,
+            688,
+            212
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1120,
+              212,
+              1120,
+              140
+            ]
+          ],
+          "bbox": [
+            1120,
+            140,
+            1120,
+            212
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1264,
+              356,
+              1264,
+              284
+            ]
+          ],
+          "bbox": [
+            1264,
+            284,
+            1264,
+            356
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              832,
+              356,
+              832,
+              284
+            ]
+          ],
+          "bbox": [
+            832,
+            284,
+            832,
+            356
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1264,
+              644,
+              1264,
+              572
+            ]
+          ],
+          "bbox": [
+            1264,
+            572,
+            1264,
+            644
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1264,
+              788,
+              1264,
+              716
+            ]
+          ],
+          "bbox": [
+            1264,
+            716,
+            1264,
+            788
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              976,
+              932,
+              976,
+              860
+            ]
+          ],
+          "bbox": [
+            976,
+            860,
+            976,
+            932
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              544,
+              932,
+              544,
+              860
+            ]
+          ],
+          "bbox": [
+            544,
+            860,
+            544,
+            932
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1120,
+              1076,
+              1120,
+              1004
+            ]
+          ],
+          "bbox": [
+            1120,
+            1004,
+            1120,
+            1076
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1264,
+              1220,
+              1264,
+              1148
+            ]
+          ],
+          "bbox": [
+            1264,
+            1148,
+            1264,
+            1220
+          ]
+        }
+      ]
+    },
+    "M1.S.4": {
+      "violation_count": 1,
+      "description": "M1.S.4 : Minimum (tip-to-tip) spacing between two M1 layer polygons' edges, when both edges are < 24 nm, is 31 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              1192,
+              112,
+              1264,
+              112
+            ],
+            [
+              1264,
+              224,
+              1192,
+              224
+            ]
+          ],
+          "bbox": [
+            1192,
+            112,
+            1264,
+            224
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "case_name": "Polygon138",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "M7.AUX.2": {
+      "violation_count": 1,
+      "description": "M7.AUX.2 : Minimum width M7 tracks must lie along the vertical routing tracks at a spacing of 2N x minimum metal width + offset from the origin.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              448,
+              0
+            ],
+            [
+              448,
+              192
+            ],
+            [
+              576,
+              192
+            ],
+            [
+              576,
+              0
+            ]
+          ],
+          "bbox": [
+            448,
+            0,
+            576,
+            192
+          ]
+        }
+      ]
+    }
+  }
+}

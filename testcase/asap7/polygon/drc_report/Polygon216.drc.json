@@ -1,0 +1,41 @@
+{
+  "case_name": "Polygon216",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "SRAM.LIG.AUX.2": {
+      "violation_count": 1,
+      "description": "SRAM.LIG.AUX.2 : LIG layer polygons, which are either completely outside the SRAMDRC layer or which do not intersect the SRAMDRC layer, may not touch the SRAMDRC layer.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              76,
+              -4
+            ],
+            [
+              76,
+              204
+            ],
+            [
+              84,
+              204
+            ],
+            [
+              84,
+              -4
+            ]
+          ],
+          "bbox": [
+            76,
+            -4,
+            84,
+            204
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "case_name": "Polygon92",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "M3.S.5": {
+      "violation_count": 1,
+      "description": "M3.S.5 : Minimum (tip-to-tip) spacing between two M3 layer polygons' edges, when one of the edges is >= 24 nm and <= 36 nm, and the other is < 24 nm, is 31 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              20,
+              200,
+              100,
+              200
+            ],
+            [
+              100,
+              312,
+              20,
+              312
+            ]
+          ],
+          "bbox": [
+            20,
+            200,
+            100,
+            312
+          ]
+        }
+      ]
+    }
+  }
+}

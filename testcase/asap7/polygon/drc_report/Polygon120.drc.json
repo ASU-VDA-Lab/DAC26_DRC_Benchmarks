@@ -1,0 +1,31 @@
+{
+  "case_name": "Polygon120",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "M5.W.3": {
+      "violation_count": 1,
+      "description": "M5.W.3 : M5 horizontal width may not be an even integer multiple of its minimum width.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              0,
+              192,
+              192,
+              192
+            ]
+          ],
+          "bbox": [
+            0,
+            192,
+            192,
+            192
+          ]
+        }
+      ]
+    }
+  }
+}

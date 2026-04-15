@@ -1,0 +1,70 @@
+{
+  "case_name": "Polygon81",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 2,
+  "rules": {
+    "M2.S.4": {
+      "violation_count": 1,
+      "description": "M2.S.4 : Minimum (tip-to-tip) spacing between two M2 layer polygons' edges, when both edges are < 24 nm, is 31 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              200,
+              80,
+              200
+            ],
+            [
+              80,
+              312,
+              0,
+              312
+            ]
+          ],
+          "bbox": [
+            0,
+            200,
+            80,
+            312
+          ]
+        }
+      ]
+    },
+    "M2.S.7": {
+      "violation_count": 1,
+      "description": "M2.S.7 : M2 tip-to-tip (18 nm) co-located with side-to-side spacing <= 32 nm is forbidden; parallel run length must be >= 35 nm when side spacing <= 32 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              200
+            ],
+            [
+              0,
+              312
+            ],
+            [
+              80,
+              312
+            ],
+            [
+              80,
+              200
+            ]
+          ],
+          "bbox": [
+            0,
+            200,
+            80,
+            312
+          ]
+        }
+      ]
+    }
+  }
+}

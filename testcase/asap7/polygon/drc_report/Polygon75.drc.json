@@ -1,0 +1,60 @@
+{
+  "case_name": "Polygon75",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 1,
+  "rules": {
+    "M1.S.6": {
+      "violation_count": 2,
+      "description": "M1.S.6 : Minimum corner-to-corner spacing between two M1 polygons is 20 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              72,
+              120,
+              72,
+              83
+            ],
+            [
+              128,
+              140,
+              128,
+              177
+            ]
+          ],
+          "bbox": [
+            72,
+            83,
+            128,
+            177
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              51,
+              120,
+              72,
+              120
+            ],
+            [
+              149,
+              140,
+              128,
+              140
+            ]
+          ],
+          "bbox": [
+            51,
+            120,
+            149,
+            140
+          ]
+        }
+      ]
+    }
+  }
+}

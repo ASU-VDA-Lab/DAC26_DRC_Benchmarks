@@ -1,0 +1,70 @@
+{
+  "case_name": "Polygon141",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 2,
+  "rules": {
+    "M7.S.1": {
+      "violation_count": 1,
+      "description": "M7.S.1 : Minimum horizontal spacing between two M7 layer polygons' edges, regardless of the edge lengths and mask colors, is 32 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              240,
+              0,
+              240,
+              192
+            ],
+            [
+              128,
+              192,
+              128,
+              0
+            ]
+          ],
+          "bbox": [
+            128,
+            0,
+            240,
+            192
+          ]
+        }
+      ]
+    },
+    "M7.AUX.1": {
+      "violation_count": 1,
+      "description": "M7.AUX.1 : M7 vertical edges must be at a grid of 32 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            240,
+            0,
+            368,
+            192
+          ],
+          "vertices": [
+            [
+              240,
+              0
+            ],
+            [
+              240,
+              192
+            ],
+            [
+              368,
+              192
+            ],
+            [
+              368,
+              0
+            ]
+          ]
+        }
+      ]
+    }
+  }
+}

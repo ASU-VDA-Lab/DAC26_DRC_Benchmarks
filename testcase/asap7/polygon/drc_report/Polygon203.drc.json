@@ -1,0 +1,124 @@
+{
+  "case_name": "Polygon203",
+  "design_type": "polygon",
+  "total_violations": 4,
+  "total_rules_violated": 4,
+  "rules": {
+    "ACTIVE.W.1": {
+      "violation_count": 1,
+      "description": "ACTIVE.W.1 : Minimum vertical width of ACTIVE layer is 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              320,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              80,
+              320,
+              80
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            320,
+            80
+          ]
+        }
+      ]
+    },
+    "ACTIVE.W.2": {
+      "violation_count": 1,
+      "description": "ACTIVE.W.2 : ACTIVE layer vertical width increment is an integer multiple of 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              0,
+              320,
+              0
+            ],
+            [
+              0,
+              80,
+              320,
+              80
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            320,
+            80
+          ]
+        }
+      ]
+    },
+    "SDT.W.2": {
+      "violation_count": 1,
+      "description": "SDT.W.2 : Minimum vertical width of SDT (not interacting with SRAMDRC) is 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              200,
+              0,
+              40,
+              0
+            ],
+            [
+              40,
+              80,
+              200,
+              80
+            ]
+          ],
+          "bbox": [
+            40,
+            0,
+            200,
+            80
+          ]
+        }
+      ]
+    },
+    "LISD.W.1": {
+      "violation_count": 1,
+      "description": "LISD.W.1 : Minimum width of LISD is 24 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              320,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              80,
+              320,
+              80
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            320,
+            80
+          ]
+        }
+      ]
+    }
+  }
+}

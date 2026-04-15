@@ -1,0 +1,107 @@
+{
+  "case_name": "Polygon163",
+  "design_type": "polygon",
+  "total_violations": 3,
+  "total_rules_violated": 3,
+  "rules": {
+    "M8.W.3": {
+      "violation_count": 1,
+      "description": "M8.W.3 : Minimum width of M8, when its length >= 1200 nm and < 1800 nm, is 80 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              5445,
+              0,
+              8800
+            ],
+            [
+              280,
+              8800,
+              280,
+              5600
+            ]
+          ],
+          "bbox": [
+            0,
+            5445,
+            280,
+            8800
+          ]
+        }
+      ]
+    },
+    "M8.W.4": {
+      "violation_count": 1,
+      "description": "M8.W.4 : Minimum width of M8, when its length >= 1800 nm, is 120 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              5210,
+              0,
+              8800
+            ],
+            [
+              280,
+              8800,
+              280,
+              5600
+            ]
+          ],
+          "bbox": [
+            0,
+            5210,
+            280,
+            8800
+          ]
+        }
+      ]
+    },
+    "M8.W.5": {
+      "violation_count": 1,
+      "description": "M8.W.5 : Maximum width of M8 is 2000 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              8800
+            ],
+            [
+              280,
+              8800
+            ],
+            [
+              280,
+              5600
+            ],
+            [
+              800,
+              5600
+            ],
+            [
+              800,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            800,
+            8800
+          ]
+        }
+      ]
+    }
+  }
+}

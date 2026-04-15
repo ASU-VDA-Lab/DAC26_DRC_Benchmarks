@@ -1,0 +1,41 @@
+{
+  "case_name": "Polygon199",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "SDT.LISD.AUX.4": {
+      "violation_count": 1,
+      "description": "SDT.LISD.AUX.4 : SDT must always be inside LISD.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              40,
+              0
+            ],
+            [
+              40,
+              108
+            ],
+            [
+              200,
+              108
+            ],
+            [
+              200,
+              0
+            ]
+          ],
+          "bbox": [
+            40,
+            0,
+            200,
+            108
+          ]
+        }
+      ]
+    }
+  }
+}

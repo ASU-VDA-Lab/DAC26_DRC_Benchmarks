@@ -1,0 +1,189 @@
+{
+  "case_name": "Polygon130",
+  "design_type": "polygon",
+  "total_violations": 7,
+  "total_rules_violated": 4,
+  "rules": {
+    "M6.S.3": {
+      "violation_count": 2,
+      "description": "M6.S.3 : Minimum tip-to-tip spacing between two M6 layer polygons\u2014\u2014that do not share a parallel run length\u2014\u2014on adjacent tracks is 40 nm.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              512,
+              128,
+              512,
+              64
+            ]
+          ],
+          "bbox": [
+            512,
+            64,
+            512,
+            128
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              640,
+              256,
+              640,
+              320
+            ]
+          ],
+          "bbox": [
+            640,
+            256,
+            640,
+            320
+          ]
+        }
+      ]
+    },
+    "M6.S.4": {
+      "violation_count": 2,
+      "description": "M6.S.4 : Minimum tip-to-tip spacing between two M6 layer polygons\u2014\u2014that share a parallel run length\u2014\u2014on adjacent tracks is 40 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              1264,
+              0,
+              1712
+            ],
+            [
+              128,
+              1712,
+              128,
+              1264
+            ]
+          ],
+          "bbox": [
+            0,
+            1264,
+            128,
+            1712
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              256,
+              1264,
+              256,
+              1712
+            ],
+            [
+              384,
+              1712,
+              384,
+              1264
+            ]
+          ],
+          "bbox": [
+            256,
+            1264,
+            384,
+            1712
+          ]
+        }
+      ]
+    },
+    "M6.S.5": {
+      "violation_count": 1,
+      "description": "M6.S.5 : Minimum parallel run length of two M6 layer polygons on adjacent tracks is 44 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              128,
+              1424,
+              128,
+              1552
+            ],
+            [
+              256,
+              1552,
+              256,
+              1424
+            ]
+          ],
+          "bbox": [
+            128,
+            1424,
+            256,
+            1552
+          ]
+        }
+      ]
+    },
+    "M6.AUX.1": {
+      "violation_count": 2,
+      "description": "M6.AUX.1 : M6 horizontal edges must be at a grid of 32 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            0,
+            1024,
+            256,
+            1424
+          ],
+          "vertices": [
+            [
+              0,
+              1024
+            ],
+            [
+              0,
+              1424
+            ],
+            [
+              256,
+              1424
+            ],
+            [
+              256,
+              1024
+            ]
+          ]
+        },
+        {
+          "type": "polygon",
+          "bbox": [
+            128,
+            1552,
+            384,
+            1952
+          ],
+          "vertices": [
+            [
+              128,
+              1552
+            ],
+            [
+              128,
+              1952
+            ],
+            [
+              384,
+              1952
+            ],
+            [
+              384,
+              1552
+            ]
+          ]
+        }
+      ]
+    }
+  }
+}

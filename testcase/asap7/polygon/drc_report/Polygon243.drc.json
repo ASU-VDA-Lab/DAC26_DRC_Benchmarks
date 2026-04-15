@@ -1,0 +1,139 @@
+{
+  "case_name": "Polygon243",
+  "design_type": "polygon",
+  "total_violations": 5,
+  "total_rules_violated": 2,
+  "rules": {
+    "V0.LIG.EN.4": {
+      "violation_count": 4,
+      "description": "V0.LIG.EN.4 : Minimum enclosure of V0 (interacting with LIG and not inside LISD) by LIG on two opposite sides is 1 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              76,
+              76,
+              76
+            ],
+            [
+              2,
+              74,
+              74,
+              74
+            ]
+          ],
+          "bbox": [
+            0,
+            74,
+            76,
+            76
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              76,
+              76,
+              76,
+              0
+            ],
+            [
+              74,
+              74,
+              74,
+              2
+            ]
+          ],
+          "bbox": [
+            74,
+            0,
+            76,
+            76
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              0,
+              0,
+              76
+            ],
+            [
+              2,
+              2,
+              2,
+              74
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            2,
+            76
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              76,
+              0,
+              0,
+              0
+            ],
+            [
+              74,
+              2,
+              2,
+              2
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            76,
+            2
+          ]
+        }
+      ]
+    },
+    "V0.M1.AUX.3": {
+      "violation_count": 1,
+      "description": "V0.M1.AUX.3 : V0 must exactly be the same width as M1 along the direction perpendicular to the M1 length.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              76
+            ],
+            [
+              76,
+              76
+            ],
+            [
+              76,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            76,
+            76
+          ]
+        }
+      ]
+    }
+  }
+}

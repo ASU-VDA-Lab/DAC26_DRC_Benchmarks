@@ -1,0 +1,103 @@
+{
+  "case_name": "Polygon30",
+  "design_type": "polygon",
+  "total_violations": 3,
+  "total_rules_violated": 3,
+  "rules": {
+    "GATE.S.3": {
+      "violation_count": 1,
+      "description": "GATE.S.3 : Every GATE (not cut by GCUT and not interacting with the layer SRAMDRC) must have at least one other GATE within 54 nm of its surrounding along the horizontal axis. The spacing being the distance between centers of the two GATE layer polygons.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              216
+            ],
+            [
+              80,
+              216
+            ],
+            [
+              80,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            80,
+            216
+          ]
+        }
+      ]
+    },
+    "GATE.ACTIVE.EX.1": {
+      "violation_count": 1,
+      "description": "GATE.ACTIVE.EX.1 : Minimum vertical extension of GATE (not cut by GCUT) past ACTIVE is 4 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              124
+            ],
+            [
+              0,
+              136
+            ],
+            [
+              80,
+              136
+            ],
+            [
+              80,
+              124
+            ]
+          ],
+          "bbox": [
+            0,
+            124,
+            80,
+            136
+          ]
+        }
+      ]
+    },
+    "GCUT.ACTIVE.S.1": {
+      "violation_count": 1,
+      "description": "GCUT.ACTIVE.S.1 : Minimum vertical spacing between GCUT and channel is 4 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              80,
+              136,
+              0,
+              136
+            ],
+            [
+              0,
+              124,
+              80,
+              124
+            ]
+          ],
+          "bbox": [
+            0,
+            124,
+            80,
+            136
+          ]
+        }
+      ]
+    }
+  }
+}

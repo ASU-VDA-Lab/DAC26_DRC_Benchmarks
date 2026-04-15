@@ -1,0 +1,41 @@
+{
+  "case_name": "Polygon166",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "M9.A.1": {
+      "violation_count": 1,
+      "description": "M9.A.1 : Minimum area of M9 is 7520 nm-sq.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              720
+            ],
+            [
+              160,
+              720
+            ],
+            [
+              160,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            160,
+            720
+          ]
+        }
+      ]
+    }
+  }
+}

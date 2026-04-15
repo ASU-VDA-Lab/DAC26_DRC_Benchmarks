@@ -1,0 +1,37 @@
+{
+  "case_name": "Polygon35",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "GCUT.GATE.S.2": {
+      "violation_count": 1,
+      "description": "GCUT.GATE.S.2 : Minimum spacing of GCUT to GATE, when the former is not being used to cut a particular polygon drawn using the latter, is 17 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              160,
+              148,
+              160,
+              80
+            ],
+            [
+              216,
+              41,
+              216,
+              187
+            ]
+          ],
+          "bbox": [
+            160,
+            41,
+            216,
+            187
+          ]
+        }
+      ]
+    }
+  }
+}

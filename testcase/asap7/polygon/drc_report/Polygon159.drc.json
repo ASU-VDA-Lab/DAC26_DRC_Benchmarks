@@ -1,0 +1,37 @@
+{
+  "case_name": "Polygon159",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "M8.S.7": {
+      "violation_count": 1,
+      "description": "M8.S.7 : Minimum spacing between two M8 layer polygons, when the minimum width of one polygon is >= 500 nm and < 1000 nm, is 500 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              2000,
+              752,
+              2000,
+              0
+            ],
+            [
+              2400,
+              0,
+              2400,
+              752
+            ]
+          ],
+          "bbox": [
+            2000,
+            0,
+            2400,
+            752
+          ]
+        }
+      ]
+    }
+  }
+}

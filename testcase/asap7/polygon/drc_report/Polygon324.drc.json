@@ -1,0 +1,41 @@
+{
+  "case_name": "Polygon324",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "VT.AUX.2": {
+      "violation_count": 1,
+      "description": "VT.AUX.2 : VT layers (LVT, SLVT, and SRAMVT) may not overlap.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              400,
+              0
+            ],
+            [
+              400,
+              800
+            ],
+            [
+              800,
+              800
+            ],
+            [
+              800,
+              0
+            ]
+          ],
+          "bbox": [
+            400,
+            0,
+            800,
+            800
+          ]
+        }
+      ]
+    }
+  }
+}

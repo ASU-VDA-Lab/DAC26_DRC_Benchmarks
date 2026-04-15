@@ -1,0 +1,140 @@
+{
+  "case_name": "Polygon296",
+  "design_type": "polygon",
+  "total_violations": 4,
+  "total_rules_violated": 4,
+  "rules": {
+    "V6.AUX.1": {
+      "violation_count": 1,
+      "description": "V6.AUX.1 : V6 must be inside M6 and M7.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              128
+            ],
+            [
+              128,
+              128
+            ],
+            [
+              128,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            128,
+            128
+          ]
+        }
+      ]
+    },
+    "V6.M7.AUX.2": {
+      "violation_count": 1,
+      "description": "V6.M7.AUX.2 : V6 must exactly be the same width as M7 along the direction perpendicular to the M7 length.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              128
+            ],
+            [
+              128,
+              128
+            ],
+            [
+              128,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            128,
+            128
+          ]
+        }
+      ]
+    },
+    "M6.AUX.1": {
+      "violation_count": 1,
+      "description": "M6.AUX.1 : M6 horizontal edges must be at a grid of 32 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            -44,
+            -44,
+            172,
+            172
+          ],
+          "vertices": [
+            [
+              -44,
+              -44
+            ],
+            [
+              -44,
+              172
+            ],
+            [
+              172,
+              172
+            ],
+            [
+              172,
+              -44
+            ]
+          ]
+        }
+      ]
+    },
+    "M7.AUX.1": {
+      "violation_count": 1,
+      "description": "M7.AUX.1 : M7 vertical edges must be at a grid of 32 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            -44,
+            -44,
+            104,
+            172
+          ],
+          "vertices": [
+            [
+              -44,
+              -44
+            ],
+            [
+              -44,
+              172
+            ],
+            [
+              104,
+              172
+            ],
+            [
+              104,
+              -44
+            ]
+          ]
+        }
+      ]
+    }
+  }
+}

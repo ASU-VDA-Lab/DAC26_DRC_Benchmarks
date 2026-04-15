@@ -1,0 +1,37 @@
+{
+  "case_name": "Polygon321",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "V9.S.1": {
+      "violation_count": 1,
+      "description": "V9.S.1 : Minimum spacing between two V9 instances is 57 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              360,
+              0,
+              360,
+              160
+            ],
+            [
+              160,
+              160,
+              160,
+              0
+            ]
+          ],
+          "bbox": [
+            160,
+            0,
+            360,
+            160
+          ]
+        }
+      ]
+    }
+  }
+}

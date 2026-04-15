@@ -1,0 +1,253 @@
+{
+  "case_name": "Cell6",
+  "design_type": "cell",
+  "total_violations": 13,
+  "total_rules_violated": 2,
+  "rules": {
+    "V0.M0.EN.5": {
+      "violation_count": 11,
+      "description": "V0.M0.EN.5 : Minimum enclosure of V0 by M0 on two opposite sides is 5 & 5 nm or 5 & 0 nm.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1696,
+              68,
+              1696,
+              -4
+            ]
+          ],
+          "bbox": [
+            1696,
+            -4,
+            1696,
+            68
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              544,
+              68,
+              544,
+              -4
+            ]
+          ],
+          "bbox": [
+            544,
+            -4,
+            544,
+            68
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1264,
+              68,
+              1264,
+              -4
+            ]
+          ],
+          "bbox": [
+            1264,
+            -4,
+            1264,
+            68
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              832,
+              212,
+              832,
+              140
+            ]
+          ],
+          "bbox": [
+            832,
+            140,
+            832,
+            212
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              256,
+              500,
+              256,
+              428
+            ]
+          ],
+          "bbox": [
+            256,
+            428,
+            256,
+            500
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1408,
+              500,
+              1408,
+              428
+            ]
+          ],
+          "bbox": [
+            1408,
+            428,
+            1408,
+            500
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              688,
+              500,
+              688,
+              428
+            ]
+          ],
+          "bbox": [
+            688,
+            428,
+            688,
+            500
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1552,
+              644,
+              1552,
+              572
+            ]
+          ],
+          "bbox": [
+            1552,
+            572,
+            1552,
+            644
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1696,
+              788,
+              1696,
+              716
+            ]
+          ],
+          "bbox": [
+            1696,
+            716,
+            1696,
+            788
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              688,
+              788,
+              688,
+              716
+            ]
+          ],
+          "bbox": [
+            688,
+            716,
+            688,
+            788
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1120,
+              788,
+              1120,
+              716
+            ]
+          ],
+          "bbox": [
+            1120,
+            716,
+            1120,
+            788
+          ]
+        }
+      ]
+    },
+    "M1.S.4": {
+      "violation_count": 2,
+      "description": "M1.S.4 : Minimum (tip-to-tip) spacing between two M1 layer polygons' edges, when both edges are < 24 nm, is 31 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              616,
+              544,
+              688,
+              544
+            ],
+            [
+              688,
+              656,
+              616,
+              656
+            ]
+          ],
+          "bbox": [
+            616,
+            544,
+            688,
+            656
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              760,
+              544,
+              832,
+              544
+            ],
+            [
+              832,
+              656,
+              760,
+              656
+            ]
+          ],
+          "bbox": [
+            760,
+            544,
+            832,
+            656
+          ]
+        }
+      ]
+    }
+  }
+}

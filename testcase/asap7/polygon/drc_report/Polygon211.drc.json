@@ -1,0 +1,70 @@
+{
+  "case_name": "Polygon211",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 2,
+  "rules": {
+    "ACTIVE.W.3": {
+      "violation_count": 1,
+      "description": "ACTIVE.W.3 : Minimum horizontal width of ACTIVE is 16 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              0,
+              0,
+              108
+            ],
+            [
+              60,
+              108,
+              60,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            60,
+            108
+          ]
+        }
+      ]
+    },
+    "SRAM.ACTIVE.A.2A": {
+      "violation_count": 1,
+      "description": "SRAM.ACTIVE.A.2A : Minimum area of an ACTIVE layer polygon that interacts with the layer SRAMDRC is 432 nm-sq",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              108
+            ],
+            [
+              60,
+              108
+            ],
+            [
+              60,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            60,
+            108
+          ]
+        }
+      ]
+    }
+  }
+}

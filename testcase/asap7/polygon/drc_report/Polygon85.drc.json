@@ -1,0 +1,68 @@
+{
+  "case_name": "Polygon85",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 1,
+  "rules": {
+    "M2.S.8": {
+      "violation_count": 2,
+      "description": "M2.S.8 : Minimum diagonal center-to-center spacing between M2 tip-to-tip gaps on different tracks is 80 nm. Gap centers are found by shrinking each 18 nm tip-to-tip gap by 8.5 nm per side; euclidian distance between centers must be >= 80 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              394,
+              34
+            ],
+            [
+              358,
+              290
+            ],
+            [
+              358,
+              370
+            ],
+            [
+              394,
+              114
+            ]
+          ],
+          "bbox": [
+            358,
+            34,
+            394,
+            370
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              394,
+              114
+            ],
+            [
+              354,
+              290
+            ],
+            [
+              358,
+              290
+            ],
+            [
+              398,
+              114
+            ]
+          ],
+          "bbox": [
+            354,
+            114,
+            398,
+            290
+          ]
+        }
+      ]
+    }
+  }
+}

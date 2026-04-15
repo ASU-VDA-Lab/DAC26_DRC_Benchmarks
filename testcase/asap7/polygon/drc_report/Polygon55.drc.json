@@ -1,0 +1,168 @@
+{
+  "case_name": "Polygon55",
+  "design_type": "polygon",
+  "total_violations": 6,
+  "total_rules_violated": 5,
+  "rules": {
+    "ACTIVE.W.2": {
+      "violation_count": 1,
+      "description": "ACTIVE.W.2 : ACTIVE layer vertical width increment is an integer multiple of 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              100,
+              -40,
+              260,
+              -40
+            ],
+            [
+              100,
+              240,
+              260,
+              240
+            ]
+          ],
+          "bbox": [
+            100,
+            -40,
+            260,
+            240
+          ]
+        }
+      ]
+    },
+    "SDT.W.3": {
+      "violation_count": 1,
+      "description": "SDT.W.3 : SDT (not interacting with SRAMDRC) layer vertical width increment is an integer multiple of 27 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              120,
+              16
+            ],
+            [
+              120,
+              200
+            ],
+            [
+              240,
+              200
+            ],
+            [
+              240,
+              16
+            ]
+          ],
+          "bbox": [
+            120,
+            16,
+            240,
+            200
+          ]
+        }
+      ]
+    },
+    "SDT.ACTIVE.AUX.2": {
+      "violation_count": 2,
+      "description": "SDT.ACTIVE.AUX.2 : SDT (not interacting with SRAMDRC) horizontal edges must coincide with ACTIVE horizontal edges.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              120,
+              200,
+              240,
+              200
+            ]
+          ],
+          "bbox": [
+            120,
+            200,
+            240,
+            200
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              240,
+              16,
+              120,
+              16
+            ]
+          ],
+          "bbox": [
+            120,
+            16,
+            240,
+            16
+          ]
+        }
+      ]
+    },
+    "LIG.LISD.S.6": {
+      "violation_count": 1,
+      "description": "LIG.LISD.S.6 : Minimum spacing between LIG and LISD layer polygons not on the same net is 14 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              80,
+              200,
+              80,
+              0
+            ],
+            [
+              100,
+              -40,
+              100,
+              240
+            ]
+          ],
+          "bbox": [
+            80,
+            -40,
+            100,
+            240
+          ]
+        }
+      ]
+    },
+    "LIG.SDT.S.8": {
+      "violation_count": 1,
+      "description": "LIG.SDT.S.8 : Minimum spacing between LIG and SDT layer polygons not on the same net is 14 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              80,
+              200,
+              80,
+              16
+            ],
+            [
+              120,
+              16,
+              120,
+              200
+            ]
+          ],
+          "bbox": [
+            80,
+            16,
+            120,
+            200
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "case_name": "Polygon143",
+  "design_type": "polygon",
+  "total_violations": 6,
+  "total_rules_violated": 4,
+  "rules": {
+    "M7.W.4": {
+      "violation_count": 2,
+      "description": "M7.W.4 : M7 horizontal width, resulting in the polygon spanning an even number of minimum width routing tracks horizontally, is not allowed.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              0,
+              0,
+              192
+            ],
+            [
+              384,
+              192,
+              384,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            384,
+            192
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              416,
+              320,
+              416,
+              512
+            ],
+            [
+              800,
+              512,
+              800,
+              320
+            ]
+          ],
+          "bbox": [
+            416,
+            320,
+            800,
+            512
+          ]
+        }
+      ]
+    },
+    "M7.S.2": {
+      "violation_count": 1,
+      "description": "M7.S.2 : Minimum vertical spacing between two M7 layer polygons' edges, regardless of the edge lengths and mask colors, is 40 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              320,
+              192,
+              384,
+              192
+            ],
+            [
+              480,
+              320,
+              416,
+              320
+            ]
+          ],
+          "bbox": [
+            320,
+            192,
+            480,
+            320
+          ]
+        }
+      ]
+    },
+    "M7.S.3": {
+      "violation_count": 2,
+      "description": "M7.S.3 : Minimum tip-to-tip spacing between two M7 layer polygons\u2014\u2014that do not share a parallel run length\u2014\u2014on adjacent tracks is 40 nm.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              224,
+              192,
+              384,
+              192
+            ]
+          ],
+          "bbox": [
+            224,
+            192,
+            384,
+            192
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              576,
+              320,
+              416,
+              320
+            ]
+          ],
+          "bbox": [
+            416,
+            320,
+            576,
+            320
+          ]
+        }
+      ]
+    },
+    "M7.AUX.1": {
+      "violation_count": 1,
+      "description": "M7.AUX.1 : M7 vertical edges must be at a grid of 32 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            416,
+            320,
+            800,
+            512
+          ],
+          "vertices": [
+            [
+              416,
+              320
+            ],
+            [
+              416,
+              512
+            ],
+            [
+              800,
+              512
+            ],
+            [
+              800,
+              320
+            ]
+          ]
+        }
+      ]
+    }
+  }
+}

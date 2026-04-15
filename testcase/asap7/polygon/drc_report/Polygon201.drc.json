@@ -1,0 +1,37 @@
+{
+  "case_name": "Polygon201",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "SDT.S.1": {
+      "violation_count": 1,
+      "description": "SDT.S.1 : Minimum horizontal spacing between two SDT layer polygons is 30 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              224,
+              0,
+              224,
+              108
+            ],
+            [
+              136,
+              108,
+              136,
+              0
+            ]
+          ],
+          "bbox": [
+            136,
+            0,
+            224,
+            108
+          ]
+        }
+      ]
+    }
+  }
+}

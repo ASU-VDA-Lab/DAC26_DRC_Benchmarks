@@ -1,0 +1,100 @@
+{
+  "case_name": "Polygon139",
+  "design_type": "polygon",
+  "total_violations": 4,
+  "total_rules_violated": 3,
+  "rules": {
+    "M7.W.3": {
+      "violation_count": 1,
+      "description": "M7.W.3 : M7 horizontal width may not be an even integer multiple of its minimum width.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              0,
+              384,
+              256,
+              384
+            ]
+          ],
+          "bbox": [
+            0,
+            384,
+            256,
+            384
+          ]
+        }
+      ]
+    },
+    "M7.W.4": {
+      "violation_count": 1,
+      "description": "M7.W.4 : M7 horizontal width, resulting in the polygon spanning an even number of minimum width routing tracks horizontally, is not allowed.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              0,
+              0,
+              192
+            ],
+            [
+              384,
+              192,
+              384,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            384,
+            192
+          ]
+        }
+      ]
+    },
+    "M7.AUX.3": {
+      "violation_count": 2,
+      "description": "M7.AUX.3 : M7 may not bend.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              256,
+              384,
+              256,
+              192
+            ]
+          ],
+          "bbox": [
+            256,
+            192,
+            256,
+            384
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              256,
+              192,
+              384,
+              192
+            ]
+          ],
+          "bbox": [
+            256,
+            192,
+            384,
+            192
+          ]
+        }
+      ]
+    }
+  }
+}

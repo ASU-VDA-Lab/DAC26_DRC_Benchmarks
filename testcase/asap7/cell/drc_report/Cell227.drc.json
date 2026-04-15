@@ -1,0 +1,276 @@
+{
+  "case_name": "Cell227",
+  "design_type": "cell",
+  "total_violations": 14,
+  "total_rules_violated": 3,
+  "rules": {
+    "V0.M0.EN.5": {
+      "violation_count": 12,
+      "description": "V0.M0.EN.5 : Minimum enclosure of V0 by M0 on two opposite sides is 5 & 5 nm or 5 & 0 nm.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              2128,
+              212,
+              2128,
+              140
+            ]
+          ],
+          "bbox": [
+            2128,
+            140,
+            2128,
+            212
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1552,
+              212,
+              1552,
+              140
+            ]
+          ],
+          "bbox": [
+            1552,
+            140,
+            1552,
+            212
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1840,
+              356,
+              1840,
+              284
+            ]
+          ],
+          "bbox": [
+            1840,
+            284,
+            1840,
+            356
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1696,
+              500,
+              1696,
+              428
+            ]
+          ],
+          "bbox": [
+            1696,
+            428,
+            1696,
+            500
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1264,
+              644,
+              1264,
+              572
+            ]
+          ],
+          "bbox": [
+            1264,
+            572,
+            1264,
+            644
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              688,
+              644,
+              688,
+              572
+            ]
+          ],
+          "bbox": [
+            688,
+            572,
+            688,
+            644
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              256,
+              788,
+              256,
+              716
+            ]
+          ],
+          "bbox": [
+            256,
+            716,
+            256,
+            788
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1840,
+              788,
+              1840,
+              716
+            ]
+          ],
+          "bbox": [
+            1840,
+            716,
+            1840,
+            788
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1552,
+              788,
+              1552,
+              716
+            ]
+          ],
+          "bbox": [
+            1552,
+            716,
+            1552,
+            788
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              400,
+              932,
+              400,
+              860
+            ]
+          ],
+          "bbox": [
+            400,
+            860,
+            400,
+            932
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              832,
+              1076,
+              832,
+              1004
+            ]
+          ],
+          "bbox": [
+            832,
+            1004,
+            832,
+            1076
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1264,
+              1076,
+              1264,
+              1004
+            ]
+          ],
+          "bbox": [
+            1264,
+            1004,
+            1264,
+            1076
+          ]
+        }
+      ]
+    },
+    "M1.S.4": {
+      "violation_count": 1,
+      "description": "M1.S.4 : Minimum (tip-to-tip) spacing between two M1 layer polygons' edges, when both edges are < 24 nm, is 31 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              616,
+              112,
+              688,
+              112
+            ],
+            [
+              688,
+              224,
+              616,
+              224
+            ]
+          ],
+          "bbox": [
+            616,
+            112,
+            688,
+            224
+          ]
+        }
+      ]
+    },
+    "M2.S.4": {
+      "violation_count": 1,
+      "description": "M2.S.4 : Minimum (tip-to-tip) spacing between two M2 layer polygons' edges, when both edges are < 24 nm, is 31 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              816,
+              68,
+              816,
+              -4
+            ],
+            [
+              848,
+              -4,
+              848,
+              68
+            ]
+          ],
+          "bbox": [
+            816,
+            -4,
+            848,
+            68
+          ]
+        }
+      ]
+    }
+  }
+}

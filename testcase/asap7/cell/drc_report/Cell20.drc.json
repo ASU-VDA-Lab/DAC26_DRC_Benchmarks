@@ -1,0 +1,133 @@
+{
+  "case_name": "Cell20",
+  "design_type": "cell",
+  "total_violations": 7,
+  "total_rules_violated": 1,
+  "rules": {
+    "V0.M0.EN.5": {
+      "violation_count": 7,
+      "description": "V0.M0.EN.5 : Minimum enclosure of V0 by M0 on two opposite sides is 5 & 5 nm or 5 & 0 nm.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1264,
+              68,
+              1264,
+              -4
+            ]
+          ],
+          "bbox": [
+            1264,
+            -4,
+            1264,
+            68
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1120,
+              212,
+              1120,
+              140
+            ]
+          ],
+          "bbox": [
+            1120,
+            140,
+            1120,
+            212
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              400,
+              68,
+              400,
+              -4
+            ]
+          ],
+          "bbox": [
+            400,
+            -4,
+            400,
+            68
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              976,
+              932,
+              976,
+              860
+            ]
+          ],
+          "bbox": [
+            976,
+            860,
+            976,
+            932
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              256,
+              788,
+              256,
+              716
+            ]
+          ],
+          "bbox": [
+            256,
+            716,
+            256,
+            788
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              976,
+              68,
+              976,
+              -4
+            ]
+          ],
+          "bbox": [
+            976,
+            -4,
+            976,
+            68
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1120,
+              788,
+              1120,
+              716
+            ]
+          ],
+          "bbox": [
+            1120,
+            716,
+            1120,
+            788
+          ]
+        }
+      ]
+    }
+  }
+}

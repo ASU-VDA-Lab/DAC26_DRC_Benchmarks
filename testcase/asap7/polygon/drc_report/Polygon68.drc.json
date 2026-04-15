@@ -1,0 +1,41 @@
+{
+  "case_name": "Polygon68",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "M1.A.1": {
+      "violation_count": 1,
+      "description": "M1.A.1 : Minimum M1 area is 504 nm-sq.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              108
+            ],
+            [
+              72,
+              108
+            ],
+            [
+              72,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            72,
+            108
+          ]
+        }
+      ]
+    }
+  }
+}

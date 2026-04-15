@@ -1,0 +1,118 @@
+{
+  "case_name": "Polygon226",
+  "design_type": "polygon",
+  "total_violations": 4,
+  "total_rules_violated": 3,
+  "rules": {
+    "PSELECT.W.1": {
+      "violation_count": 1,
+      "description": "PSELECT.W.1 : Minimum horizontal width of PSELECT is 108 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              0,
+              0,
+              188
+            ],
+            [
+              320,
+              188,
+              320,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            320,
+            188
+          ]
+        }
+      ]
+    },
+    "PSELECT.W.2": {
+      "violation_count": 1,
+      "description": "PSELECT.W.2 : Minimum vertical width of PSELECT is 54 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              320,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              188,
+              320,
+              188
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            320,
+            188
+          ]
+        }
+      ]
+    },
+    "SRAM.PSELECT.ACTIVE.EN.4": {
+      "violation_count": 2,
+      "description": "SRAM.PSELECT.ACTIVE.EN.4 : Minimum vertical enclosure of ACTIVE (interacting with SRAMDRC) by PSELECT is 13.5 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              80,
+              188,
+              240,
+              188
+            ],
+            [
+              80,
+              148,
+              240,
+              148
+            ]
+          ],
+          "bbox": [
+            80,
+            148,
+            240,
+            188
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              240,
+              0,
+              80,
+              0
+            ],
+            [
+              240,
+              40,
+              80,
+              40
+            ]
+          ],
+          "bbox": [
+            80,
+            0,
+            240,
+            40
+          ]
+        }
+      ]
+    }
+  }
+}

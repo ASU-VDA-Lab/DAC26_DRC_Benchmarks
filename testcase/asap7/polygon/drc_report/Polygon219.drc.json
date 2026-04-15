@@ -1,0 +1,31 @@
+{
+  "case_name": "Polygon219",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "SRAM.LISD.AUX.1": {
+      "violation_count": 1,
+      "description": "SRAM.LISD.AUX.1 : LISD layer polygons, which are either completely outside the SRAMDRC layer or which do not intersect the SRAMDRC layer, may not touch the SRAMDRC layer.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              120,
+              0,
+              120,
+              200
+            ]
+          ],
+          "bbox": [
+            120,
+            0,
+            120,
+            200
+          ]
+        }
+      ]
+    }
+  }
+}

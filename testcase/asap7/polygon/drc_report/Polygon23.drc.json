@@ -1,0 +1,178 @@
+{
+  "case_name": "Polygon23",
+  "design_type": "polygon",
+  "total_violations": 6,
+  "total_rules_violated": 4,
+  "rules": {
+    "GATE.W.1": {
+      "violation_count": 2,
+      "description": "GATE.W.1 : Exact horizontal GATE width is 20 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              216
+            ],
+            [
+              160,
+              216
+            ],
+            [
+              160,
+              160
+            ],
+            [
+              80,
+              160
+            ],
+            [
+              80,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            160,
+            216
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              160
+            ],
+            [
+              0,
+              216
+            ],
+            [
+              80,
+              216
+            ],
+            [
+              80,
+              160
+            ]
+          ],
+          "bbox": [
+            0,
+            160,
+            80,
+            216
+          ]
+        }
+      ]
+    },
+    "GATE.W.2": {
+      "violation_count": 1,
+      "description": "GATE.W.2 : Minimum vertical GATE width is 40 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              160,
+              160,
+              80,
+              160
+            ],
+            [
+              80,
+              216,
+              160,
+              216
+            ]
+          ],
+          "bbox": [
+            80,
+            160,
+            160,
+            216
+          ]
+        }
+      ]
+    },
+    "GATE.S.1": {
+      "violation_count": 1,
+      "description": "GATE.S.1 : Exact horizontal GATE pitch is 54 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              40,
+              80
+            ],
+            [
+              40,
+              160
+            ],
+            [
+              80,
+              160
+            ],
+            [
+              80,
+              80
+            ]
+          ],
+          "bbox": [
+            40,
+            80,
+            80,
+            160
+          ]
+        }
+      ]
+    },
+    "GATE.AUX.1": {
+      "violation_count": 2,
+      "description": "GATE.AUX.1 : GATE may not bend.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              160,
+              160,
+              80,
+              160
+            ]
+          ],
+          "bbox": [
+            80,
+            160,
+            160,
+            160
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              80,
+              160,
+              80,
+              0
+            ]
+          ],
+          "bbox": [
+            80,
+            0,
+            80,
+            160
+          ]
+        }
+      ]
+    }
+  }
+}

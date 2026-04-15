@@ -1,0 +1,494 @@
+{
+  "case_name": "Polygon9",
+  "design_type": "polygon",
+  "total_violations": 18,
+  "total_rules_violated": 6,
+  "rules": {
+    "GATE.S.1": {
+      "violation_count": 6,
+      "description": "GATE.S.1 : Exact horizontal GATE pitch is 54 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              112,
+              -40
+            ],
+            [
+              112,
+              288
+            ],
+            [
+              136,
+              288
+            ],
+            [
+              136,
+              -40
+            ]
+          ],
+          "bbox": [
+            112,
+            -40,
+            136,
+            288
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              112,
+              -40
+            ],
+            [
+              112,
+              288
+            ],
+            [
+              336,
+              288
+            ],
+            [
+              336,
+              -40
+            ]
+          ],
+          "bbox": [
+            112,
+            -40,
+            336,
+            288
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              112,
+              -40
+            ],
+            [
+              112,
+              288
+            ],
+            [
+              440,
+              288
+            ],
+            [
+              440,
+              -40
+            ]
+          ],
+          "bbox": [
+            112,
+            -40,
+            440,
+            288
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              216,
+              -40
+            ],
+            [
+              216,
+              288
+            ],
+            [
+              336,
+              288
+            ],
+            [
+              336,
+              -40
+            ]
+          ],
+          "bbox": [
+            216,
+            -40,
+            336,
+            288
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              216,
+              -40
+            ],
+            [
+              216,
+              288
+            ],
+            [
+              440,
+              288
+            ],
+            [
+              440,
+              -40
+            ]
+          ],
+          "bbox": [
+            216,
+            -40,
+            440,
+            288
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              416,
+              -40
+            ],
+            [
+              416,
+              288
+            ],
+            [
+              440,
+              288
+            ],
+            [
+              440,
+              -40
+            ]
+          ],
+          "bbox": [
+            416,
+            -40,
+            440,
+            288
+          ]
+        }
+      ]
+    },
+    "GATE.S.2": {
+      "violation_count": 3,
+      "description": "GATE.S.2 : Minimum horizontal GATE spacing is 34 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              136,
+              -40,
+              136,
+              288
+            ],
+            [
+              112,
+              288,
+              112,
+              -40
+            ]
+          ],
+          "bbox": [
+            112,
+            -40,
+            136,
+            288
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              440,
+              -40,
+              440,
+              288
+            ],
+            [
+              416,
+              288,
+              416,
+              -40
+            ]
+          ],
+          "bbox": [
+            416,
+            -40,
+            440,
+            288
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              336,
+              -40,
+              336,
+              288
+            ],
+            [
+              216,
+              288,
+              216,
+              -40
+            ]
+          ],
+          "bbox": [
+            216,
+            -40,
+            336,
+            288
+          ]
+        }
+      ]
+    },
+    "GATE.S.3": {
+      "violation_count": 4,
+      "description": "GATE.S.3 : Every GATE (not cut by GCUT and not interacting with the layer SRAMDRC) must have at least one other GATE within 54 nm of its surrounding along the horizontal axis. The spacing being the distance between centers of the two GATE layer polygons.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              32,
+              -40
+            ],
+            [
+              32,
+              288
+            ],
+            [
+              112,
+              288
+            ],
+            [
+              112,
+              -40
+            ]
+          ],
+          "bbox": [
+            32,
+            -40,
+            112,
+            288
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              136,
+              -40
+            ],
+            [
+              136,
+              288
+            ],
+            [
+              216,
+              288
+            ],
+            [
+              216,
+              -40
+            ]
+          ],
+          "bbox": [
+            136,
+            -40,
+            216,
+            288
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              336,
+              -40
+            ],
+            [
+              336,
+              288
+            ],
+            [
+              416,
+              288
+            ],
+            [
+              416,
+              -40
+            ]
+          ],
+          "bbox": [
+            336,
+            -40,
+            416,
+            288
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              440,
+              -40
+            ],
+            [
+              440,
+              288
+            ],
+            [
+              520,
+              288
+            ],
+            [
+              520,
+              -40
+            ]
+          ],
+          "bbox": [
+            440,
+            -40,
+            520,
+            288
+          ]
+        }
+      ]
+    },
+    "GATE.ACTIVE.AUX.3": {
+      "violation_count": 2,
+      "description": "GATE.ACTIVE.AUX.3 : ACTIVE layer vertical edge may not lie inside, or coincide with, the GATE layer.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              216,
+              232,
+              216,
+              16
+            ]
+          ],
+          "bbox": [
+            216,
+            16,
+            216,
+            232
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              336,
+              16,
+              336,
+              232
+            ]
+          ],
+          "bbox": [
+            336,
+            16,
+            336,
+            232
+          ]
+        }
+      ]
+    },
+    "GATE.ACTIVE.EX.2": {
+      "violation_count": 2,
+      "description": "GATE.ACTIVE.EX.2 : Minimum horizontal extension of ACTIVE interacting with GATE (not cut by GCUT layer) past GATE (not cut by GCUT layer) is 25 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              16
+            ],
+            [
+              0,
+              232
+            ],
+            [
+              32,
+              232
+            ],
+            [
+              32,
+              16
+            ]
+          ],
+          "bbox": [
+            0,
+            16,
+            32,
+            232
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              520,
+              16
+            ],
+            [
+              520,
+              232
+            ],
+            [
+              552,
+              232
+            ],
+            [
+              552,
+              16
+            ]
+          ],
+          "bbox": [
+            520,
+            16,
+            552,
+            232
+          ]
+        }
+      ]
+    },
+    "ACTIVE.S.2B": {
+      "violation_count": 1,
+      "description": "ACTIVE.S.2B : Minimum horizontal spacing of ACTIVE is 38 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              336,
+              16,
+              336,
+              232
+            ],
+            [
+              216,
+              232,
+              216,
+              16
+            ]
+          ],
+          "bbox": [
+            216,
+            16,
+            336,
+            232
+          ]
+        }
+      ]
+    }
+  }
+}

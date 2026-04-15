@@ -1,0 +1,142 @@
+{
+  "case_name": "Polygon265",
+  "design_type": "polygon",
+  "total_violations": 6,
+  "total_rules_violated": 2,
+  "rules": {
+    "V2.M3.EN.2": {
+      "violation_count": 5,
+      "description": "V2.M3.EN.2 : Minimum enclosure of V2 by M3 on two opposite sides is 5 & 5 nm or 5 & 0 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              72
+            ],
+            [
+              72,
+              72
+            ],
+            [
+              72,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            72,
+            72
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              0,
+              72,
+              72,
+              72
+            ]
+          ],
+          "bbox": [
+            0,
+            72,
+            72,
+            72
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              0,
+              0,
+              0,
+              72
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            0,
+            72
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              72,
+              72,
+              72,
+              0
+            ]
+          ],
+          "bbox": [
+            72,
+            0,
+            72,
+            72
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              72,
+              0,
+              0,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            72,
+            0
+          ]
+        }
+      ]
+    },
+    "V2.M3.AUX.2": {
+      "violation_count": 1,
+      "description": "V2.M3.AUX.2 : V2 must exactly be the same width as M3 along the direction perpendicular to the M3 length.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              72
+            ],
+            [
+              72,
+              72
+            ],
+            [
+              72,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            72,
+            72
+          ]
+        }
+      ]
+    }
+  }
+}

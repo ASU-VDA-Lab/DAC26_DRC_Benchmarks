@@ -1,0 +1,132 @@
+{
+  "case_name": "Polygon218",
+  "design_type": "polygon",
+  "total_violations": 4,
+  "total_rules_violated": 4,
+  "rules": {
+    "LIG.W.1": {
+      "violation_count": 1,
+      "description": "LIG.W.1 : Minimum width of LIG is 16 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              320,
+              88,
+              240,
+              88
+            ],
+            [
+              240,
+              120,
+              320,
+              120
+            ]
+          ],
+          "bbox": [
+            240,
+            88,
+            320,
+            120
+          ]
+        }
+      ]
+    },
+    "LIG.A.1": {
+      "violation_count": 1,
+      "description": "LIG.A.1 : Minimum LIG area is 324 nm-sq.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              240,
+              88
+            ],
+            [
+              240,
+              120
+            ],
+            [
+              320,
+              120
+            ],
+            [
+              320,
+              88
+            ]
+          ],
+          "bbox": [
+            240,
+            88,
+            320,
+            120
+          ]
+        }
+      ]
+    },
+    "SRAM.LIG.GATE.A.4": {
+      "violation_count": 1,
+      "description": "SRAM.LIG.GATE.A.4 : Minimum area of overlap between LIG (interacting with the layer SRAMDRC) and GATE (not cut using GCUT) is 240 nm-sq.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              240,
+              88
+            ],
+            [
+              240,
+              120
+            ],
+            [
+              280,
+              120
+            ],
+            [
+              280,
+              88
+            ]
+          ],
+          "bbox": [
+            240,
+            88,
+            280,
+            120
+          ]
+        }
+      ]
+    },
+    "SRAM.LIG.GATE.OV.2": {
+      "violation_count": 1,
+      "description": "SRAM.LIG.GATE.OV.2 : Minimum overlap of LIG (interacting with the layer SRAMDRC) and GATE (not cut using GCUT) is 15 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              240,
+              88,
+              240,
+              120
+            ],
+            [
+              280,
+              165,
+              280,
+              43
+            ]
+          ],
+          "bbox": [
+            240,
+            43,
+            280,
+            165
+          ]
+        }
+      ]
+    }
+  }
+}

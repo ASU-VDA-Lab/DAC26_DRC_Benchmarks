@@ -1,0 +1,41 @@
+{
+  "case_name": "Polygon124",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "M6.AUX.2": {
+      "violation_count": 1,
+      "description": "M6.AUX.2 : Minimum width M6 tracks must lie along the horizontal routing tracks at a spacing of 2N x minimum metal width + offset from the origin.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              448
+            ],
+            [
+              0,
+              576
+            ],
+            [
+              192,
+              576
+            ],
+            [
+              192,
+              448
+            ]
+          ],
+          "bbox": [
+            0,
+            448,
+            192,
+            576
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,344 @@
+{
+  "case_name": "Polygon15",
+  "design_type": "polygon",
+  "total_violations": 12,
+  "total_rules_violated": 4,
+  "rules": {
+    "FIN.W.1": {
+      "violation_count": 3,
+      "description": "FIN.W.1 : Exact vertical FIN width is 7 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              28
+            ],
+            [
+              400,
+              28
+            ],
+            [
+              400,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            400,
+            28
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              428,
+              0
+            ],
+            [
+              428,
+              28
+            ],
+            [
+              800,
+              28
+            ],
+            [
+              800,
+              0
+            ]
+          ],
+          "bbox": [
+            428,
+            0,
+            800,
+            28
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              28
+            ],
+            [
+              400,
+              28
+            ],
+            [
+              400,
+              108
+            ],
+            [
+              428,
+              108
+            ],
+            [
+              428,
+              28
+            ],
+            [
+              800,
+              28
+            ],
+            [
+              800,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            800,
+            108
+          ]
+        }
+      ]
+    },
+    "FIN.W.2": {
+      "violation_count": 3,
+      "description": "FIN.W.2 : Minimum horizontal FIN width is 108 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              400,
+              28,
+              400,
+              108
+            ],
+            [
+              428,
+              108,
+              428,
+              28
+            ]
+          ],
+          "bbox": [
+            400,
+            28,
+            428,
+            108
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              28
+            ],
+            [
+              400,
+              28
+            ],
+            [
+              400,
+              108
+            ],
+            [
+              412,
+              108
+            ],
+            [
+              412,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            412,
+            108
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              416,
+              0
+            ],
+            [
+              416,
+              108
+            ],
+            [
+              428,
+              108
+            ],
+            [
+              428,
+              28
+            ],
+            [
+              800,
+              28
+            ],
+            [
+              800,
+              0
+            ]
+          ],
+          "bbox": [
+            416,
+            0,
+            800,
+            108
+          ]
+        }
+      ]
+    },
+    "FIN.S.1": {
+      "violation_count": 2,
+      "description": "FIN.S.1 : Exact vertical FIN pitch is 27 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              400,
+              0
+            ],
+            [
+              400,
+              48
+            ],
+            [
+              428,
+              48
+            ],
+            [
+              428,
+              0
+            ]
+          ],
+          "bbox": [
+            400,
+            0,
+            428,
+            48
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              400,
+              0
+            ],
+            [
+              400,
+              40
+            ],
+            [
+              428,
+              40
+            ],
+            [
+              428,
+              0
+            ]
+          ],
+          "bbox": [
+            400,
+            0,
+            428,
+            40
+          ]
+        }
+      ]
+    },
+    "FIN.AUX.1": {
+      "violation_count": 4,
+      "description": "FIN.AUX.1 : FIN may not bend.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              400,
+              28,
+              400,
+              108
+            ]
+          ],
+          "bbox": [
+            400,
+            28,
+            400,
+            108
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              0,
+              28,
+              400,
+              28
+            ]
+          ],
+          "bbox": [
+            0,
+            28,
+            400,
+            28
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              428,
+              28,
+              800,
+              28
+            ]
+          ],
+          "bbox": [
+            428,
+            28,
+            800,
+            28
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              428,
+              108,
+              428,
+              28
+            ]
+          ],
+          "bbox": [
+            428,
+            28,
+            428,
+            108
+          ]
+        }
+      ]
+    }
+  }
+}

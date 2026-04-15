@@ -1,0 +1,128 @@
+{
+  "case_name": "Polygon227",
+  "design_type": "polygon",
+  "total_violations": 4,
+  "total_rules_violated": 4,
+  "rules": {
+    "SRAM.SDT.W.4": {
+      "violation_count": 1,
+      "description": "SRAM.SDT.W.4 : Minimum vertical width of SDT (interacting with SRAMDRC) is 17 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              200,
+              -20,
+              40,
+              -20
+            ],
+            [
+              40,
+              36,
+              200,
+              36
+            ]
+          ],
+          "bbox": [
+            40,
+            -20,
+            200,
+            36
+          ]
+        }
+      ]
+    },
+    "SRAM.SDT.ACTIVE.OV.3": {
+      "violation_count": 1,
+      "description": "SRAM.SDT.ACTIVE.OV.3 : Minimum vertical overlap between SDT (interacting with SRAMDRC) and ACTIVE is 17 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              200,
+              0,
+              40,
+              0
+            ],
+            [
+              40,
+              36,
+              200,
+              36
+            ]
+          ],
+          "bbox": [
+            40,
+            0,
+            200,
+            36
+          ]
+        }
+      ]
+    },
+    "LISD.W.1": {
+      "violation_count": 1,
+      "description": "LISD.W.1 : Minimum width of LISD is 24 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              200,
+              -20,
+              40,
+              -20
+            ],
+            [
+              40,
+              36,
+              200,
+              36
+            ]
+          ],
+          "bbox": [
+            40,
+            -20,
+            200,
+            36
+          ]
+        }
+      ]
+    },
+    "LISD.A.1": {
+      "violation_count": 1,
+      "description": "LISD.A.1 : Minimum LISD area is 648 nm-sq.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              40,
+              -20
+            ],
+            [
+              40,
+              36
+            ],
+            [
+              200,
+              36
+            ],
+            [
+              200,
+              -20
+            ]
+          ],
+          "bbox": [
+            40,
+            -20,
+            200,
+            36
+          ]
+        }
+      ]
+    }
+  }
+}

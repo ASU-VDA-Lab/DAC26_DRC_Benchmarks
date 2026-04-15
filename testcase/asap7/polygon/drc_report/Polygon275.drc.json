@@ -1,0 +1,961 @@
+{
+  "case_name": "Polygon275",
+  "design_type": "polygon",
+  "total_violations": 37,
+  "total_rules_violated": 9,
+  "rules": {
+    "V3.S.1": {
+      "violation_count": 2,
+      "description": "V3.S.1 : Minimum spacing between V3 instances [on the same M4 track | on parallel M4 tracks, not aligned | on parallel M4 tracks, aligned] is [18 nm | 27 nm | 18 nm].",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              128,
+              20,
+              128,
+              92
+            ],
+            [
+              92,
+              92,
+              92,
+              20
+            ]
+          ],
+          "bbox": [
+            92,
+            20,
+            128,
+            92
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              92,
+              1692,
+              92,
+              1581
+            ],
+            [
+              93,
+              1581,
+              93,
+              1692
+            ]
+          ],
+          "bbox": [
+            92,
+            1581,
+            93,
+            1692
+          ]
+        }
+      ]
+    },
+    "V3.M4.EN.2": {
+      "violation_count": 6,
+      "description": "V3.M4.EN.2 : Minimum enclosure of V3 by M4 on at least two opposite sides is 11 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              800
+            ],
+            [
+              0,
+              872
+            ],
+            [
+              72,
+              872
+            ],
+            [
+              72,
+              800
+            ]
+          ],
+          "bbox": [
+            0,
+            800,
+            72,
+            872
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              148,
+              40
+            ],
+            [
+              148,
+              112
+            ],
+            [
+              220,
+              112
+            ],
+            [
+              220,
+              40
+            ]
+          ],
+          "bbox": [
+            148,
+            40,
+            220,
+            112
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              1600
+            ],
+            [
+              0,
+              1672
+            ],
+            [
+              72,
+              1672
+            ],
+            [
+              72,
+              1600
+            ]
+          ],
+          "bbox": [
+            0,
+            1600,
+            72,
+            1672
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              72
+            ],
+            [
+              72,
+              72
+            ],
+            [
+              72,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            72,
+            72
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              940
+            ],
+            [
+              0,
+              1012
+            ],
+            [
+              72,
+              1012
+            ],
+            [
+              72,
+              940
+            ]
+          ],
+          "bbox": [
+            0,
+            940,
+            72,
+            1012
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              113,
+              1601
+            ],
+            [
+              113,
+              1673
+            ],
+            [
+              185,
+              1673
+            ],
+            [
+              185,
+              1601
+            ]
+          ],
+          "bbox": [
+            113,
+            1601,
+            185,
+            1673
+          ]
+        }
+      ]
+    },
+    "M4.W.1": {
+      "violation_count": 6,
+      "description": "M4.W.1 : Minimum vertical width of M4 is 24 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              72,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              72,
+              72,
+              72
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            72,
+            72
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              220,
+              40,
+              148,
+              40
+            ],
+            [
+              148,
+              112,
+              220,
+              112
+            ]
+          ],
+          "bbox": [
+            148,
+            40,
+            220,
+            112
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              72,
+              800,
+              0,
+              800
+            ],
+            [
+              0,
+              872,
+              72,
+              872
+            ]
+          ],
+          "bbox": [
+            0,
+            800,
+            72,
+            872
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              72,
+              940,
+              0,
+              940
+            ],
+            [
+              0,
+              1012,
+              72,
+              1012
+            ]
+          ],
+          "bbox": [
+            0,
+            940,
+            72,
+            1012
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              72,
+              1600,
+              0,
+              1600
+            ],
+            [
+              0,
+              1672,
+              72,
+              1672
+            ]
+          ],
+          "bbox": [
+            0,
+            1600,
+            72,
+            1672
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              185,
+              1601,
+              113,
+              1601
+            ],
+            [
+              113,
+              1673,
+              185,
+              1673
+            ]
+          ],
+          "bbox": [
+            113,
+            1601,
+            185,
+            1673
+          ]
+        }
+      ]
+    },
+    "M4.W.5": {
+      "violation_count": 6,
+      "description": "M4.W.5 : Minimum horizontal width of M4 is 44 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              0,
+              0,
+              72
+            ],
+            [
+              72,
+              72,
+              72,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            72,
+            72
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              148,
+              40,
+              148,
+              112
+            ],
+            [
+              220,
+              112,
+              220,
+              40
+            ]
+          ],
+          "bbox": [
+            148,
+            40,
+            220,
+            112
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              800,
+              0,
+              872
+            ],
+            [
+              72,
+              872,
+              72,
+              800
+            ]
+          ],
+          "bbox": [
+            0,
+            800,
+            72,
+            872
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              940,
+              0,
+              1012
+            ],
+            [
+              72,
+              1012,
+              72,
+              940
+            ]
+          ],
+          "bbox": [
+            0,
+            940,
+            72,
+            1012
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              1600,
+              0,
+              1672
+            ],
+            [
+              72,
+              1672,
+              72,
+              1600
+            ]
+          ],
+          "bbox": [
+            0,
+            1600,
+            72,
+            1672
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              113,
+              1601,
+              113,
+              1673
+            ],
+            [
+              185,
+              1673,
+              185,
+              1601
+            ]
+          ],
+          "bbox": [
+            113,
+            1601,
+            185,
+            1673
+          ]
+        }
+      ]
+    },
+    "M4.S.1": {
+      "violation_count": 1,
+      "description": "M4.S.1 : Minimum vertical spacing between two M4 layer polygons' edges, regardless of the edge lengths and mask colors, is 24 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              872,
+              72,
+              872
+            ],
+            [
+              72,
+              940,
+              0,
+              940
+            ]
+          ],
+          "bbox": [
+            0,
+            872,
+            72,
+            940
+          ]
+        }
+      ]
+    },
+    "M4.S.2": {
+      "violation_count": 2,
+      "description": "M4.S.2 : Minimum horizontal spacing between two M4 layer polygons' edges, regardless of the edge lengths and mask colors, is 40 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              72,
+              72,
+              72,
+              0
+            ],
+            [
+              148,
+              40,
+              148,
+              112
+            ]
+          ],
+          "bbox": [
+            72,
+            0,
+            148,
+            112
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              72,
+              1672,
+              72,
+              1600
+            ],
+            [
+              113,
+              1601,
+              113,
+              1673
+            ]
+          ],
+          "bbox": [
+            72,
+            1600,
+            113,
+            1673
+          ]
+        }
+      ]
+    },
+    "M4.S.3": {
+      "violation_count": 4,
+      "description": "M4.S.3 : Minimum tip-to-tip spacing between two M4 layer polygons\u2014\u2014that do not share a parallel run length\u2014\u2014on adjacent tracks is 40 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              113,
+              1600,
+              113,
+              1601
+            ],
+            [
+              72,
+              1601,
+              72,
+              1600
+            ]
+          ],
+          "bbox": [
+            72,
+            1600,
+            113,
+            1601
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              72,
+              1673,
+              72,
+              1672
+            ],
+            [
+              113,
+              1672,
+              113,
+              1673
+            ]
+          ],
+          "bbox": [
+            72,
+            1672,
+            113,
+            1673
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              72,
+              112,
+              72,
+              72
+            ],
+            [
+              148,
+              72,
+              148,
+              112
+            ]
+          ],
+          "bbox": [
+            72,
+            72,
+            148,
+            112
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              148,
+              0,
+              148,
+              40
+            ],
+            [
+              72,
+              40,
+              72,
+              0
+            ]
+          ],
+          "bbox": [
+            72,
+            0,
+            148,
+            40
+          ]
+        }
+      ]
+    },
+    "M4.S.4": {
+      "violation_count": 4,
+      "description": "M4.S.4 : Minimum tip-to-tip spacing between two M4 layer polygons\u2014\u2014that share a parallel run length\u2014\u2014on adjacent tracks is 40 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              185,
+              1601,
+              185,
+              1600
+            ],
+            [
+              72,
+              1601,
+              72,
+              1600
+            ]
+          ],
+          "bbox": [
+            72,
+            1600,
+            185,
+            1601
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              72,
+              0,
+              112
+            ],
+            [
+              148,
+              72,
+              148,
+              112
+            ]
+          ],
+          "bbox": [
+            0,
+            72,
+            148,
+            112
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              1672,
+              0,
+              1673
+            ],
+            [
+              113,
+              1672,
+              113,
+              1673
+            ]
+          ],
+          "bbox": [
+            0,
+            1672,
+            113,
+            1673
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              220,
+              40,
+              220,
+              0
+            ],
+            [
+              72,
+              40,
+              72,
+              0
+            ]
+          ],
+          "bbox": [
+            72,
+            0,
+            220,
+            40
+          ]
+        }
+      ]
+    },
+    "M4.AUX.1": {
+      "violation_count": 6,
+      "description": "M4.AUX.1 : M4 horizontal edges must be at a grid of 24 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            0,
+            0,
+            72,
+            72
+          ],
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              72
+            ],
+            [
+              72,
+              72
+            ],
+            [
+              72,
+              0
+            ]
+          ]
+        },
+        {
+          "type": "polygon",
+          "bbox": [
+            148,
+            40,
+            220,
+            112
+          ],
+          "vertices": [
+            [
+              148,
+              40
+            ],
+            [
+              148,
+              112
+            ],
+            [
+              220,
+              112
+            ],
+            [
+              220,
+              40
+            ]
+          ]
+        },
+        {
+          "type": "polygon",
+          "bbox": [
+            0,
+            800,
+            72,
+            872
+          ],
+          "vertices": [
+            [
+              0,
+              800
+            ],
+            [
+              0,
+              872
+            ],
+            [
+              72,
+              872
+            ],
+            [
+              72,
+              800
+            ]
+          ]
+        },
+        {
+          "type": "polygon",
+          "bbox": [
+            0,
+            940,
+            72,
+            1012
+          ],
+          "vertices": [
+            [
+              0,
+              940
+            ],
+            [
+              0,
+              1012
+            ],
+            [
+              72,
+              1012
+            ],
+            [
+              72,
+              940
+            ]
+          ]
+        },
+        {
+          "type": "polygon",
+          "bbox": [
+            0,
+            1600,
+            72,
+            1672
+          ],
+          "vertices": [
+            [
+              0,
+              1600
+            ],
+            [
+              0,
+              1672
+            ],
+            [
+              72,
+              1672
+            ],
+            [
+              72,
+              1600
+            ]
+          ]
+        },
+        {
+          "type": "polygon",
+          "bbox": [
+            113,
+            1601,
+            185,
+            1673
+          ],
+          "vertices": [
+            [
+              113,
+              1601
+            ],
+            [
+              113,
+              1673
+            ],
+            [
+              185,
+              1673
+            ],
+            [
+              185,
+              1601
+            ]
+          ]
+        }
+      ]
+    }
+  }
+}

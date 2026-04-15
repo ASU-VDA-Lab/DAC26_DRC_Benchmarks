@@ -1,0 +1,41 @@
+{
+  "case_name": "Polygon314",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "V8.M9.EN.2": {
+      "violation_count": 1,
+      "description": "V8.M9.EN.2 : Minimum enclosure of V8 by M9 on at least two opposite sides is 20 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              160
+            ],
+            [
+              160,
+              160
+            ],
+            [
+              160,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            160,
+            160
+          ]
+        }
+      ]
+    }
+  }
+}

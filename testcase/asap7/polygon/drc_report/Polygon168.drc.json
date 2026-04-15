@@ -1,0 +1,97 @@
+{
+  "case_name": "Polygon168",
+  "design_type": "polygon",
+  "total_violations": 3,
+  "total_rules_violated": 2,
+  "rules": {
+    "M9.S.1": {
+      "violation_count": 1,
+      "description": "M9.S.1 : Minimum (side-to-side) spacing between two M9 layer polygons' edges, when both edges are >= 80 nm, is 40 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              160,
+              400,
+              160,
+              0
+            ],
+            [
+              280,
+              0,
+              280,
+              400
+            ]
+          ],
+          "bbox": [
+            160,
+            0,
+            280,
+            400
+          ]
+        }
+      ]
+    },
+    "M9.A.1": {
+      "violation_count": 2,
+      "description": "M9.A.1 : Minimum area of M9 is 7520 nm-sq.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              400
+            ],
+            [
+              160,
+              400
+            ],
+            [
+              160,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            160,
+            400
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              280,
+              0
+            ],
+            [
+              280,
+              400
+            ],
+            [
+              440,
+              400
+            ],
+            [
+              440,
+              0
+            ]
+          ],
+          "bbox": [
+            280,
+            0,
+            440,
+            400
+          ]
+        }
+      ]
+    }
+  }
+}

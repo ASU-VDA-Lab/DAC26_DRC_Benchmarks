@@ -1,0 +1,162 @@
+{
+  "case_name": "Polygon115",
+  "design_type": "polygon",
+  "total_violations": 6,
+  "total_rules_violated": 4,
+  "rules": {
+    "M5.W.4": {
+      "violation_count": 2,
+      "description": "M5.W.4 : M5 horizontal width, resulting in the polygon spanning an even number of minimum width routing tracks horizontally, is not allowed.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              0,
+              0,
+              192
+            ],
+            [
+              288,
+              192,
+              288,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            288,
+            192
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              320,
+              320,
+              320,
+              512
+            ],
+            [
+              608,
+              512,
+              608,
+              320
+            ]
+          ],
+          "bbox": [
+            320,
+            320,
+            608,
+            512
+          ]
+        }
+      ]
+    },
+    "M5.S.2": {
+      "violation_count": 1,
+      "description": "M5.S.2 : Minimum vertical spacing between two M5 layer polygons' edges, regardless of the edge lengths and mask colors, is 40 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              224,
+              192,
+              288,
+              192
+            ],
+            [
+              384,
+              320,
+              320,
+              320
+            ]
+          ],
+          "bbox": [
+            224,
+            192,
+            384,
+            320
+          ]
+        }
+      ]
+    },
+    "M5.S.3": {
+      "violation_count": 2,
+      "description": "M5.S.3 : Minimum tip-to-tip spacing between two M5 layer polygons\u2014\u2014that do not share a parallel run length\u2014\u2014on adjacent tracks is 40 nm.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              128,
+              192,
+              288,
+              192
+            ]
+          ],
+          "bbox": [
+            128,
+            192,
+            288,
+            192
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              480,
+              320,
+              320,
+              320
+            ]
+          ],
+          "bbox": [
+            320,
+            320,
+            480,
+            320
+          ]
+        }
+      ]
+    },
+    "M5.AUX.1": {
+      "violation_count": 1,
+      "description": "M5.AUX.1 : M5 vertical edges must be at a grid of 24 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            320,
+            320,
+            608,
+            512
+          ],
+          "vertices": [
+            [
+              320,
+              320
+            ],
+            [
+              320,
+              512
+            ],
+            [
+              608,
+              512
+            ],
+            [
+              608,
+              320
+            ]
+          ]
+        }
+      ]
+    }
+  }
+}

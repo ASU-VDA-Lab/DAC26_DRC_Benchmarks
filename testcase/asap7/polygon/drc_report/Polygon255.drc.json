@@ -1,0 +1,41 @@
+{
+  "case_name": "Polygon255",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "V1.M2.AUX.2": {
+      "violation_count": 1,
+      "description": "V1.M2.AUX.2 : V1 must exactly be the same width as M2 along the direction perpendicular to the M2 length.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              72
+            ],
+            [
+              72,
+              72
+            ],
+            [
+              72,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            72,
+            72
+          ]
+        }
+      ]
+    }
+  }
+}

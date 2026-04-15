@@ -1,0 +1,70 @@
+{
+  "case_name": "Polygon43",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 2,
+  "rules": {
+    "GATE.S.3": {
+      "violation_count": 1,
+      "description": "GATE.S.3 : Every GATE (not cut by GCUT and not interacting with the layer SRAMDRC) must have at least one other GATE within 54 nm of its surrounding along the horizontal axis. The spacing being the distance between centers of the two GATE layer polygons.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              200,
+              0
+            ],
+            [
+              200,
+              216
+            ],
+            [
+              280,
+              216
+            ],
+            [
+              280,
+              0
+            ]
+          ],
+          "bbox": [
+            200,
+            0,
+            280,
+            216
+          ]
+        }
+      ]
+    },
+    "LIG.GATE.S.9A": {
+      "violation_count": 1,
+      "description": "LIG.GATE.S.9A : Minimum vertical spacing between LIG and GATE (not cut using GCUT) layer polygons is 14 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              280,
+              256,
+              200,
+              256
+            ],
+            [
+              200,
+              216,
+              280,
+              216
+            ]
+          ],
+          "bbox": [
+            200,
+            216,
+            280,
+            256
+          ]
+        }
+      ]
+    }
+  }
+}

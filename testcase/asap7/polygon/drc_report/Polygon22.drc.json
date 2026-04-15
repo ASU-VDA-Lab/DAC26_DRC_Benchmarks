@@ -1,0 +1,163 @@
+{
+  "case_name": "Polygon22",
+  "design_type": "polygon",
+  "total_violations": 5,
+  "total_rules_violated": 4,
+  "rules": {
+    "GATE.S.1": {
+      "violation_count": 1,
+      "description": "GATE.S.1 : Exact horizontal GATE pitch is 54 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              80,
+              0
+            ],
+            [
+              80,
+              216
+            ],
+            [
+              308,
+              216
+            ],
+            [
+              308,
+              0
+            ]
+          ],
+          "bbox": [
+            80,
+            0,
+            308,
+            216
+          ]
+        }
+      ]
+    },
+    "GATE.S.3": {
+      "violation_count": 2,
+      "description": "GATE.S.3 : Every GATE (not cut by GCUT and not interacting with the layer SRAMDRC) must have at least one other GATE within 54 nm of its surrounding along the horizontal axis. The spacing being the distance between centers of the two GATE layer polygons.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              216
+            ],
+            [
+              80,
+              216
+            ],
+            [
+              80,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            80,
+            216
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              308,
+              0
+            ],
+            [
+              308,
+              216
+            ],
+            [
+              388,
+              216
+            ],
+            [
+              388,
+              0
+            ]
+          ],
+          "bbox": [
+            308,
+            0,
+            388,
+            216
+          ]
+        }
+      ]
+    },
+    "GATE.ACTIVE.S.4": {
+      "violation_count": 1,
+      "description": "GATE.ACTIVE.S.4 : Minimum horizontal spacing between ACTIVE and GATE (not cut by GCUT and not interacting with ACTIVE) is 9 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              280,
+              16
+            ],
+            [
+              280,
+              200
+            ],
+            [
+              308,
+              200
+            ],
+            [
+              308,
+              16
+            ]
+          ],
+          "bbox": [
+            280,
+            16,
+            308,
+            200
+          ]
+        }
+      ]
+    },
+    "ACTIVE.W.2": {
+      "violation_count": 1,
+      "description": "ACTIVE.W.2 : ACTIVE layer vertical width increment is an integer multiple of 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              -100,
+              16,
+              280,
+              16
+            ],
+            [
+              -100,
+              200,
+              280,
+              200
+            ]
+          ],
+          "bbox": [
+            -100,
+            16,
+            280,
+            200
+          ]
+        }
+      ]
+    }
+  }
+}

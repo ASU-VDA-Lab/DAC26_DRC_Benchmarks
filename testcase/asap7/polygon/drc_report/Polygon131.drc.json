@@ -1,0 +1,278 @@
+{
+  "case_name": "Polygon131",
+  "design_type": "polygon",
+  "total_violations": 10,
+  "total_rules_violated": 4,
+  "rules": {
+    "M6.S.1": {
+      "violation_count": 1,
+      "description": "M6.S.1 : Minimum vertical spacing between two M6 layer polygons' edges, regardless of the edge lengths and mask colors, is 32 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              128,
+              400,
+              256,
+              400
+            ],
+            [
+              256,
+              496,
+              128,
+              496
+            ]
+          ],
+          "bbox": [
+            128,
+            400,
+            256,
+            496
+          ]
+        }
+      ]
+    },
+    "M6.S.4": {
+      "violation_count": 4,
+      "description": "M6.S.4 : Minimum tip-to-tip spacing between two M6 layer polygons\u2014\u2014that share a parallel run length\u2014\u2014on adjacent tracks is 40 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              240,
+              0,
+              656
+            ],
+            [
+              128,
+              656,
+              128,
+              240
+            ]
+          ],
+          "bbox": [
+            0,
+            240,
+            128,
+            656
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              256,
+              240,
+              256,
+              656
+            ],
+            [
+              384,
+              656,
+              384,
+              240
+            ]
+          ],
+          "bbox": [
+            256,
+            240,
+            384,
+            656
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              1520,
+              0,
+              1968
+            ],
+            [
+              128,
+              1968,
+              128,
+              1520
+            ]
+          ],
+          "bbox": [
+            0,
+            1520,
+            128,
+            1968
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              256,
+              1520,
+              256,
+              1968
+            ],
+            [
+              384,
+              1968,
+              384,
+              1520
+            ]
+          ],
+          "bbox": [
+            256,
+            1520,
+            384,
+            1968
+          ]
+        }
+      ]
+    },
+    "M6.S.5": {
+      "violation_count": 1,
+      "description": "M6.S.5 : Minimum parallel run length of two M6 layer polygons on adjacent tracks is 44 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              128,
+              1680,
+              128,
+              1808
+            ],
+            [
+              256,
+              1808,
+              256,
+              1680
+            ]
+          ],
+          "bbox": [
+            128,
+            1680,
+            256,
+            1808
+          ]
+        }
+      ]
+    },
+    "M6.AUX.1": {
+      "violation_count": 4,
+      "description": "M6.AUX.1 : M6 horizontal edges must be at a grid of 32 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            0,
+            0,
+            256,
+            400
+          ],
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              400
+            ],
+            [
+              256,
+              400
+            ],
+            [
+              256,
+              0
+            ]
+          ]
+        },
+        {
+          "type": "polygon",
+          "bbox": [
+            128,
+            496,
+            384,
+            896
+          ],
+          "vertices": [
+            [
+              128,
+              496
+            ],
+            [
+              128,
+              896
+            ],
+            [
+              384,
+              896
+            ],
+            [
+              384,
+              496
+            ]
+          ]
+        },
+        {
+          "type": "polygon",
+          "bbox": [
+            0,
+            1280,
+            256,
+            1680
+          ],
+          "vertices": [
+            [
+              0,
+              1280
+            ],
+            [
+              0,
+              1680
+            ],
+            [
+              256,
+              1680
+            ],
+            [
+              256,
+              1280
+            ]
+          ]
+        },
+        {
+          "type": "polygon",
+          "bbox": [
+            128,
+            1808,
+            384,
+            2208
+          ],
+          "vertices": [
+            [
+              128,
+              1808
+            ],
+            [
+              128,
+              2208
+            ],
+            [
+              384,
+              2208
+            ],
+            [
+              384,
+              1808
+            ]
+          ]
+        }
+      ]
+    }
+  }
+}

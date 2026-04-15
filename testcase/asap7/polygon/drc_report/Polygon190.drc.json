@@ -1,0 +1,273 @@
+{
+  "case_name": "Polygon190",
+  "design_type": "polygon",
+  "total_violations": 9,
+  "total_rules_violated": 7,
+  "rules": {
+    "WELL.GATE.EX.2": {
+      "violation_count": 1,
+      "description": "WELL.GATE.EX.2 : Minimum vertical extension of WELL past GATE (not cut by GCUT layer) that does not interact with SRAMDRC, is 7 nm",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              200,
+              216
+            ],
+            [
+              200,
+              240
+            ],
+            [
+              280,
+              240
+            ],
+            [
+              280,
+              216
+            ]
+          ],
+          "bbox": [
+            200,
+            216,
+            280,
+            240
+          ]
+        }
+      ]
+    },
+    "GATE.S.3": {
+      "violation_count": 1,
+      "description": "GATE.S.3 : Every GATE (not cut by GCUT and not interacting with the layer SRAMDRC) must have at least one other GATE within 54 nm of its surrounding along the horizontal axis. The spacing being the distance between centers of the two GATE layer polygons.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              200,
+              0
+            ],
+            [
+              200,
+              216
+            ],
+            [
+              280,
+              216
+            ],
+            [
+              280,
+              0
+            ]
+          ],
+          "bbox": [
+            200,
+            0,
+            280,
+            216
+          ]
+        }
+      ]
+    },
+    "ACTIVE.W.2": {
+      "violation_count": 1,
+      "description": "ACTIVE.W.2 : ACTIVE layer vertical width increment is an integer multiple of 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              80,
+              16,
+              520,
+              16
+            ],
+            [
+              80,
+              200,
+              520,
+              200
+            ]
+          ],
+          "bbox": [
+            80,
+            16,
+            520,
+            200
+          ]
+        }
+      ]
+    },
+    "ACTIVE.WELL.EN.1": {
+      "violation_count": 3,
+      "description": "ACTIVE.WELL.EN.1 : Minimum enclosure of ACTIVE (outside the layer SRAMDRC) by WELL is 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              16,
+              0,
+              200
+            ],
+            [
+              80,
+              16,
+              80,
+              200
+            ]
+          ],
+          "bbox": [
+            0,
+            16,
+            80,
+            200
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              80,
+              240,
+              520,
+              240
+            ],
+            [
+              80,
+              200,
+              520,
+              200
+            ]
+          ],
+          "bbox": [
+            80,
+            200,
+            520,
+            240
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              520,
+              0,
+              80,
+              0
+            ],
+            [
+              520,
+              16,
+              80,
+              16
+            ]
+          ],
+          "bbox": [
+            80,
+            0,
+            520,
+            16
+          ]
+        }
+      ]
+    },
+    "ACTIVE.AUX.1": {
+      "violation_count": 1,
+      "description": "ACTIVE.AUX.1 : ACTIVE must always be enclosed by NSELECT or PSELECT, such that no ACTIVE layer edge(s) coincide with NSELECT or PSELECT layer edge(s).",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              80,
+              16
+            ],
+            [
+              80,
+              200
+            ],
+            [
+              520,
+              200
+            ],
+            [
+              520,
+              16
+            ]
+          ],
+          "bbox": [
+            80,
+            16,
+            520,
+            200
+          ]
+        }
+      ]
+    },
+    "ACTIVE.LUP.1": {
+      "violation_count": 1,
+      "description": "ACTIVE.LUP.1 : Maximum distance, to prevent latch-up, between ACTIVE forming a MOS device and ACTIVE forming a bulk/substrate contact within the same WELL/substrate is 30 um.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              180,
+              16
+            ],
+            [
+              180,
+              200
+            ],
+            [
+              520,
+              200
+            ],
+            [
+              520,
+              16
+            ]
+          ],
+          "bbox": [
+            180,
+            16,
+            520,
+            200
+          ]
+        }
+      ]
+    },
+    "PSELECT.GATE.EX.1": {
+      "violation_count": 1,
+      "description": "PSELECT.GATE.EX.1 : Minimum horizontal extension of PSELECT past GATE (not cut by GCUT) is 7 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              180,
+              0,
+              180,
+              216
+            ],
+            [
+              200,
+              0,
+              200,
+              216
+            ]
+          ],
+          "bbox": [
+            180,
+            0,
+            200,
+            216
+          ]
+        }
+      ]
+    }
+  }
+}

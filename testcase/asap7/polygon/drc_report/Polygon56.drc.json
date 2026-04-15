@@ -1,0 +1,37 @@
+{
+  "case_name": "Polygon56",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "LIG.W.1": {
+      "violation_count": 1,
+      "description": "LIG.W.1 : Minimum width of LIG is 16 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              0,
+              0,
+              200
+            ],
+            [
+              56,
+              200,
+              56,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            56,
+            200
+          ]
+        }
+      ]
+    }
+  }
+}

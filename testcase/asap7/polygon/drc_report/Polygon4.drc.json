@@ -1,0 +1,141 @@
+{
+  "case_name": "Polygon4",
+  "design_type": "polygon",
+  "total_violations": 5,
+  "total_rules_violated": 3,
+  "rules": {
+    "ACTIVE.W.1": {
+      "violation_count": 2,
+      "description": "ACTIVE.W.1 : Minimum vertical width of ACTIVE layer is 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              160,
+              136,
+              80,
+              136
+            ],
+            [
+              80,
+              216,
+              160,
+              216
+            ]
+          ],
+          "bbox": [
+            80,
+            136,
+            160,
+            216
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              160,
+              0,
+              80,
+              0
+            ],
+            [
+              80,
+              80,
+              160,
+              80
+            ]
+          ],
+          "bbox": [
+            80,
+            0,
+            160,
+            80
+          ]
+        }
+      ]
+    },
+    "ACTIVE.W.2": {
+      "violation_count": 2,
+      "description": "ACTIVE.W.2 : ACTIVE layer vertical width increment is an integer multiple of 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              80,
+              0,
+              160,
+              0
+            ],
+            [
+              80,
+              80,
+              160,
+              80
+            ]
+          ],
+          "bbox": [
+            80,
+            0,
+            160,
+            80
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              80,
+              136,
+              160,
+              136
+            ],
+            [
+              80,
+              216,
+              160,
+              216
+            ]
+          ],
+          "bbox": [
+            80,
+            136,
+            160,
+            216
+          ]
+        }
+      ]
+    },
+    "ACTIVE.AUX.3": {
+      "violation_count": 1,
+      "description": "ACTIVE.AUX.3 : A notch in ACTIVE along vertical axis is not allowed.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              80,
+              80,
+              160,
+              80
+            ],
+            [
+              160,
+              136,
+              80,
+              136
+            ]
+          ],
+          "bbox": [
+            80,
+            80,
+            160,
+            136
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,242 @@
+#BSD 3-Clause License
+#
+#Copyright (c) 2026, ASU-VDA-Lab
+#
+#Redistribution and use in source and binary forms, with or without
+#modification, are permitted provided that the following conditions are met:
+#
+#1. Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+#
+#2. Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+#
+#3. Neither the name of the copyright holder nor the names of its
+#   contributors may be used to endorse or promote products derived from
+#   this software without specific prior written permission.
+#
+#THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+#AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+#IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+#DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+#FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+#DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+#SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+#CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+#OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+#OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# DRC Benchmark Dockerfile (REPAIR image).
+#
+# Full image with KLayout 0.30.1 — used by the *repair* task, which
+# legitimately needs to run KLayout DRC to verify the agent's repaired
+# layout against the golden report.
+#
+# For *detection*, see Dockerfile.detection which has NO klayout and a
+# runtime blocklist of klayout-related domains.
+#
+# All dependencies are downloaded from AlmaLinux 8 repos (RHEL 8 compatible)
+# and klayout.org. Package versions are pinned for reproducibility.
+#
+# Build (from DAC26_DRC_Benchmark/):
+#   docker build -f Dockerfile.repair -t drc-benchmark-repair .
+#
+# Prerequisites (Cursor Agent CLI):
+#   curl https://cursor.com/install -fsS | bash
+#   cursor login
+#
+# Prerequisites (Claude Code CLI):
+#   curl -fsSL https://claude.ai/install.sh | bash
+#   claude login
+#
+# Run with Cursor (single case):
+#   docker run --rm \
+#       -v ~/.config/cursor:/root/.config/cursor:ro \
+#       -v $(pwd)/result:/workspace/result \
+#       -v $(pwd)/score:/workspace/score \
+#       -v $(pwd)/logs:/workspace/logs \
+#       -v $(pwd)/testcase/asap7/cell/drc_report:/workspace/testcase/asap7/cell/drc_report:ro \
+#       drc-benchmark bash src/run_pipeline_cursor.sh /workspace/task/info.json
+#
+# Run with Claude Code (single case):
+#   docker run --rm \
+#       -v ~/.claude:/root/.claude:ro \
+#       -v $(pwd)/result:/workspace/result \
+#       -v $(pwd)/score:/workspace/score \
+#       -v $(pwd)/logs:/workspace/logs \
+#       -v $(pwd)/testcase/asap7/cell/drc_report:/workspace/testcase/asap7/cell/drc_report:ro \
+#       drc-benchmark bash src/run_pipeline_claude.sh /workspace/task/info.json
+#
+# Paper experiments:
+#   bash src/evaluate_cursor.sh          # Cursor
+#   bash src/evaluate_claude.sh   # Claude Code
+
+FROM almalinux:8.10
+
+# ---------------------------------------------------------------------------
+# Install Cursor CLI and Claude Code CLI (must run before yum changes
+# that downgrade libcurl and break curl)
+# ---------------------------------------------------------------------------
+RUN curl https://cursor.com/install -fsS | bash
+ENV PATH="/root/.local/bin:${PATH}"
+
+RUN curl -fsSL https://claude.ai/install.sh | bash
+
+# ---------------------------------------------------------------------------
+# Downgrade python3-libs to match pinned version (base image has 3.6.8-74)
+# ---------------------------------------------------------------------------
+RUN yum downgrade -y \
+        python3-libs-3.6.8-62.el8_10.alma.1 \
+    && yum clean all
+
+# ---------------------------------------------------------------------------
+# Install all dependencies with pinned versions
+# ---------------------------------------------------------------------------
+RUN yum install -y \
+        # Python
+        python36-3.6.8-39.module_el8.10.0+3769+3838165b \
+        python3-pip-9.0.3-24.el8 \
+        python3-lxml-4.2.3-4.el8 \
+        # Ruby (KLayout DRC engine) — enable module stream first
+    && yum module enable -y ruby:2.5 \
+    && yum install -y \
+        ruby-2.5.9-112.module_el8.10.0+3871+342e2c2f \
+        ruby-libs-2.5.9-112.module_el8.10.0+3871+342e2c2f \
+        rubygems-2.7.6.3-112.module_el8.10.0+3871+342e2c2f \
+        rubygem-rdoc-6.0.1.1-112.module_el8.10.0+3871+342e2c2f \
+        # Qt5 (KLayout runtime)
+        qt5-qtbase-5.15.3-8.el8_10 \
+        qt5-qtbase-gui-5.15.3-8.el8_10 \
+        qt5-qtdeclarative-5.15.3-2.el8 \
+        qt5-qtmultimedia-5.15.3-1.el8 \
+        qt5-qtsvg-5.15.3-2.el8 \
+        qt5-qttools-libs-designer-5.15.3-6.el8 \
+        qt5-qtx11extras-5.15.3-1.el8 \
+        qt5-qtxmlpatterns-5.15.3-1.el8 \
+        # X11 / OpenGL
+        libX11-1.6.8-8.el8 \
+        libX11-xcb-1.6.8-8.el8 \
+        libXext-1.3.4-1.el8 \
+        libXi-1.7.10-1.el8 \
+        libXtst-1.2.3-7.el8 \
+        libxkbcommon-x11-0.9.1-1.el8 \
+        mesa-libGL-23.1.4-3.el8_10.alma.1 \
+        mesa-libGLU-9.0.0-15.el8 \
+        # Audio (KLayout dependency)
+        pulseaudio-libs-14.0-4.el8 \
+        pulseaudio-libs-glib2-14.0-4.el8 \
+        # Misc KLayout dependencies
+        libgit2-0.26.8-2.el8 \
+        # Build tools
+        gcc-8.5.0-22.el8_10 \
+        gcc-c++-8.5.0-22.el8_10 \
+        git-2.43.5-1.el8_10 \
+        wget-1.19.5-12.el8_10 \
+    && yum clean all \
+    && rm -rf /var/cache/yum
+
+# ---------------------------------------------------------------------------
+# Download and install KLayout 0.30.1 from klayout.org
+# ---------------------------------------------------------------------------
+RUN wget -O /tmp/klayout-0.30.1.rpm \
+        https://www.klayout.org/downloads/CentOS_8/klayout-0.30.1-0.x86_64.rpm \
+    && rpm -Uvh --force --nodeps /tmp/klayout-0.30.1.rpm \
+    && rm -f /tmp/klayout-0.30.1.rpm
+
+# ---------------------------------------------------------------------------
+# Configure Ruby environment for KLayout DRC engine
+# ---------------------------------------------------------------------------
+ENV RUBYLIB="/usr/share/rubygems:/usr/share/ruby:/usr/lib64/ruby" \
+    GEM_HOME="/usr/share/gems"
+
+# ---------------------------------------------------------------------------
+# Environment
+# ---------------------------------------------------------------------------
+ENV WORKSPACE=/workspace
+
+# ---------------------------------------------------------------------------
+# Workspace layout
+# ---------------------------------------------------------------------------
+WORKDIR /workspace
+
+RUN mkdir -p \
+        src \
+        testcase \
+        result \
+        task \
+        temp \
+        logs \
+        score/cell/repair \
+        score/cell/detection \
+        score/polygon/repair \
+        score/polygon/detection \
+        score/block/repair \
+        score/block/detection
+
+# ---------------------------------------------------------------------------
+# Copy project files
+# ---------------------------------------------------------------------------
+COPY CLAUDE.md /workspace/CLAUDE.md
+COPY src/      /workspace/src/
+COPY testcase/ /workspace/testcase/
+
+# Keep golden DRC report directories empty in the image.
+# Golden reports are injected at runtime via docker cp (managed by evaluate_cursor.sh).
+RUN rm -rf /workspace/testcase/asap7/cell/drc_report/* \
+    && rm -rf /workspace/testcase/asap7/polygon/drc_report/* \
+    && rm -rf /workspace/testcase/asap7/block/drc_report/* \
+    && mkdir -p /workspace/testcase/asap7/cell/drc_report \
+               /workspace/testcase/asap7/polygon/drc_report \
+               /workspace/testcase/asap7/block/drc_report
+
+# ---------------------------------------------------------------------------
+# Install Shapely for shape-aware connectivity generation
+# (used by src/check_connectivity.py)
+#
+# Python 3.6.8 is pinned by the base image, so we must use the 1.8.x
+# shapely series (shapely >= 2.0 requires Python >= 3.7). The 1.8.x
+# manylinux wheels bundle libgeos, so no additional yum packages are
+# needed. pip 9.0.3 in the base image predates modern manylinux tags,
+# so we first upgrade to pip 21.3.1 (the last pip version supporting
+# Python 3.6).
+# ---------------------------------------------------------------------------
+RUN pip3 install --upgrade "pip==21.3.1" \
+    && pip3 install "shapely==1.8.5.post1"
+
+# ---------------------------------------------------------------------------
+# Default command: print usage
+# ---------------------------------------------------------------------------
+CMD ["bash", "-c", "\
+echo ''; \
+echo 'DRC Benchmark Container (KLayout 0.30.1 + Cursor CLI + Claude Code CLI)'; \
+echo '========================================================================'; \
+echo ''; \
+echo 'Prerequisites (choose one):'; \
+echo '  Cursor:      curl https://cursor.com/install -fsS | bash && cursor login'; \
+echo '  Claude Code:  curl -fsSL https://claude.ai/install.sh | bash && claude login'; \
+echo ''; \
+echo 'Single case:'; \
+echo '  Cursor:      bash src/run_pipeline_cursor.sh /workspace/task/info.json'; \
+echo '  Claude Code: bash src/run_pipeline_claude.sh /workspace/task/info.json'; \
+echo ''; \
+echo 'Paper experiments:'; \
+echo '  Cursor:      bash src/evaluate_cursor.sh'; \
+echo '  Claude Code: bash src/evaluate_claude.sh'; \
+echo ''; \
+echo 'Auth (bind-mount read-only from host):'; \
+echo '  Cursor:      -v ~/.config/cursor:/root/.config/cursor:ro'; \
+echo '  Claude Code: -v ~/.claude:/root/.claude:ro'; \
+echo ''; \
+echo 'Pipeline outputs (bind-mount these to retrieve from host):'; \
+echo '  Results: /workspace/result/<model_name>/<design_type>/<task_type>/<case_name>/'; \
+echo '  Scores:  /workspace/score/<model_name>/<design_type>/<task_type>/'; \
+echo '  Logs:    /workspace/logs/'; \
+echo ''; \
+echo 'Environment variables:'; \
+echo '  WORKSPACE               (default: /workspace)'; \
+echo '  MAX_ITERATIONS          (default: 5)'; \
+echo '  AGENT_INITIAL_BUDGET    (default: 600s)'; \
+echo '  AGENT_REMINDER_BUDGET   (default: 120s)'; \
+echo '  SKIP_DRC                (set to 1 to skip KLayout DRC step)'; \
+echo ''"]

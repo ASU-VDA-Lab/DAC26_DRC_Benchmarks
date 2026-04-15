@@ -1,0 +1,107 @@
+{
+  "case_name": "Polygon290",
+  "design_type": "polygon",
+  "total_violations": 3,
+  "total_rules_violated": 3,
+  "rules": {
+    "V5.M6.AUX.2": {
+      "violation_count": 1,
+      "description": "V5.M6.AUX.2 : V5 must exactly be the same width as M6 along the direction perpendicular to the M6 length.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              48,
+              0
+            ],
+            [
+              48,
+              96
+            ],
+            [
+              144,
+              96
+            ],
+            [
+              144,
+              0
+            ]
+          ],
+          "bbox": [
+            48,
+            0,
+            144,
+            96
+          ]
+        }
+      ]
+    },
+    "M5.AUX.1": {
+      "violation_count": 1,
+      "description": "M5.AUX.1 : M5 vertical edges must be at a grid of 24 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            4,
+            -44,
+            188,
+            140
+          ],
+          "vertices": [
+            [
+              4,
+              -44
+            ],
+            [
+              4,
+              140
+            ],
+            [
+              188,
+              140
+            ],
+            [
+              188,
+              -44
+            ]
+          ]
+        }
+      ]
+    },
+    "M6.AUX.1": {
+      "violation_count": 1,
+      "description": "M6.AUX.1 : M6 horizontal edges must be at a grid of 32 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            0,
+            -44,
+            192,
+            400
+          ],
+          "vertices": [
+            [
+              0,
+              -44
+            ],
+            [
+              0,
+              400
+            ],
+            [
+              192,
+              400
+            ],
+            [
+              192,
+              -44
+            ]
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "case_name": "Polygon261",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 2,
+  "rules": {
+    "V1.W.1": {
+      "violation_count": 1,
+      "description": "V1.W.1 : Minimum width of a V1 instance along the length of M2 is 18 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              0,
+              0,
+              72
+            ],
+            [
+              64,
+              72,
+              64,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            64,
+            72
+          ]
+        }
+      ]
+    },
+    "V1.M2.AUX.2": {
+      "violation_count": 1,
+      "description": "V1.M2.AUX.2 : V1 must exactly be the same width as M2 along the direction perpendicular to the M2 length.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              72
+            ],
+            [
+              64,
+              72
+            ],
+            [
+              64,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            64,
+            72
+          ]
+        }
+      ]
+    }
+  }
+}

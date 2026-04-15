@@ -1,0 +1,163 @@
+{
+  "case_name": "Polygon292",
+  "design_type": "polygon",
+  "total_violations": 5,
+  "total_rules_violated": 4,
+  "rules": {
+    "V5.S.1": {
+      "violation_count": 1,
+      "description": "V5.S.1 : Minimum spacing between V5 instances on the same net is 33 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              208,
+              0,
+              208,
+              96
+            ],
+            [
+              96,
+              96,
+              96,
+              0
+            ]
+          ],
+          "bbox": [
+            96,
+            0,
+            208,
+            96
+          ]
+        }
+      ]
+    },
+    "V5.M6.AUX.2": {
+      "violation_count": 2,
+      "description": "V5.M6.AUX.2 : V5 must exactly be the same width as M6 along the direction perpendicular to the M6 length.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              96
+            ],
+            [
+              96,
+              96
+            ],
+            [
+              96,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            96,
+            96
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              208,
+              0
+            ],
+            [
+              208,
+              96
+            ],
+            [
+              304,
+              96
+            ],
+            [
+              304,
+              0
+            ]
+          ],
+          "bbox": [
+            208,
+            0,
+            304,
+            96
+          ]
+        }
+      ]
+    },
+    "M5.AUX.1": {
+      "violation_count": 1,
+      "description": "M5.AUX.1 : M5 vertical edges must be at a grid of 24 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            -60,
+            -60,
+            364,
+            300
+          ],
+          "vertices": [
+            [
+              -60,
+              -60
+            ],
+            [
+              -60,
+              300
+            ],
+            [
+              364,
+              300
+            ],
+            [
+              364,
+              -60
+            ]
+          ]
+        }
+      ]
+    },
+    "M6.AUX.1": {
+      "violation_count": 1,
+      "description": "M6.AUX.1 : M6 horizontal edges must be at a grid of 32 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            -60,
+            -60,
+            364,
+            300
+          ],
+          "vertices": [
+            [
+              -60,
+              -60
+            ],
+            [
+              -60,
+              300
+            ],
+            [
+              364,
+              300
+            ],
+            [
+              364,
+              -60
+            ]
+          ]
+        }
+      ]
+    }
+  }
+}

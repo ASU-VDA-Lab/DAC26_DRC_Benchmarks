@@ -1,0 +1,103 @@
+{
+  "case_name": "Polygon279",
+  "design_type": "polygon",
+  "total_violations": 3,
+  "total_rules_violated": 3,
+  "rules": {
+    "V3.W.1": {
+      "violation_count": 1,
+      "description": "V3.W.1 : Minimum width of a V3 instance along the length of M4 is 18 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              0,
+              0,
+              72
+            ],
+            [
+              64,
+              72,
+              64,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            64,
+            72
+          ]
+        }
+      ]
+    },
+    "V3.M4.AUX.2": {
+      "violation_count": 1,
+      "description": "V3.M4.AUX.2 : V3 must exactly be the same width as M4 along the direction perpendicular to the M4 length.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              72
+            ],
+            [
+              64,
+              72
+            ],
+            [
+              64,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            64,
+            72
+          ]
+        }
+      ]
+    },
+    "M4.AUX.1": {
+      "violation_count": 1,
+      "description": "M4.AUX.1 : M4 horizontal edges must be at a grid of 24 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            -64,
+            -12,
+            128,
+            84
+          ],
+          "vertices": [
+            [
+              -64,
+              -12
+            ],
+            [
+              -64,
+              84
+            ],
+            [
+              128,
+              84
+            ],
+            [
+              128,
+              -12
+            ]
+          ]
+        }
+      ]
+    }
+  }
+}

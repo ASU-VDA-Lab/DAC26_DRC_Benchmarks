@@ -1,0 +1,41 @@
+{
+  "case_name": "Polygon1",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "ACTIVE.A.1A": {
+      "violation_count": 1,
+      "description": "ACTIVE.A.1A : Minimum area of an ACTIVE layer polygon that does not interact with the layer SRAMDRC is 864 nm-sq.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              108
+            ],
+            [
+              108,
+              108
+            ],
+            [
+              108,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            108,
+            108
+          ]
+        }
+      ]
+    }
+  }
+}

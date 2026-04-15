@@ -1,0 +1,99 @@
+{
+  "case_name": "Polygon326",
+  "design_type": "polygon",
+  "total_violations": 3,
+  "total_rules_violated": 3,
+  "rules": {
+    "WELL.W.1": {
+      "violation_count": 1,
+      "description": "WELL.W.1 : Minimum horizontal width of WELL is 108 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              400,
+              0,
+              600
+            ],
+            [
+              400,
+              600,
+              400,
+              400
+            ]
+          ],
+          "bbox": [
+            0,
+            400,
+            400,
+            600
+          ]
+        }
+      ]
+    },
+    "WELL.S.2": {
+      "violation_count": 1,
+      "description": "WELL.S.2 : Minimum horizontal spacing between WELL layer polygons is 54 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              400,
+              400,
+              832,
+              400
+            ],
+            [
+              832,
+              600,
+              400,
+              600
+            ]
+          ],
+          "bbox": [
+            400,
+            400,
+            832,
+            600
+          ]
+        }
+      ]
+    },
+    "WELL.A.1B": {
+      "violation_count": 1,
+      "description": "WELL.A.1B : Minimum enclosed area of WELL is 5832 nm-sq.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              400,
+              400
+            ],
+            [
+              400,
+              600
+            ],
+            [
+              832,
+              600
+            ],
+            [
+              832,
+              400
+            ]
+          ],
+          "bbox": [
+            400,
+            400,
+            832,
+            600
+          ]
+        }
+      ]
+    }
+  }
+}

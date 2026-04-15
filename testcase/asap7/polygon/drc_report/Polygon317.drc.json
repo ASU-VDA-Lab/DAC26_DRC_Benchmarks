@@ -1,0 +1,57 @@
+{
+  "case_name": "Polygon317",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "V8.W.1": {
+      "violation_count": 1,
+      "description": "V8.W.1 : Exact width of a V8 instance is [40 nm x 40 nm | 40 nm x 120 nm | 120 nm x 40 nm].",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              -4,
+              -4
+            ],
+            [
+              -4,
+              204
+            ],
+            [
+              204,
+              204
+            ],
+            [
+              204,
+              -4
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              196,
+              4
+            ],
+            [
+              196,
+              196
+            ],
+            [
+              4,
+              196
+            ]
+          ],
+          "bbox": [
+            -4,
+            -4,
+            204,
+            204
+          ]
+        }
+      ]
+    }
+  }
+}

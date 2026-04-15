@@ -1,0 +1,37 @@
+{
+  "case_name": "Polygon169",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "M9.S.2": {
+      "violation_count": 1,
+      "description": "M9.S.2 : Minimum (tip-to-side) spacing between two M9 layer polygons' edges, when one of the edges is < 80 nm and the other is >= 80 nm, is 43 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              752,
+              160,
+              752
+            ],
+            [
+              160,
+              912,
+              0,
+              912
+            ]
+          ],
+          "bbox": [
+            0,
+            752,
+            160,
+            912
+          ]
+        }
+      ]
+    }
+  }
+}

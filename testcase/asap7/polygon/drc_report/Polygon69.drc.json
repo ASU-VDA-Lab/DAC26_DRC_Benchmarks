@@ -1,0 +1,41 @@
+{
+  "case_name": "Polygon69",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "M1.R.0": {
+      "violation_count": 1,
+      "description": "M1.R.0 : Redundant M1 island (approximation). M1 enclosing exactly one small V0 via is flagged near a large empty M1 region (>= 500 nm wide, area > 2.5 um-sq, expanded by 400 nm).",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              14200,
+              6400
+            ],
+            [
+              14200,
+              6800
+            ],
+            [
+              14272,
+              6800
+            ],
+            [
+              14272,
+              6400
+            ]
+          ],
+          "bbox": [
+            14200,
+            6400,
+            14272,
+            6800
+          ]
+        }
+      ]
+    }
+  }
+}

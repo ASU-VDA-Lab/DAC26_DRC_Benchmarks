@@ -1,0 +1,81 @@
+{
+  "case_name": "Polygon194",
+  "design_type": "polygon",
+  "total_violations": 3,
+  "total_rules_violated": 2,
+  "rules": {
+    "SDT.W.3": {
+      "violation_count": 1,
+      "description": "SDT.W.3 : SDT (not interacting with SRAMDRC) layer vertical width increment is an integer multiple of 27 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              40,
+              40
+            ],
+            [
+              40,
+              160
+            ],
+            [
+              200,
+              160
+            ],
+            [
+              200,
+              40
+            ]
+          ],
+          "bbox": [
+            40,
+            40,
+            200,
+            160
+          ]
+        }
+      ]
+    },
+    "SDT.ACTIVE.AUX.2": {
+      "violation_count": 2,
+      "description": "SDT.ACTIVE.AUX.2 : SDT (not interacting with SRAMDRC) horizontal edges must coincide with ACTIVE horizontal edges.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              40,
+              160,
+              200,
+              160
+            ]
+          ],
+          "bbox": [
+            40,
+            160,
+            200,
+            160
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              200,
+              40,
+              40,
+              40
+            ]
+          ],
+          "bbox": [
+            40,
+            40,
+            200,
+            40
+          ]
+        }
+      ]
+    }
+  }
+}

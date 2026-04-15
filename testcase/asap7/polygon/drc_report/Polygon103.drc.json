@@ -1,0 +1,149 @@
+{
+  "case_name": "Polygon103",
+  "design_type": "polygon",
+  "total_violations": 5,
+  "total_rules_violated": 3,
+  "rules": {
+    "M4.S.4": {
+      "violation_count": 2,
+      "description": "M4.S.4 : Minimum tip-to-tip spacing between two M4 layer polygons\u2014\u2014that share a parallel run length\u2014\u2014on adjacent tracks is 40 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              496,
+              0,
+              520
+            ],
+            [
+              96,
+              496,
+              96,
+              520
+            ]
+          ],
+          "bbox": [
+            0,
+            496,
+            96,
+            520
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              288,
+              400,
+              288,
+              376
+            ],
+            [
+              192,
+              400,
+              192,
+              376
+            ]
+          ],
+          "bbox": [
+            192,
+            376,
+            288,
+            400
+          ]
+        }
+      ]
+    },
+    "M4.S.5": {
+      "violation_count": 1,
+      "description": "M4.S.5 : Minimum parallel run length of two M4 layer polygons on adjacent tracks is 44 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              96,
+              400,
+              96,
+              496
+            ],
+            [
+              192,
+              496,
+              192,
+              400
+            ]
+          ],
+          "bbox": [
+            96,
+            400,
+            192,
+            496
+          ]
+        }
+      ]
+    },
+    "M4.AUX.1": {
+      "violation_count": 2,
+      "description": "M4.AUX.1 : M4 horizontal edges must be at a grid of 24 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            0,
+            0,
+            192,
+            400
+          ],
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              400
+            ],
+            [
+              192,
+              400
+            ],
+            [
+              192,
+              0
+            ]
+          ]
+        },
+        {
+          "type": "polygon",
+          "bbox": [
+            96,
+            496,
+            288,
+            896
+          ],
+          "vertices": [
+            [
+              96,
+              496
+            ],
+            [
+              96,
+              896
+            ],
+            [
+              288,
+              896
+            ],
+            [
+              288,
+              496
+            ]
+          ]
+        }
+      ]
+    }
+  }
+}

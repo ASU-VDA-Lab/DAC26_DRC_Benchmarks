@@ -1,0 +1,169 @@
+{
+  "case_name": "Polygon304",
+  "design_type": "polygon",
+  "total_violations": 5,
+  "total_rules_violated": 5,
+  "rules": {
+    "V7.AUX.1": {
+      "violation_count": 1,
+      "description": "V7.AUX.1 : V7 must be inside M7 and M8.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              128
+            ],
+            [
+              128,
+              128
+            ],
+            [
+              128,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            128,
+            128
+          ]
+        }
+      ]
+    },
+    "V7.M8.AUX.2": {
+      "violation_count": 1,
+      "description": "V7.M8.AUX.2 : V7 must exactly be the same width as M8 along the direction perpendicular to the M8 length.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              128
+            ],
+            [
+              128,
+              128
+            ],
+            [
+              128,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            128,
+            128
+          ]
+        }
+      ]
+    },
+    "M8.W.1": {
+      "violation_count": 1,
+      "description": "M8.W.1 : Minimum width of M8 is 40 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              172,
+              -44,
+              -44,
+              -44
+            ],
+            [
+              -44,
+              104,
+              172,
+              104
+            ]
+          ],
+          "bbox": [
+            -44,
+            -44,
+            172,
+            104
+          ]
+        }
+      ]
+    },
+    "M8.A.1": {
+      "violation_count": 1,
+      "description": "M8.A.1 : Minimum area of M8 is 7520 nm-sq.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              -44,
+              -44
+            ],
+            [
+              -44,
+              104
+            ],
+            [
+              172,
+              104
+            ],
+            [
+              172,
+              -44
+            ]
+          ],
+          "bbox": [
+            -44,
+            -44,
+            172,
+            104
+          ]
+        }
+      ]
+    },
+    "M7.AUX.1": {
+      "violation_count": 1,
+      "description": "M7.AUX.1 : M7 vertical edges must be at a grid of 32 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            -44,
+            -44,
+            172,
+            172
+          ],
+          "vertices": [
+            [
+              -44,
+              -44
+            ],
+            [
+              -44,
+              172
+            ],
+            [
+              172,
+              172
+            ],
+            [
+              172,
+              -44
+            ]
+          ]
+        }
+      ]
+    }
+  }
+}

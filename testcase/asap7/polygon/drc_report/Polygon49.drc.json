@@ -1,0 +1,120 @@
+{
+  "case_name": "Polygon49",
+  "design_type": "polygon",
+  "total_violations": 4,
+  "total_rules_violated": 2,
+  "rules": {
+    "LIG.LISD.S.6": {
+      "violation_count": 2,
+      "description": "LIG.LISD.S.6 : Minimum spacing between LIG and LISD layer polygons not on the same net is 14 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              68,
+              200,
+              80,
+              200
+            ],
+            [
+              132,
+              220,
+              120,
+              220
+            ]
+          ],
+          "bbox": [
+            68,
+            200,
+            132,
+            220
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              80,
+              200,
+              80,
+              181
+            ],
+            [
+              120,
+              220,
+              120,
+              239
+            ]
+          ],
+          "bbox": [
+            80,
+            181,
+            120,
+            239
+          ]
+        }
+      ]
+    },
+    "LIG.LISD.S.7": {
+      "violation_count": 2,
+      "description": "LIG.LISD.S.7 : Minimum corner-to-corner spacing between LISD and LIG not on the same net is 15 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              63,
+              200
+            ],
+            [
+              120,
+              220
+            ],
+            [
+              137,
+              220
+            ],
+            [
+              80,
+              200
+            ]
+          ],
+          "bbox": [
+            63,
+            200,
+            137,
+            220
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              80,
+              175
+            ],
+            [
+              80,
+              200
+            ],
+            [
+              120,
+              245
+            ],
+            [
+              120,
+              220
+            ]
+          ],
+          "bbox": [
+            80,
+            175,
+            120,
+            245
+          ]
+        }
+      ]
+    }
+  }
+}

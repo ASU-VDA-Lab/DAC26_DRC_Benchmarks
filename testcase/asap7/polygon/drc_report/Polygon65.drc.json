@@ -1,0 +1,161 @@
+{
+  "case_name": "Polygon65",
+  "design_type": "polygon",
+  "total_violations": 5,
+  "total_rules_violated": 5,
+  "rules": {
+    "GATE.S.3": {
+      "violation_count": 1,
+      "description": "GATE.S.3 : Every GATE (not cut by GCUT and not interacting with the layer SRAMDRC) must have at least one other GATE within 54 nm of its surrounding along the horizontal axis. The spacing being the distance between centers of the two GATE layer polygons.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              200,
+              0
+            ],
+            [
+              200,
+              216
+            ],
+            [
+              280,
+              216
+            ],
+            [
+              280,
+              0
+            ]
+          ],
+          "bbox": [
+            200,
+            0,
+            280,
+            216
+          ]
+        }
+      ]
+    },
+    "ACTIVE.W.2": {
+      "violation_count": 1,
+      "description": "ACTIVE.W.2 : ACTIVE layer vertical width increment is an integer multiple of 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              80,
+              16,
+              520,
+              16
+            ],
+            [
+              80,
+              200,
+              520,
+              200
+            ]
+          ],
+          "bbox": [
+            80,
+            16,
+            520,
+            200
+          ]
+        }
+      ]
+    },
+    "LVT.ACTIVE.EN.1": {
+      "violation_count": 1,
+      "description": "LVT.ACTIVE.EN.1 : Minimum horizontal enclosure of ACTIVE (not interacting with SRAMDRC) by LVT is 46 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              16,
+              0,
+              200
+            ],
+            [
+              80,
+              16,
+              80,
+              200
+            ]
+          ],
+          "bbox": [
+            0,
+            16,
+            80,
+            200
+          ]
+        }
+      ]
+    },
+    "LVT.ACTIVE.EN.2": {
+      "violation_count": 1,
+      "description": "LVT.ACTIVE.EN.2 : Minimum vertical enclosure of ACTIVE (not interacting with SRAMDRC) by LVT is 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              520,
+              -20,
+              80,
+              -20
+            ],
+            [
+              520,
+              16,
+              80,
+              16
+            ]
+          ],
+          "bbox": [
+            80,
+            -20,
+            520,
+            16
+          ]
+        }
+      ]
+    },
+    "LVT.GATE.EX.2": {
+      "violation_count": 1,
+      "description": "LVT.GATE.EX.2 : Minimum vertical extension of LVT past GATE (not cut by GCUT layer) is 7 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              200,
+              -20
+            ],
+            [
+              200,
+              0
+            ],
+            [
+              280,
+              0
+            ],
+            [
+              280,
+              -20
+            ]
+          ],
+          "bbox": [
+            200,
+            -20,
+            280,
+            0
+          ]
+        }
+      ]
+    }
+  }
+}

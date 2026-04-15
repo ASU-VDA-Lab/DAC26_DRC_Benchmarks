@@ -1,0 +1,41 @@
+{
+  "case_name": "Polygon320",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "V9.PAD.EN.2": {
+      "violation_count": 1,
+      "description": "V9.PAD.EN.2 : Minimum enclosure of V9 by PAD on at least two opposite sides is 20 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              160
+            ],
+            [
+              160,
+              160
+            ],
+            [
+              160,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            160,
+            160
+          ]
+        }
+      ]
+    }
+  }
+}

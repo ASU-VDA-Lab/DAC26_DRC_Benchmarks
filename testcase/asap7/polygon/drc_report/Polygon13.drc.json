@@ -1,0 +1,70 @@
+{
+  "case_name": "Polygon13",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 2,
+  "rules": {
+    "ACTIVE.WELL.EN.1": {
+      "violation_count": 1,
+      "description": "ACTIVE.WELL.EN.1 : Minimum enclosure of ACTIVE (outside the layer SRAMDRC) by WELL is 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              600,
+              0,
+              200,
+              0
+            ],
+            [
+              600,
+              40,
+              200,
+              40
+            ]
+          ],
+          "bbox": [
+            200,
+            0,
+            600,
+            40
+          ]
+        }
+      ]
+    },
+    "ACTIVE.LUP.1": {
+      "violation_count": 1,
+      "description": "ACTIVE.LUP.1 : Maximum distance, to prevent latch-up, between ACTIVE forming a MOS device and ACTIVE forming a bulk/substrate contact within the same WELL/substrate is 30 um.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              200,
+              40
+            ],
+            [
+              200,
+              256
+            ],
+            [
+              600,
+              256
+            ],
+            [
+              600,
+              40
+            ]
+          ],
+          "bbox": [
+            200,
+            40,
+            600,
+            256
+          ]
+        }
+      ]
+    }
+  }
+}

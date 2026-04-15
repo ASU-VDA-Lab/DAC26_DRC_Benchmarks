@@ -1,0 +1,107 @@
+{
+  "case_name": "Polygon241",
+  "design_type": "polygon",
+  "total_violations": 3,
+  "total_rules_violated": 3,
+  "rules": {
+    "V0.LIG.A.1": {
+      "violation_count": 1,
+      "description": "V0.LIG.A.1 : Min. area of overlap between V0 (interacting with LIG and not inside LISD) and LIG : 288nm2",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              20,
+              20
+            ],
+            [
+              20,
+              72
+            ],
+            [
+              72,
+              72
+            ],
+            [
+              72,
+              20
+            ]
+          ],
+          "bbox": [
+            20,
+            20,
+            72,
+            72
+          ]
+        }
+      ]
+    },
+    "V0.M1.AUX.3": {
+      "violation_count": 1,
+      "description": "V0.M1.AUX.3 : V0 must exactly be the same width as M1 along the direction perpendicular to the M1 length.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              72
+            ],
+            [
+              72,
+              72
+            ],
+            [
+              72,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            72,
+            72
+          ]
+        }
+      ]
+    },
+    "V0.LIG.AUX.2": {
+      "violation_count": 1,
+      "description": "V0.LIG.AUX.2 : V0 (interacting LIG, not inside LIG/LISD) must not have edges lying inside or coincident with LIG.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              72
+            ],
+            [
+              72,
+              72
+            ],
+            [
+              72,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            72,
+            72
+          ]
+        }
+      ]
+    }
+  }
+}

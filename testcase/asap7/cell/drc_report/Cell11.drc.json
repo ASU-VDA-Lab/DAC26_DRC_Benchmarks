@@ -1,0 +1,116 @@
+{
+  "case_name": "Cell11",
+  "design_type": "cell",
+  "total_violations": 6,
+  "total_rules_violated": 1,
+  "rules": {
+    "V0.M0.EN.5": {
+      "violation_count": 6,
+      "description": "V0.M0.EN.5 : Minimum enclosure of V0 by M0 on two opposite sides is 5 & 5 nm or 5 & 0 nm.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              3424,
+              212,
+              3424,
+              140
+            ]
+          ],
+          "bbox": [
+            3424,
+            140,
+            3424,
+            212
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              1984,
+              356,
+              1984,
+              284
+            ]
+          ],
+          "bbox": [
+            1984,
+            284,
+            1984,
+            356
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              2848,
+              500,
+              2848,
+              428
+            ]
+          ],
+          "bbox": [
+            2848,
+            428,
+            2848,
+            500
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              2992,
+              644,
+              2992,
+              572
+            ]
+          ],
+          "bbox": [
+            2992,
+            572,
+            2992,
+            644
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              3424,
+              788,
+              3424,
+              716
+            ]
+          ],
+          "bbox": [
+            3424,
+            716,
+            3424,
+            788
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              2848,
+              788,
+              2848,
+              716
+            ]
+          ],
+          "bbox": [
+            2848,
+            716,
+            2848,
+            788
+          ]
+        }
+      ]
+    }
+  }
+}

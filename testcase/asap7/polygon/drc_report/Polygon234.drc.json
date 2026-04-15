@@ -1,0 +1,60 @@
+{
+  "case_name": "Polygon234",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 1,
+  "rules": {
+    "SRAMVT.ACTIVE.EN.1": {
+      "violation_count": 2,
+      "description": "SRAMVT.ACTIVE.EN.1 : Minimum horizontal enclosure of ACTIVE (not interacting with SRAMDRC) by SRAMVT is 46 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              440,
+              216,
+              440,
+              108
+            ],
+            [
+              320,
+              216,
+              320,
+              108
+            ]
+          ],
+          "bbox": [
+            320,
+            108,
+            440,
+            216
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              108,
+              0,
+              216
+            ],
+            [
+              160,
+              108,
+              160,
+              216
+            ]
+          ],
+          "bbox": [
+            0,
+            108,
+            160,
+            216
+          ]
+        }
+      ]
+    }
+  }
+}

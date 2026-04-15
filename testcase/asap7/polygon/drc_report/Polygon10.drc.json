@@ -1,0 +1,66 @@
+{
+  "case_name": "Polygon10",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 2,
+  "rules": {
+    "ACTIVE.W.1": {
+      "violation_count": 1,
+      "description": "ACTIVE.W.1 : Minimum vertical width of ACTIVE layer is 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              800,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              80,
+              800,
+              80
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            800,
+            80
+          ]
+        }
+      ]
+    },
+    "ACTIVE.W.2": {
+      "violation_count": 1,
+      "description": "ACTIVE.W.2 : ACTIVE layer vertical width increment is an integer multiple of 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              0,
+              800,
+              0
+            ],
+            [
+              0,
+              80,
+              800,
+              80
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            800,
+            80
+          ]
+        }
+      ]
+    }
+  }
+}

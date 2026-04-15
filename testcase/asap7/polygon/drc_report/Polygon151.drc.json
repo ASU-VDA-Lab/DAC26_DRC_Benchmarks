@@ -1,0 +1,41 @@
+{
+  "case_name": "Polygon151",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "M8.A.1": {
+      "violation_count": 1,
+      "description": "M8.A.1 : Minimum area of M8 is 7520 nm-sq.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              480
+            ],
+            [
+              240,
+              480
+            ],
+            [
+              240,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            240,
+            480
+          ]
+        }
+      ]
+    }
+  }
+}

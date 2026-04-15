@@ -1,0 +1,60 @@
+{
+  "case_name": "Polygon116",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 1,
+  "rules": {
+    "M5.S.4": {
+      "violation_count": 2,
+      "description": "M5.S.4 : Minimum tip-to-tip spacing between two M5 layer polygons\u2014\u2014that share a parallel run length\u2014\u2014on adjacent tracks is 40 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              216,
+              0,
+              192,
+              0
+            ],
+            [
+              216,
+              96,
+              192,
+              96
+            ]
+          ],
+          "bbox": [
+            192,
+            0,
+            216,
+            96
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              72,
+              496,
+              96,
+              496
+            ],
+            [
+              72,
+              400,
+              96,
+              400
+            ]
+          ],
+          "bbox": [
+            72,
+            400,
+            96,
+            496
+          ]
+        }
+      ]
+    }
+  }
+}

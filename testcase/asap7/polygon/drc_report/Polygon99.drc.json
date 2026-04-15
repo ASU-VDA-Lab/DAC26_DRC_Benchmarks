@@ -1,0 +1,70 @@
+{
+  "case_name": "Polygon99",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 2,
+  "rules": {
+    "M4.S.1": {
+      "violation_count": 1,
+      "description": "M4.S.1 : Minimum vertical spacing between two M4 layer polygons' edges, regardless of the edge lengths and mask colors, is 24 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              96,
+              192,
+              96
+            ],
+            [
+              192,
+              176,
+              0,
+              176
+            ]
+          ],
+          "bbox": [
+            0,
+            96,
+            192,
+            176
+          ]
+        }
+      ]
+    },
+    "M4.AUX.1": {
+      "violation_count": 1,
+      "description": "M4.AUX.1 : M4 horizontal edges must be at a grid of 24 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            0,
+            176,
+            192,
+            272
+          ],
+          "vertices": [
+            [
+              0,
+              176
+            ],
+            [
+              0,
+              272
+            ],
+            [
+              192,
+              272
+            ],
+            [
+              192,
+              176
+            ]
+          ]
+        }
+      ]
+    }
+  }
+}

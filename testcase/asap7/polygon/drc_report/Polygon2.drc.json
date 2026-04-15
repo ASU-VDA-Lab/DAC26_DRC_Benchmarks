@@ -1,0 +1,174 @@
+{
+  "case_name": "Polygon2",
+  "design_type": "polygon",
+  "total_violations": 6,
+  "total_rules_violated": 4,
+  "rules": {
+    "ACTIVE.W.2": {
+      "violation_count": 3,
+      "description": "ACTIVE.W.2 : ACTIVE layer vertical width increment is an integer multiple of 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              400,
+              0,
+              508,
+              0
+            ],
+            [
+              400,
+              400,
+              508,
+              400
+            ]
+          ],
+          "bbox": [
+            400,
+            0,
+            508,
+            400
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              400,
+              508,
+              508,
+              508
+            ],
+            [
+              400,
+              2000,
+              508,
+              2000
+            ]
+          ],
+          "bbox": [
+            400,
+            508,
+            508,
+            2000
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              0,
+              2000,
+              0
+            ],
+            [
+              0,
+              2000,
+              2000,
+              2000
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            2000,
+            2000
+          ]
+        }
+      ]
+    },
+    "ACTIVE.S.2B": {
+      "violation_count": 1,
+      "description": "ACTIVE.S.2B : Minimum horizontal spacing of ACTIVE is 38 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              508,
+              400,
+              508,
+              508
+            ],
+            [
+              400,
+              508,
+              400,
+              400
+            ]
+          ],
+          "bbox": [
+            400,
+            400,
+            508,
+            508
+          ]
+        }
+      ]
+    },
+    "ACTIVE.A.1B": {
+      "violation_count": 1,
+      "description": "ACTIVE.A.1B : Minimum enclosed area of an ACTIVE layer polygon that does not interact with the layer SRAMDRC is 864 nm-sq.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              400,
+              400
+            ],
+            [
+              400,
+              508
+            ],
+            [
+              508,
+              508
+            ],
+            [
+              508,
+              400
+            ]
+          ],
+          "bbox": [
+            400,
+            400,
+            508,
+            508
+          ]
+        }
+      ]
+    },
+    "ACTIVE.AUX.3": {
+      "violation_count": 1,
+      "description": "ACTIVE.AUX.3 : A notch in ACTIVE along vertical axis is not allowed.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              400,
+              400,
+              508,
+              400
+            ],
+            [
+              508,
+              508,
+              400,
+              508
+            ]
+          ],
+          "bbox": [
+            400,
+            400,
+            508,
+            508
+          ]
+        }
+      ]
+    }
+  }
+}

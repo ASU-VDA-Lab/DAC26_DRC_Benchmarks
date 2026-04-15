@@ -1,0 +1,31 @@
+{
+  "case_name": "Polygon135",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "M6.W.4": {
+      "violation_count": 1,
+      "description": "M6.W.4 : M6 vertical width, resulting in the polygon spanning an even number of minimum width routing tracks vertically, is not allowed.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              0,
+              0,
+              0,
+              384
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            0,
+            384
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "case_name": "Polygon140",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 1,
+  "rules": {
+    "M7.AUX.4": {
+      "violation_count": 2,
+      "description": "M7.AUX.4 : Outside edge of a wide M7 layer polygon may not touch a routing track edge.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              128,
+              384,
+              128,
+              864
+            ]
+          ],
+          "bbox": [
+            128,
+            384,
+            128,
+            864
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              768,
+              864,
+              768,
+              384
+            ]
+          ],
+          "bbox": [
+            768,
+            384,
+            768,
+            864
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "case_name": "Polygon274",
+  "design_type": "polygon",
+  "total_violations": 3,
+  "total_rules_violated": 3,
+  "rules": {
+    "V3.M4.EN.2": {
+      "violation_count": 1,
+      "description": "V3.M4.EN.2 : Minimum enclosure of V3 by M4 on at least two opposite sides is 11 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              72
+            ],
+            [
+              72,
+              72
+            ],
+            [
+              72,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            72,
+            72
+          ]
+        }
+      ]
+    },
+    "V3.M4.AUX.2": {
+      "violation_count": 1,
+      "description": "V3.M4.AUX.2 : V3 must exactly be the same width as M4 along the direction perpendicular to the M4 length.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              72
+            ],
+            [
+              72,
+              72
+            ],
+            [
+              72,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            72,
+            72
+          ]
+        }
+      ]
+    },
+    "M4.AUX.1": {
+      "violation_count": 1,
+      "description": "M4.AUX.1 : M4 horizontal edges must be at a grid of 24 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            -20,
+            -20,
+            800,
+            800
+          ],
+          "vertices": [
+            [
+              -20,
+              -20
+            ],
+            [
+              -20,
+              800
+            ],
+            [
+              800,
+              800
+            ],
+            [
+              800,
+              -20
+            ]
+          ]
+        }
+      ]
+    }
+  }
+}

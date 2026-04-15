@@ -1,0 +1,68 @@
+{
+  "case_name": "Polygon84",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 1,
+  "rules": {
+    "M2.S.7": {
+      "violation_count": 2,
+      "description": "M2.S.7 : M2 tip-to-tip (18 nm) co-located with side-to-side spacing <= 32 nm is forbidden; parallel run length must be >= 35 nm when side spacing <= 32 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              760,
+              240
+            ],
+            [
+              760,
+              320
+            ],
+            [
+              800,
+              320
+            ],
+            [
+              800,
+              240
+            ]
+          ],
+          "bbox": [
+            760,
+            240,
+            800,
+            320
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              1632,
+              240
+            ],
+            [
+              1632,
+              320
+            ],
+            [
+              1672,
+              320
+            ],
+            [
+              1672,
+              240
+            ]
+          ],
+          "bbox": [
+            1632,
+            240,
+            1672,
+            320
+          ]
+        }
+      ]
+    }
+  }
+}

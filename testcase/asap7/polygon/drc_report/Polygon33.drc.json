@@ -1,0 +1,155 @@
+{
+  "case_name": "Polygon33",
+  "design_type": "polygon",
+  "total_violations": 5,
+  "total_rules_violated": 4,
+  "rules": {
+    "GATE.S.3": {
+      "violation_count": 1,
+      "description": "GATE.S.3 : Every GATE (not cut by GCUT and not interacting with the layer SRAMDRC) must have at least one other GATE within 54 nm of its surrounding along the horizontal axis. The spacing being the distance between centers of the two GATE layer polygons.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              216
+            ],
+            [
+              80,
+              216
+            ],
+            [
+              80,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            80,
+            216
+          ]
+        }
+      ]
+    },
+    "ACTIVE.W.2": {
+      "violation_count": 1,
+      "description": "ACTIVE.W.2 : ACTIVE layer vertical width increment is an integer multiple of 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              -100,
+              60,
+              280,
+              60
+            ],
+            [
+              -100,
+              180,
+              280,
+              180
+            ]
+          ],
+          "bbox": [
+            -100,
+            60,
+            280,
+            180
+          ]
+        }
+      ]
+    },
+    "GCUT.ACTIVE.S.1": {
+      "violation_count": 2,
+      "description": "GCUT.ACTIVE.S.1 : Minimum vertical spacing between GCUT and channel is 4 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              168,
+              80,
+              168
+            ],
+            [
+              80,
+              168,
+              0,
+              168
+            ]
+          ],
+          "bbox": [
+            0,
+            168,
+            80,
+            168
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              80,
+              100,
+              0,
+              100
+            ],
+            [
+              0,
+              100,
+              80,
+              100
+            ]
+          ],
+          "bbox": [
+            0,
+            100,
+            80,
+            100
+          ]
+        }
+      ]
+    },
+    "GCUT.AUX.3": {
+      "violation_count": 1,
+      "description": "GCUT.AUX.3 : GCUT may not interact with channel.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              -80,
+              100
+            ],
+            [
+              -80,
+              168
+            ],
+            [
+              160,
+              168
+            ],
+            [
+              160,
+              100
+            ]
+          ],
+          "bbox": [
+            -80,
+            100,
+            160,
+            168
+          ]
+        }
+      ]
+    }
+  }
+}

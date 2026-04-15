@@ -1,0 +1,89 @@
+{
+  "case_name": "Polygon239",
+  "design_type": "polygon",
+  "total_violations": 3,
+  "total_rules_violated": 2,
+  "rules": {
+    "SRAMVT.W.2": {
+      "violation_count": 1,
+      "description": "SRAMVT.W.2 : Minimum vertical width of SRAMVT is 54 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              800,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              200,
+              800,
+              200
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            800,
+            200
+          ]
+        }
+      ]
+    },
+    "SRAMVT.ACTIVE.EN.2": {
+      "violation_count": 2,
+      "description": "SRAMVT.ACTIVE.EN.2 : Minimum vertical enclosure of ACTIVE (not interacting with SRAMDRC) by SRAMVT is 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              320,
+              200,
+              480,
+              200
+            ],
+            [
+              320,
+              152,
+              480,
+              152
+            ]
+          ],
+          "bbox": [
+            320,
+            152,
+            480,
+            200
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              480,
+              0,
+              320,
+              0
+            ],
+            [
+              480,
+              44,
+              320,
+              44
+            ]
+          ],
+          "bbox": [
+            320,
+            0,
+            480,
+            44
+          ]
+        }
+      ]
+    }
+  }
+}

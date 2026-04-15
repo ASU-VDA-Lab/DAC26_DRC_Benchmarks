@@ -1,0 +1,192 @@
+{
+  "case_name": "Polygon297",
+  "design_type": "polygon",
+  "total_violations": 6,
+  "total_rules_violated": 5,
+  "rules": {
+    "V6.W.1": {
+      "violation_count": 2,
+      "description": "V6.W.1 : Minimum width of a V6 instance along the length of M7 is 32 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              0,
+              0,
+              96
+            ],
+            [
+              96,
+              96,
+              96,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            96,
+            96
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              96,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              96,
+              96,
+              96
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            96,
+            96
+          ]
+        }
+      ]
+    },
+    "V6.M6.EN.1": {
+      "violation_count": 1,
+      "description": "V6.M6.EN.1 : Minimum enclosure of V6 by M6 on at least two opposite sides is 11 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              96
+            ],
+            [
+              96,
+              96
+            ],
+            [
+              96,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            96,
+            96
+          ]
+        }
+      ]
+    },
+    "V6.M7.AUX.2": {
+      "violation_count": 1,
+      "description": "V6.M7.AUX.2 : V6 must exactly be the same width as M7 along the direction perpendicular to the M7 length.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              96
+            ],
+            [
+              96,
+              96
+            ],
+            [
+              96,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            96,
+            96
+          ]
+        }
+      ]
+    },
+    "M6.AUX.1": {
+      "violation_count": 1,
+      "description": "M6.AUX.1 : M6 horizontal edges must be at a grid of 32 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            -20,
+            -20,
+            800,
+            800
+          ],
+          "vertices": [
+            [
+              -20,
+              -20
+            ],
+            [
+              -20,
+              800
+            ],
+            [
+              800,
+              800
+            ],
+            [
+              800,
+              -20
+            ]
+          ]
+        }
+      ]
+    },
+    "M7.AUX.1": {
+      "violation_count": 1,
+      "description": "M7.AUX.1 : M7 vertical edges must be at a grid of 32 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            -44,
+            -44,
+            800,
+            800
+          ],
+          "vertices": [
+            [
+              -44,
+              -44
+            ],
+            [
+              -44,
+              800
+            ],
+            [
+              800,
+              800
+            ],
+            [
+              800,
+              -44
+            ]
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "case_name": "Polygon213",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "SRAM.ACTIVE.AUX.2": {
+      "violation_count": 1,
+      "description": "SRAM.ACTIVE.AUX.2 : ACTIVE layer polygons not belonging to an SRAM cell, i.e. those that are either completely outside the SRAMDRC layer or those that do not intersect the SRAMDRC layer, may not touch the SRAMDRC layer.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              160,
+              216,
+              160,
+              0
+            ]
+          ],
+          "bbox": [
+            160,
+            0,
+            160,
+            216
+          ]
+        }
+      ]
+    }
+  }
+}

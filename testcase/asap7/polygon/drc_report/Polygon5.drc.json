@@ -1,0 +1,41 @@
+{
+  "case_name": "Polygon5",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "ACTIVE.FIN.EX.1": {
+      "violation_count": 1,
+      "description": "ACTIVE.FIN.EX.1 : Minimum vertical extension of ACTIVE past FIN is 10 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              292,
+              132
+            ],
+            [
+              292,
+              160
+            ],
+            [
+              508,
+              160
+            ],
+            [
+              508,
+              132
+            ]
+          ],
+          "bbox": [
+            292,
+            132,
+            508,
+            160
+          ]
+        }
+      ]
+    }
+  }
+}

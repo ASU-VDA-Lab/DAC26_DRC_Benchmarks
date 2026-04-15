@@ -1,0 +1,70 @@
+{
+  "case_name": "Polygon228",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 2,
+  "rules": {
+    "SRAM.SDT.LISD.OV.4": {
+      "violation_count": 1,
+      "description": "SRAM.SDT.LISD.OV.4 : Minimum vertical overlap between SDT (interacting with SRAMDRC) and LISD is 17 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              400,
+              68,
+              40,
+              68
+            ],
+            [
+              40,
+              108,
+              400,
+              108
+            ]
+          ],
+          "bbox": [
+            40,
+            68,
+            400,
+            108
+          ]
+        }
+      ]
+    },
+    "SDT.LISD.AUX.4": {
+      "violation_count": 1,
+      "description": "SDT.LISD.AUX.4 : SDT must always be inside LISD.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              40,
+              0
+            ],
+            [
+              40,
+              108
+            ],
+            [
+              400,
+              108
+            ],
+            [
+              400,
+              0
+            ]
+          ],
+          "bbox": [
+            40,
+            0,
+            400,
+            108
+          ]
+        }
+      ]
+    }
+  }
+}

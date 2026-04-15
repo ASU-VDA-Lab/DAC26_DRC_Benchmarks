@@ -1,0 +1,74 @@
+{
+  "case_name": "Polygon318",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 2,
+  "rules": {
+    "M9.A.1": {
+      "violation_count": 1,
+      "description": "M9.A.1 : Minimum area of M9 is 7520 nm-sq.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              40,
+              -80
+            ],
+            [
+              40,
+              240
+            ],
+            [
+              240,
+              240
+            ],
+            [
+              240,
+              -80
+            ]
+          ],
+          "bbox": [
+            40,
+            -80,
+            240,
+            240
+          ]
+        }
+      ]
+    },
+    "V9.AUX.1": {
+      "violation_count": 1,
+      "description": "V9.AUX.1 : V9 must be inside M9 and PAD.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              160
+            ],
+            [
+              160,
+              160
+            ],
+            [
+              160,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            160,
+            160
+          ]
+        }
+      ]
+    }
+  }
+}

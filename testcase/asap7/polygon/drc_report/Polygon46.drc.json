@@ -1,0 +1,155 @@
+{
+  "case_name": "Polygon46",
+  "design_type": "polygon",
+  "total_violations": 5,
+  "total_rules_violated": 4,
+  "rules": {
+    "LISD.W.1": {
+      "violation_count": 2,
+      "description": "LISD.W.1 : Minimum width of LISD is 24 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              56,
+              0,
+              56,
+              80
+            ],
+            [
+              120,
+              80,
+              120,
+              0
+            ]
+          ],
+          "bbox": [
+            56,
+            0,
+            120,
+            80
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              120,
+              0,
+              56,
+              0
+            ],
+            [
+              56,
+              80,
+              120,
+              80
+            ]
+          ],
+          "bbox": [
+            56,
+            0,
+            120,
+            80
+          ]
+        }
+      ]
+    },
+    "LISD.A.1": {
+      "violation_count": 1,
+      "description": "LISD.A.1 : Minimum LISD area is 648 nm-sq.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              56,
+              0
+            ],
+            [
+              56,
+              80
+            ],
+            [
+              120,
+              80
+            ],
+            [
+              120,
+              0
+            ]
+          ],
+          "bbox": [
+            56,
+            0,
+            120,
+            80
+          ]
+        }
+      ]
+    },
+    "LIG.LISD.A.2": {
+      "violation_count": 1,
+      "description": "LIG.LISD.A.2 : Minimum area of overlap between LIG and LISD is 128 nm-sq.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              56,
+              0
+            ],
+            [
+              56,
+              80
+            ],
+            [
+              80,
+              80
+            ],
+            [
+              80,
+              0
+            ]
+          ],
+          "bbox": [
+            56,
+            0,
+            80,
+            80
+          ]
+        }
+      ]
+    },
+    "LIG.LISD.OV.1": {
+      "violation_count": 1,
+      "description": "LIG.LISD.OV.1 : Minimum overlap between LIG and LISD connected together is 8 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              80,
+              80,
+              80,
+              0
+            ],
+            [
+              56,
+              0,
+              56,
+              80
+            ]
+          ],
+          "bbox": [
+            56,
+            0,
+            80,
+            80
+          ]
+        }
+      ]
+    }
+  }
+}

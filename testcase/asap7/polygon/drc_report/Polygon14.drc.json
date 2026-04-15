@@ -1,0 +1,37 @@
+{
+  "case_name": "Polygon14",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "ACTIVE.WELL.S.4": {
+      "violation_count": 1,
+      "description": "ACTIVE.WELL.S.4 : Minimum spacing of ACTIVE (outside the layer SRAMDRC) to WELL is 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              120,
+              216,
+              520,
+              216
+            ],
+            [
+              520,
+              296,
+              120,
+              296
+            ]
+          ],
+          "bbox": [
+            120,
+            216,
+            520,
+            296
+          ]
+        }
+      ]
+    }
+  }
+}

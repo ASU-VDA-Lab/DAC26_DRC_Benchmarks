@@ -1,0 +1,144 @@
+#BSD 3-Clause License
+#
+#Copyright (c) 2026, ASU-VDA-Lab
+#
+#Redistribution and use in source and binary forms, with or without
+#modification, are permitted provided that the following conditions are met:
+#
+#1. Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+#
+#2. Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+#
+#3. Neither the name of the copyright holder nor the names of its
+#   contributors may be used to endorse or promote products derived from
+#   this software without specific prior written permission.
+#
+#THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+#AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+#IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+#DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+#FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+#DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+#SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+#CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+#OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+#OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# Detection-only container (anti-cheat: prevent the LLM from invoking or
+# installing a KLayout DRC toolchain inside the container).
+#
+# Defences:
+#   1. NO klayout binary in the image.
+#   2. NO downloaders / compilers / package managers at runtime:
+#      wget, curl, git, gcc, make, pip, yum, dnf, rpm, cpio, etc. stripped.
+#   3. At runtime, an entrypoint installs an iptables OUTPUT REJECT blocklist
+#      against known klayout / source-hosting / package-index domains
+#      (klayout.org, pypi.org, github.com, anaconda.org, sourceforge.net ...)
+#   4. Claude Code CLI and Cursor CLI are installed at build time (when
+#      internet is available) and remain functional for genuine API calls.
+#
+# Build (from repository root):
+#   docker build -f Dockerfile.detection -t drc-benchmark-detection .
+#
+# The container MUST be run with --cap-add=NET_ADMIN so the entrypoint can
+# program iptables rules.  src/evaluate_claude.sh does this automatically for
+# the detection task.
+
+FROM almalinux:8.10
+
+# ---------------------------------------------------------------------------
+# Install CLI tools FIRST (needs working curl + network)
+# ---------------------------------------------------------------------------
+RUN curl https://cursor.com/install -fsS | bash
+ENV PATH="/root/.local/bin:${PATH}"
+
+RUN curl -fsSL https://claude.ai/install.sh | bash
+
+# ---------------------------------------------------------------------------
+# Install minimum runtime: Python 3, iptables (for blocklist), getent.
+# ---------------------------------------------------------------------------
+RUN yum downgrade -y \
+        python3-libs-3.6.8-62.el8_10.alma.1 \
+    && yum install -y \
+        python36-3.6.8-39.module_el8.10.0+3769+3838165b \
+        python3-lxml-4.2.3-4.el8 \
+        iptables \
+        iproute \
+        bind-utils \
+    && yum clean all \
+    && rm -rf /var/cache/yum
+
+# ---------------------------------------------------------------------------
+# Install shapely via pip (needed for connectivity check), then scrub pip.
+# We keep python3 + site-packages but remove the pip binary so the agent
+# cannot run `pip install` at runtime.
+# ---------------------------------------------------------------------------
+RUN yum install -y python3-pip-9.0.3-24.el8 \
+    && pip3 install --upgrade "pip==21.3.1" \
+    && pip3 install "shapely==1.8.5.post1" \
+    && yum clean all
+# Keep python3 intact. Just strip the pip scripts and the pip module so the
+# agent cannot easily run `pip install` or `python -m pip install`.
+RUN rm -f /usr/bin/pip /usr/bin/pip3 /usr/bin/pip-3 /usr/local/bin/pip \
+          /usr/local/bin/pip3 /usr/bin/pip3.6 /usr/local/bin/pip3.6 \
+    && rm -rf /usr/lib/python3.6/site-packages/pip \
+              /usr/lib/python3.6/site-packages/pip-*.dist-info \
+              /usr/lib/python3.6/site-packages/pip-*.egg-info
+
+# ---------------------------------------------------------------------------
+# Strip tools the agent could use to fetch or build klayout.
+#
+# Note: yum is removed LAST because the earlier removals rely on it.  After
+# this step there is no package manager inside the image.
+# ---------------------------------------------------------------------------
+RUN yum remove -y \
+        wget curl curl-minimal \
+        gcc gcc-c++ make cmake \
+        git \
+        rpm-build rpm-plugin-systemd-inhibit \
+        diffutils patch \
+        2>/dev/null || true
+
+# Then disable the remaining package tooling + compiler linkers.
+# Leaving them in PATH but unusable (binary removed) prevents the agent from
+# running yum/dnf/rpm to install klayout from some third-party repo.
+RUN rm -f /usr/bin/yum /usr/bin/dnf /usr/bin/rpm /usr/bin/dnf-3 \
+          /usr/bin/rpmdb /usr/bin/rpmquery /usr/bin/rpmverify \
+          /usr/bin/rpmsign /usr/bin/rpmspec /usr/bin/rpmkeys \
+          /usr/bin/rpm2archive /usr/bin/rpm2cpio /usr/bin/cpio \
+          /usr/bin/gcc /usr/bin/g++ /usr/bin/cc /usr/bin/c++ \
+          /usr/bin/ld /usr/bin/ar /usr/bin/as /usr/bin/nm \
+          /usr/bin/wget /usr/bin/curl \
+    2>/dev/null || true
+
+# ---------------------------------------------------------------------------
+# Runtime entrypoint: sets up iptables blocklist for klayout-related domains.
+# ---------------------------------------------------------------------------
+COPY docker/entrypoint-blocklist.sh /usr/local/bin/entrypoint-blocklist.sh
+RUN chmod +x /usr/local/bin/entrypoint-blocklist.sh
+
+ENV WORKSPACE=/workspace
+WORKDIR /workspace
+
+RUN mkdir -p /workspace/src /workspace/testcase /workspace/task \
+             /workspace/result /workspace/score /workspace/logs /workspace/temp
+
+# Copy pipeline source and test-case assets.  The golden DRC reports are
+# removed here and re-injected at runtime via `docker cp` by evaluate_*.sh,
+# so the agent cannot see them during the agent-only phase of detection.
+COPY CLAUDE.md /workspace/CLAUDE.md
+COPY src/      /workspace/src/
+COPY testcase/ /workspace/testcase/
+
+RUN rm -rf /workspace/testcase/asap7/cell/drc_report/* \
+    && rm -rf /workspace/testcase/asap7/polygon/drc_report/* \
+    && rm -rf /workspace/testcase/asap7/block/drc_report/* \
+    && mkdir -p /workspace/testcase/asap7/cell/drc_report \
+               /workspace/testcase/asap7/polygon/drc_report \
+               /workspace/testcase/asap7/block/drc_report
+
+ENTRYPOINT ["/usr/local/bin/entrypoint-blocklist.sh"]
+CMD ["bash", "-c", "echo 'Detection container with domain blocklist active. Call agent_claude.py or agent_cursor.py.'"]

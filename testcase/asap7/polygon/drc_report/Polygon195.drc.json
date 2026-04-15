@@ -1,0 +1,41 @@
+{
+  "case_name": "Polygon195",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "SDT.ACTIVE.AUX.3": {
+      "violation_count": 1,
+      "description": "SDT.ACTIVE.AUX.3 : SDT may not be entirely outside ACTIVE.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              40,
+              0
+            ],
+            [
+              40,
+              108
+            ],
+            [
+              200,
+              108
+            ],
+            [
+              200,
+              0
+            ]
+          ],
+          "bbox": [
+            40,
+            0,
+            200,
+            108
+          ]
+        }
+      ]
+    }
+  }
+}

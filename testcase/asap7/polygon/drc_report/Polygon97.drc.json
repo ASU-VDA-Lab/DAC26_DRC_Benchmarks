@@ -1,0 +1,71 @@
+{
+  "case_name": "Polygon97",
+  "design_type": "polygon",
+  "total_violations": 3,
+  "total_rules_violated": 2,
+  "rules": {
+    "M4.W.4": {
+      "violation_count": 1,
+      "description": "M4.W.4 : M4 vertical width, resulting in the polygon spanning an even number of minimum width routing tracks vertically, is not allowed.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              0,
+              0,
+              0,
+              288
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            0,
+            288
+          ]
+        }
+      ]
+    },
+    "M4.AUX.3": {
+      "violation_count": 2,
+      "description": "M4.AUX.3 : M4 may not bend.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              384,
+              192,
+              192,
+              192
+            ]
+          ],
+          "bbox": [
+            192,
+            192,
+            384,
+            192
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              192,
+              192,
+              192,
+              0
+            ]
+          ],
+          "bbox": [
+            192,
+            0,
+            192,
+            192
+          ]
+        }
+      ]
+    }
+  }
+}

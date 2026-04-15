@@ -1,0 +1,48 @@
+{
+  "case_name": "Polygon126",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 1,
+  "rules": {
+    "M6.AUX.4": {
+      "violation_count": 2,
+      "description": "M6.AUX.4 : Outside edge of a wide M6 layer polygon may not touch a routing track edge.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              864,
+              128,
+              384,
+              128
+            ]
+          ],
+          "bbox": [
+            384,
+            128,
+            864,
+            128
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              384,
+              768,
+              864,
+              768
+            ]
+          ],
+          "bbox": [
+            384,
+            768,
+            864,
+            768
+          ]
+        }
+      ]
+    }
+  }
+}

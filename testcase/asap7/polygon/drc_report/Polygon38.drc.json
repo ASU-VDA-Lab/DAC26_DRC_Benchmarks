@@ -1,0 +1,41 @@
+{
+  "case_name": "Polygon38",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "LIG.A.1": {
+      "violation_count": 1,
+      "description": "LIG.A.1 : Minimum LIG area is 324 nm-sq.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              72
+            ],
+            [
+              64,
+              72
+            ],
+            [
+              64,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            64,
+            72
+          ]
+        }
+      ]
+    }
+  }
+}

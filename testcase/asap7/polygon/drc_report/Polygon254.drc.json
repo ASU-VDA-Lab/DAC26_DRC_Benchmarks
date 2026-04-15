@@ -1,0 +1,74 @@
+{
+  "case_name": "Polygon254",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 2,
+  "rules": {
+    "M1.A.1": {
+      "violation_count": 1,
+      "description": "M1.A.1 : Minimum M1 area is 504 nm-sq.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              -4,
+              -4
+            ],
+            [
+              -4,
+              76
+            ],
+            [
+              76,
+              76
+            ],
+            [
+              76,
+              -4
+            ]
+          ],
+          "bbox": [
+            -4,
+            -4,
+            76,
+            76
+          ]
+        }
+      ]
+    },
+    "V1.M1.EN.1": {
+      "violation_count": 1,
+      "description": "V1.M1.EN.1 : Minimum enclosure of V1 by M1 on two opposite sides is 5 & 2 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              72
+            ],
+            [
+              72,
+              72
+            ],
+            [
+              72,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            72,
+            72
+          ]
+        }
+      ]
+    }
+  }
+}

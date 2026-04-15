@@ -1,0 +1,70 @@
+{
+  "case_name": "Polygon200",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 2,
+  "rules": {
+    "SDT.LISD.OV.2": {
+      "violation_count": 1,
+      "description": "SDT.LISD.OV.2 : Minimum vertical overlap between SDT and LISD is 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              400,
+              40,
+              40,
+              40
+            ],
+            [
+              40,
+              108,
+              400,
+              108
+            ]
+          ],
+          "bbox": [
+            40,
+            40,
+            400,
+            108
+          ]
+        }
+      ]
+    },
+    "SDT.LISD.AUX.4": {
+      "violation_count": 1,
+      "description": "SDT.LISD.AUX.4 : SDT must always be inside LISD.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              40,
+              0
+            ],
+            [
+              40,
+              108
+            ],
+            [
+              400,
+              108
+            ],
+            [
+              400,
+              0
+            ]
+          ],
+          "bbox": [
+            40,
+            0,
+            400,
+            108
+          ]
+        }
+      ]
+    }
+  }
+}

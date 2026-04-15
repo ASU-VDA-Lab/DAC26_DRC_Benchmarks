@@ -1,0 +1,41 @@
+{
+  "case_name": "Polygon185",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "NSELECT.PSELECT.AUX.1": {
+      "violation_count": 1,
+      "description": "NSELECT.PSELECT.AUX.1 : NSELECT and PSELECT may not overlap",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              400,
+              0
+            ],
+            [
+              400,
+              800
+            ],
+            [
+              800,
+              800
+            ],
+            [
+              800,
+              0
+            ]
+          ],
+          "bbox": [
+            400,
+            0,
+            800,
+            800
+          ]
+        }
+      ]
+    }
+  }
+}

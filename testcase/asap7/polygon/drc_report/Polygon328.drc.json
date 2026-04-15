@@ -1,0 +1,74 @@
+{
+  "case_name": "Polygon328",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 2,
+  "rules": {
+    "WELL.GATE.EX.2": {
+      "violation_count": 1,
+      "description": "WELL.GATE.EX.2 : Minimum vertical extension of WELL past GATE (not cut by GCUT layer) that does not interact with SRAMDRC, is 7 nm",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              200,
+              -12
+            ],
+            [
+              200,
+              0
+            ],
+            [
+              280,
+              0
+            ],
+            [
+              280,
+              -12
+            ]
+          ],
+          "bbox": [
+            200,
+            -12,
+            280,
+            0
+          ]
+        }
+      ]
+    },
+    "GATE.S.3": {
+      "violation_count": 1,
+      "description": "GATE.S.3 : Every GATE (not cut by GCUT and not interacting with the layer SRAMDRC) must have at least one other GATE within 54 nm of its surrounding along the horizontal axis. The spacing being the distance between centers of the two GATE layer polygons.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              200,
+              0
+            ],
+            [
+              200,
+              216
+            ],
+            [
+              280,
+              216
+            ],
+            [
+              280,
+              0
+            ]
+          ],
+          "bbox": [
+            200,
+            0,
+            280,
+            216
+          ]
+        }
+      ]
+    }
+  }
+}

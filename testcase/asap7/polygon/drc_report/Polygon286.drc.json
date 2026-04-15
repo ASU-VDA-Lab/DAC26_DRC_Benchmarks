@@ -1,0 +1,194 @@
+{
+  "case_name": "Polygon286",
+  "design_type": "polygon",
+  "total_violations": 6,
+  "total_rules_violated": 4,
+  "rules": {
+    "V4.S.3": {
+      "violation_count": 2,
+      "description": "V4.S.3 : Minimum corner-to-corner spacing between two V4 instances is 33 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              96,
+              45
+            ],
+            [
+              96,
+              96
+            ],
+            [
+              160,
+              211
+            ],
+            [
+              160,
+              160
+            ]
+          ],
+          "bbox": [
+            96,
+            45,
+            160,
+            211
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              45,
+              96
+            ],
+            [
+              160,
+              160
+            ],
+            [
+              211,
+              160
+            ],
+            [
+              96,
+              96
+            ]
+          ],
+          "bbox": [
+            45,
+            96,
+            211,
+            160
+          ]
+        }
+      ]
+    },
+    "V4.M5.AUX.2": {
+      "violation_count": 2,
+      "description": "V4.M5.AUX.2 : V4 must exactly be the same width as M5 along the direction perpendicular to the M5 length.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              96
+            ],
+            [
+              96,
+              96
+            ],
+            [
+              96,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            96,
+            96
+          ]
+        },
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              160,
+              160
+            ],
+            [
+              160,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              160
+            ]
+          ],
+          "bbox": [
+            160,
+            160,
+            256,
+            256
+          ]
+        }
+      ]
+    },
+    "M4.AUX.1": {
+      "violation_count": 1,
+      "description": "M4.AUX.1 : M4 horizontal edges must be at a grid of 24 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            -60,
+            -60,
+            316,
+            316
+          ],
+          "vertices": [
+            [
+              -60,
+              -60
+            ],
+            [
+              -60,
+              316
+            ],
+            [
+              316,
+              316
+            ],
+            [
+              316,
+              -60
+            ]
+          ]
+        }
+      ]
+    },
+    "M5.AUX.1": {
+      "violation_count": 1,
+      "description": "M5.AUX.1 : M5 vertical edges must be at a grid of 24 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            -60,
+            -60,
+            316,
+            316
+          ],
+          "vertices": [
+            [
+              -60,
+              -60
+            ],
+            [
+              -60,
+              316
+            ],
+            [
+              316,
+              316
+            ],
+            [
+              316,
+              -60
+            ]
+          ]
+        }
+      ]
+    }
+  }
+}

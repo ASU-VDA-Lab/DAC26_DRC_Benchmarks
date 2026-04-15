@@ -1,0 +1,41 @@
+{
+  "case_name": "Polygon31",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "GCUT.AUX.1": {
+      "violation_count": 1,
+      "description": "GCUT.AUX.1 : GCUT layer may not exist without the layer GATE.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              80
+            ],
+            [
+              200,
+              80
+            ],
+            [
+              200,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            200,
+            80
+          ]
+        }
+      ]
+    }
+  }
+}

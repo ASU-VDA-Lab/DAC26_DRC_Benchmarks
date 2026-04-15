@@ -1,0 +1,70 @@
+{
+  "case_name": "Polygon204",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 2,
+  "rules": {
+    "ACTIVE.W.2": {
+      "violation_count": 1,
+      "description": "ACTIVE.W.2 : ACTIVE layer vertical width increment is an integer multiple of 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              0,
+              320,
+              0
+            ],
+            [
+              0,
+              160,
+              320,
+              160
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            320,
+            160
+          ]
+        }
+      ]
+    },
+    "SDT.W.3": {
+      "violation_count": 1,
+      "description": "SDT.W.3 : SDT (not interacting with SRAMDRC) layer vertical width increment is an integer multiple of 27 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              40,
+              0
+            ],
+            [
+              40,
+              160
+            ],
+            [
+              200,
+              160
+            ],
+            [
+              200,
+              0
+            ]
+          ],
+          "bbox": [
+            40,
+            0,
+            200,
+            160
+          ]
+        }
+      ]
+    }
+  }
+}

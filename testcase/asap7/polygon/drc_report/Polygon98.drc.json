@@ -1,0 +1,31 @@
+{
+  "case_name": "Polygon98",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "M4.AUX.4": {
+      "violation_count": 1,
+      "description": "M4.AUX.4 : Outside edge of a wide M4 layer polygon may not touch a routing track edge.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              864,
+              96,
+              384,
+              96
+            ]
+          ],
+          "bbox": [
+            384,
+            96,
+            864,
+            96
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "case_name": "Polygon214",
+  "design_type": "polygon",
+  "total_violations": 4,
+  "total_rules_violated": 3,
+  "rules": {
+    "ACTIVE.W.2": {
+      "violation_count": 1,
+      "description": "ACTIVE.W.2 : ACTIVE layer vertical width increment is an integer multiple of 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              20,
+              20,
+              240,
+              20
+            ],
+            [
+              20,
+              256,
+              240,
+              256
+            ]
+          ],
+          "bbox": [
+            20,
+            20,
+            240,
+            256
+          ]
+        }
+      ]
+    },
+    "SRAM.ACTIVE.WELL.EN.2": {
+      "violation_count": 2,
+      "description": "SRAM.ACTIVE.WELL.EN.2 : Minimum enclosure of ACTIVE (interacting with the layer SRAMDRC) by WELL is 13.5 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              20,
+              0,
+              256
+            ],
+            [
+              20,
+              20,
+              20,
+              256
+            ]
+          ],
+          "bbox": [
+            0,
+            20,
+            20,
+            256
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              240,
+              0,
+              20,
+              0
+            ],
+            [
+              240,
+              20,
+              20,
+              20
+            ]
+          ],
+          "bbox": [
+            20,
+            0,
+            240,
+            20
+          ]
+        }
+      ]
+    },
+    "ACTIVE.LUP.1": {
+      "violation_count": 1,
+      "description": "ACTIVE.LUP.1 : Maximum distance, to prevent latch-up, between ACTIVE forming a MOS device and ACTIVE forming a bulk/substrate contact within the same WELL/substrate is 30 um.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              20,
+              20
+            ],
+            [
+              20,
+              256
+            ],
+            [
+              240,
+              256
+            ],
+            [
+              240,
+              20
+            ]
+          ],
+          "bbox": [
+            20,
+            20,
+            240,
+            256
+          ]
+        }
+      ]
+    }
+  }
+}

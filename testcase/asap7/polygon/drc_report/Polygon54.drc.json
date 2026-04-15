@@ -1,0 +1,41 @@
+{
+  "case_name": "Polygon54",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "LIG.S.5": {
+      "violation_count": 1,
+      "description": "LIG.S.5 : Minimum (tip-to-tip) spacing between two LIG layer polygons' (lying completely outside the layer SRAMDRC) edges, when one of the edges is >= 24 nm and <= 36 nm, and the other is < 24 nm, is 31 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              120
+            ],
+            [
+              20,
+              232
+            ],
+            [
+              100,
+              232
+            ],
+            [
+              120,
+              120
+            ]
+          ],
+          "bbox": [
+            0,
+            120,
+            120,
+            232
+          ]
+        }
+      ]
+    }
+  }
+}

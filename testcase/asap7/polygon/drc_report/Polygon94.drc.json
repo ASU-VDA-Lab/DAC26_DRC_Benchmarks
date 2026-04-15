@@ -1,0 +1,37 @@
+{
+  "case_name": "Polygon94",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "M3.W.1": {
+      "violation_count": 1,
+      "description": "M3.W.1 : Minimum width of M3 is 18 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              0,
+              0,
+              200
+            ],
+            [
+              64,
+              200,
+              64,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            64,
+            200
+          ]
+        }
+      ]
+    }
+  }
+}

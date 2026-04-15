@@ -1,0 +1,77 @@
+{
+  "case_name": "Polygon128",
+  "design_type": "polygon",
+  "total_violations": 3,
+  "total_rules_violated": 2,
+  "rules": {
+    "M6.W.3": {
+      "violation_count": 2,
+      "description": "M6.W.3 : M6 vertical width may not be an even integer multiple of its minimum width.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              0,
+              0,
+              0,
+              256
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            0,
+            256
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              320,
+              0,
+              320,
+              256
+            ]
+          ],
+          "bbox": [
+            320,
+            0,
+            320,
+            256
+          ]
+        }
+      ]
+    },
+    "M6.S.2": {
+      "violation_count": 1,
+      "description": "M6.S.2 : Minimum horizontal spacing between two M6 layer polygons' edges, regardless of the edge lengths and mask colors, is 40 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              320,
+              0,
+              320,
+              256
+            ],
+            [
+              192,
+              256,
+              192,
+              0
+            ]
+          ],
+          "bbox": [
+            192,
+            0,
+            320,
+            256
+          ]
+        }
+      ]
+    }
+  }
+}

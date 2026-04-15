@@ -1,0 +1,89 @@
+{
+  "case_name": "Polygon221",
+  "design_type": "polygon",
+  "total_violations": 3,
+  "total_rules_violated": 2,
+  "rules": {
+    "LVT.W.1": {
+      "violation_count": 1,
+      "description": "LVT.W.1 : Minimum horizontal width of LVT is 108 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              0,
+              0,
+              240
+            ],
+            [
+              240,
+              240,
+              240,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            240,
+            240
+          ]
+        }
+      ]
+    },
+    "SRAM.LVT.ACTIVE.EN.3": {
+      "violation_count": 2,
+      "description": "SRAM.LVT.ACTIVE.EN.3 : Minimum horizontal enclosure of ACTIVE (interacting with SRAMDRC) by LVT is 13.5 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              60,
+              0,
+              168
+            ],
+            [
+              40,
+              60,
+              40,
+              168
+            ]
+          ],
+          "bbox": [
+            0,
+            60,
+            40,
+            168
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              240,
+              168,
+              240,
+              60
+            ],
+            [
+              200,
+              168,
+              200,
+              60
+            ]
+          ],
+          "bbox": [
+            200,
+            60,
+            240,
+            168
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "case_name": "Polygon57",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "LISD.A.1": {
+      "violation_count": 1,
+      "description": "LISD.A.1 : Minimum LISD area is 648 nm-sq.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              100
+            ],
+            [
+              96,
+              100
+            ],
+            [
+              96,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            96,
+            100
+          ]
+        }
+      ]
+    }
+  }
+}

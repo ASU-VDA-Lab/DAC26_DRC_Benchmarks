@@ -1,0 +1,231 @@
+{
+  "case_name": "Polygon3",
+  "design_type": "polygon",
+  "total_violations": 9,
+  "total_rules_violated": 3,
+  "rules": {
+    "ACTIVE.AUX.1": {
+      "violation_count": 2,
+      "description": "ACTIVE.AUX.1 : ACTIVE must always be enclosed by NSELECT or PSELECT, such that no ACTIVE layer edge(s) coincide with NSELECT or PSELECT layer edge(s).",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              40,
+              80
+            ],
+            [
+              40,
+              296
+            ],
+            [
+              680,
+              296
+            ],
+            [
+              680,
+              80
+            ]
+          ],
+          "bbox": [
+            40,
+            80,
+            680,
+            296
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              800,
+              620,
+              800,
+              404
+            ]
+          ],
+          "bbox": [
+            800,
+            404,
+            800,
+            620
+          ]
+        }
+      ]
+    },
+    "PSELECT.ACTIVE.EN.1": {
+      "violation_count": 5,
+      "description": "PSELECT.ACTIVE.EN.1 : Minimum horizontal enclosure of ACTIVE (not interacting with SRAMDRC) by PSELECT 46 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              800,
+              620,
+              800,
+              404
+            ],
+            [
+              800,
+              620,
+              800,
+              404
+            ]
+          ],
+          "bbox": [
+            800,
+            404,
+            800,
+            620
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              800,
+              944,
+              800,
+              728
+            ],
+            [
+              720,
+              944,
+              720,
+              728
+            ]
+          ],
+          "bbox": [
+            720,
+            728,
+            800,
+            944
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              800,
+              296,
+              800,
+              80
+            ],
+            [
+              680,
+              296,
+              680,
+              80
+            ]
+          ],
+          "bbox": [
+            680,
+            80,
+            800,
+            296
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              160,
+              404,
+              160,
+              620
+            ],
+            [
+              240,
+              404,
+              240,
+              620
+            ]
+          ],
+          "bbox": [
+            160,
+            404,
+            240,
+            620
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              160,
+              728,
+              160,
+              944
+            ],
+            [
+              240,
+              728,
+              240,
+              944
+            ]
+          ],
+          "bbox": [
+            160,
+            728,
+            240,
+            944
+          ]
+        }
+      ]
+    },
+    "PSELECT.ACTIVE.EN.2": {
+      "violation_count": 2,
+      "description": "PSELECT.ACTIVE.EN.2 : Minimum vertical enclosure of ACTIVE (not interacting with SRAMDRC) by PSELECT is 27 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              240,
+              1040,
+              720,
+              1040
+            ],
+            [
+              240,
+              944,
+              720,
+              944
+            ]
+          ],
+          "bbox": [
+            240,
+            944,
+            720,
+            1040
+          ]
+        },
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              680,
+              0,
+              160,
+              0
+            ],
+            [
+              680,
+              80,
+              160,
+              80
+            ]
+          ],
+          "bbox": [
+            160,
+            0,
+            680,
+            80
+          ]
+        }
+      ]
+    }
+  }
+}

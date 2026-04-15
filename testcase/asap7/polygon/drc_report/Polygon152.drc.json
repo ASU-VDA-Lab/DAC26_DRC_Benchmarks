@@ -1,0 +1,48 @@
+{
+  "case_name": "Polygon152",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 1,
+  "rules": {
+    "M8.L.1": {
+      "violation_count": 2,
+      "description": "M8.L.1 : Minimum feature length of M8 is 40 nm.",
+      "violations": [
+        {
+          "type": "edge",
+          "edges": [
+            [
+              280,
+              400,
+              280,
+              360
+            ]
+          ],
+          "bbox": [
+            280,
+            360,
+            280,
+            400
+          ]
+        },
+        {
+          "type": "edge",
+          "edges": [
+            [
+              280,
+              360,
+              400,
+              360
+            ]
+          ],
+          "bbox": [
+            280,
+            360,
+            400,
+            360
+          ]
+        }
+      ]
+    }
+  }
+}

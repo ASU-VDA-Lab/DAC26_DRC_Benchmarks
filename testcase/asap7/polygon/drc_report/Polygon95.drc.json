@@ -1,0 +1,70 @@
+{
+  "case_name": "Polygon95",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 2,
+  "rules": {
+    "M4.W.5": {
+      "violation_count": 1,
+      "description": "M4.W.5 : Minimum horizontal width of M4 is 44 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              0,
+              0,
+              100
+            ],
+            [
+              100,
+              100,
+              100,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            100,
+            100
+          ]
+        }
+      ]
+    },
+    "M4.AUX.1": {
+      "violation_count": 1,
+      "description": "M4.AUX.1 : M4 horizontal edges must be at a grid of 24 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            0,
+            0,
+            100,
+            100
+          ],
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              100
+            ],
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              0
+            ]
+          ]
+        }
+      ]
+    }
+  }
+}

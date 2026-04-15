@@ -1,0 +1,37 @@
+{
+  "case_name": "Polygon18",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "FIN.W.2": {
+      "violation_count": 1,
+      "description": "FIN.W.2 : Minimum horizontal FIN width is 108 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              0,
+              0,
+              28
+            ],
+            [
+              400,
+              28,
+              400,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            400,
+            28
+          ]
+        }
+      ]
+    }
+  }
+}

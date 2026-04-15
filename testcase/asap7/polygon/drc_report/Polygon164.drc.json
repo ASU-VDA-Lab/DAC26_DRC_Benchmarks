@@ -1,0 +1,78 @@
+{
+  "case_name": "Polygon164",
+  "design_type": "polygon",
+  "total_violations": 2,
+  "total_rules_violated": 2,
+  "rules": {
+    "M8.W.4": {
+      "violation_count": 1,
+      "description": "M8.W.4 : Minimum width of M8, when its length >= 1800 nm, is 120 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              6935,
+              0,
+              13200
+            ],
+            [
+              400,
+              13200,
+              400,
+              7200
+            ]
+          ],
+          "bbox": [
+            0,
+            6935,
+            400,
+            13200
+          ]
+        }
+      ]
+    },
+    "M8.W.5": {
+      "violation_count": 1,
+      "description": "M8.W.5 : Maximum width of M8 is 2000 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              13200
+            ],
+            [
+              400,
+              13200
+            ],
+            [
+              400,
+              7200
+            ],
+            [
+              800,
+              7200
+            ],
+            [
+              800,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            800,
+            13200
+          ]
+        }
+      ]
+    }
+  }
+}

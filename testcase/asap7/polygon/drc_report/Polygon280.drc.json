@@ -1,0 +1,169 @@
+{
+  "case_name": "Polygon280",
+  "design_type": "polygon",
+  "total_violations": 5,
+  "total_rules_violated": 5,
+  "rules": {
+    "M4.W.5": {
+      "violation_count": 1,
+      "description": "M4.W.5 : Minimum horizontal width of M4 is 44 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              -44,
+              -44,
+              -44,
+              140
+            ],
+            [
+              72,
+              140,
+              72,
+              -44
+            ]
+          ],
+          "bbox": [
+            -44,
+            -44,
+            72,
+            140
+          ]
+        }
+      ]
+    },
+    "V4.AUX.1": {
+      "violation_count": 1,
+      "description": "V4.AUX.1 : V4 must be inside M4 and M5.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              96
+            ],
+            [
+              96,
+              96
+            ],
+            [
+              96,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            96,
+            96
+          ]
+        }
+      ]
+    },
+    "V4.M5.AUX.2": {
+      "violation_count": 1,
+      "description": "V4.M5.AUX.2 : V4 must exactly be the same width as M5 along the direction perpendicular to the M5 length.",
+      "violations": [
+        {
+          "type": "polygon",
+          "vertices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              96
+            ],
+            [
+              96,
+              96
+            ],
+            [
+              96,
+              0
+            ]
+          ],
+          "bbox": [
+            0,
+            0,
+            96,
+            96
+          ]
+        }
+      ]
+    },
+    "M4.AUX.1": {
+      "violation_count": 1,
+      "description": "M4.AUX.1 : M4 horizontal edges must be at a grid of 24 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            -44,
+            -44,
+            72,
+            140
+          ],
+          "vertices": [
+            [
+              -44,
+              -44
+            ],
+            [
+              -44,
+              140
+            ],
+            [
+              72,
+              140
+            ],
+            [
+              72,
+              -44
+            ]
+          ]
+        }
+      ]
+    },
+    "M5.AUX.1": {
+      "violation_count": 1,
+      "description": "M5.AUX.1 : M5 vertical edges must be at a grid of 24 nm.",
+      "violations": [
+        {
+          "type": "polygon",
+          "bbox": [
+            -44,
+            -44,
+            140,
+            140
+          ],
+          "vertices": [
+            [
+              -44,
+              -44
+            ],
+            [
+              -44,
+              140
+            ],
+            [
+              140,
+              140
+            ],
+            [
+              140,
+              -44
+            ]
+          ]
+        }
+      ]
+    }
+  }
+}

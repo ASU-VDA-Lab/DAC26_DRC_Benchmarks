@@ -1,0 +1,37 @@
+{
+  "case_name": "Polygon59",
+  "design_type": "polygon",
+  "total_violations": 1,
+  "total_rules_violated": 1,
+  "rules": {
+    "LISD.S.2": {
+      "violation_count": 1,
+      "description": "LISD.S.2 : Minimum (tip-to-side) spacing between two LISD layer polygons' edges, when one edge is <= 36 nm and the other edge is > 36 nm, is 25 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [
+            [
+              0,
+              200,
+              140,
+              200
+            ],
+            [
+              140,
+              280,
+              0,
+              280
+            ]
+          ],
+          "bbox": [
+            0,
+            200,
+            140,
+            280
+          ]
+        }
+      ]
+    }
+  }
+}
