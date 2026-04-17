@@ -167,9 +167,7 @@ docker exec "$CONTAINER" mkdir -p "/workspace/testcase/asap7/$DESIGN/drc_report"
 docker cp "testcase/asap7/$DESIGN/drc_report/$CASE.drc.json" \
     "$CONTAINER:/workspace/testcase/asap7/$DESIGN/drc_report/"
 
-docker exec \
-    -e AGENT_INITIAL_BUDGET=600 -e AGENT_REMINDER_BUDGET=300 \
-    "$CONTAINER" bash src/run_pipeline_cursor.sh /workspace/task/info.json
+docker exec "$CONTAINER" bash src/run_pipeline_cursor.sh /workspace/task/info.json
 
 docker rm -f "$CONTAINER"
 ```
@@ -196,17 +194,13 @@ docker start "$CONTAINER"
 docker cp info.json "$CONTAINER:/workspace/task/info.json"
 
 # Phase 1: agent-only (golden report NOT yet in container)
-docker exec \
-    -e AGENT_INITIAL_BUDGET=600 -e AGENT_REMINDER_BUDGET=300 \
-    "$CONTAINER" bash src/run_pipeline_claude.sh --agent-only /workspace/task/info.json
+docker exec "$CONTAINER" bash src/run_pipeline_claude.sh --agent-only /workspace/task/info.json
 
 # Phase 2: inject golden report, then score
 docker exec "$CONTAINER" mkdir -p "/workspace/testcase/asap7/$DESIGN/drc_report"
 docker cp "testcase/asap7/$DESIGN/drc_report/$CASE.drc.json" \
     "$CONTAINER:/workspace/testcase/asap7/$DESIGN/drc_report/"
-docker exec \
-    -e AGENT_INITIAL_BUDGET=1800 -e AGENT_REMINDER_BUDGET=120 \
-    "$CONTAINER" bash src/run_pipeline_claude.sh --score-only /workspace/task/info.json
+docker exec "$CONTAINER" bash src/run_pipeline_claude.sh --score-only /workspace/task/info.json
 
 docker rm -f "$CONTAINER"
 ```
@@ -246,36 +240,27 @@ Inside the container, `run_pipeline_cursor.sh` executes:
 ```
 run_pipeline_cursor.sh <info.json>                                      [CONTAINER]
   |
-  +-- Step 1: Post-process info.json (rewrite paths to container perspective, including connectivity file path for cell/block)
-  +-- Step 2: Format prompt (prompt_format.py + prompt_repair/detection.md; cell/block repair prompts include golden connectivity JSON path)
+  +-- Step 1: Post-process info.json (rewrite paths to container perspective)
+  +-- Step 2: Format prompt (prompt_format.py + prompt_repair/detection.md)
+  +-- Step 3: Call LLM model once (agent_cursor.py or agent_claude.py)
+  |            The agent runs to completion; no timeout, no reminder.
+  |            The wrapper parses CLI JSON output for token usage and
+  |            emits STATUS, TOKENS_JSON, and RUNTIME_SECONDS on stderr.
   |
-  +-- Step 3: Call LLM model (agent_cursor.py or agent_claude.py --model <model_name>)
-  |            Global budget: 10-min total across all repair iterations (timer paused during KLayout DRC and scoring)
-  |            Reminder: when budget exhausted, agent gets 5 min to write final output
-  |            Force-kill if reminder also times out
-  |
-  +-- [Repair only -- repeated up to MAX_ITERATIONS times (default: 5)]:
+  +-- [Repair only]:
   |    +-- Step 3.5: Render GDS (KLayout batch mode)
-  |    +-- Step 4: Run KLayout DRC (run_klayout_drc.py) -> .lyrpt
-  |    +-- Step 4.5: Convert DRC report to JSON (process_klayout_reports.py) -> .drc.json
-  |    +-- Step 5: Sanity check (sanity_check.py)
-  |    +-- Step 5.5: Connectivity check (check_connectivity.py, cell/block only)
-  |    +-- Break early if DRC-clean (polygon) or DRC-clean + connectivity
-  |         preserved (cell/block); otherwise feed result back for next iteration
+  |    +-- Step 4:   Run KLayout DRC -> .lyrpt -> .drc.json
+  |    +-- Step 5:   Sanity check
+  |    +-- Step 5.5: Connectivity check (cell/block only)
   |
-  +-- Step 6: Score best iteration (score_repair.py or score_detection.py)
-  +-- Write CSV (write_score_csv)
-  +-- Append runtime to logs/runtime.csv
+  +-- Step 6: Score (score_repair.py or score_detection.py) -- also writes
+              agent_status, runtime_seconds, and the 4 token fields into
+              the score JSON.
+  +-- Write CSV (write_score_csv.py)
+  +-- Append runtime row to logs/runtime.csv (log_runtime.py)
 ```
 
-### Iterative Repair
-
-For repair tasks, the pipeline retries up to `**MAX_ITERATIONS**` times (default: `5`, configurable via the `MAX_ITERATIONS` environment variable). Each iteration feeds the previous iteration's DRC result back to the agent as additional context. The agent operates under a **global time budget of 10 minutes (600s) shared across all iterations** -- the timer runs only while `agent_cursor.py` is executing and is paused during KLayout DRC, scoring, and other intermediate steps.
-
-- **Early termination:** the loop breaks as soon as the output is DRC-clean. For cell/block designs, both DRC-clean **and** connectivity-preserved must hold.
-- **Per-iteration score files:** each iteration writes its own score file (e.g., `<case_name>_score_iter1.json`). The agent output script is always written to `<case_name>_repaired.py` (overwritten each iteration); intermediate DRC files go to `result/<model_name>/<design_type>/repair/<case_name>/temp/`.
-- **Best iteration selection:** among all iterations, the best is chosen by: connectivity preserved first, then fewest violations, then lowest iteration number (i.e., earliest clean repair wins ties).
-- **Final score JSON:** contains `best_iteration`, `iteration_used`, and `iteration_history` keys summarising all iterations.
+Each agent call is a **single invocation** that runs to natural completion; token usage is captured from the CLI JSON output.
 
 ### Supported Models
 
@@ -293,20 +278,6 @@ Models are invoked via the Cursor Agent CLI (`src/agent_cursor.py`) or Claude Co
 
 
 See [Cursor Models and Pricing](https://cursor.com/docs/models-and-pricing) for the full list of available models. Any model supported by the Cursor Agent CLI can be passed as `model_name`.
-
-### Agent Timeout Behavior
-
-The agent uses a **two-phase timeout** to ensure the pipeline always completes. For repair tasks, the budget is **global across all iterations** (not per-iteration). **Detection tasks** are unchanged: single-shot with 10 min + 5 min reminder.
-
-
-| Phase              | Duration            | Behavior                                                                        |
-| ------------------ | ------------------- | ------------------------------------------------------------------------------- |
-| **Initial budget** | 10 min (600s) total | Agent works across all iterations; timer paused during KLayout DRC and scoring  |
-| **Reminder**       | 5 min (300s)        | When initial budget is exhausted, agent is given 5 min to write its best output |
-| **Force-kill**     | --                  | If reminder also times out, agent is killed and iteration recorded as failed    |
-
-
-Configurable via environment variables: `AGENT_INITIAL_BUDGET` (default `600`), `AGENT_REMINDER_BUDGET` (default `300`, as set by `evaluate_cursor.sh` / `evaluate_claude.sh`). These env vars are the canonical knobs. The underlying Python flags `agent_cursor.py --reminder_timeout` / `--final_timeout` / `--temp_dir` exist for direct invocation and carry their own Python-level defaults (`600` / `120`), which `evaluate_*.sh` overrides via the env vars above.
 
 ### Intermediate Files
 
@@ -327,10 +298,36 @@ Running the image requires `--cap-add=NET_ADMIN` (both `evaluate_*.sh` scripts a
 Every pipeline run appends a row to `logs/runtime.csv` with columns:
 
 ```
-model, task_type, design_type, case_name, agent_runtime_seconds, total_runtime_seconds, agent_initial_budget, timestamp
+model, effort, task_type, design_type, case_name,
+agent_status, agent_runtime_seconds,
+input_tokens, output_tokens, cache_read_tokens, cache_write_tokens,
+timestamp
 ```
 
-The `runtime_seconds` field is also embedded in each score JSON file.
+The score JSON embeds `runtime_seconds`, which is the **agent runtime** (subprocess wall-clock time reported by the agent wrapper).
+
+### Token Accounting
+
+Each pipeline run records four token counters captured from the CLI's JSON
+stdout:
+
+| Field | Definition |
+|-------|------------|
+| `input_tokens` | New input tokens (excluding any served from prompt cache) |
+| `cache_write_tokens` | Tokens written to the prompt cache this call |
+| `cache_read_tokens` | Tokens served from the prompt cache this call |
+| `output_tokens` | Output tokens (includes reasoning tokens; the CLI does not split them out) |
+
+CLI-level field names differ by vendor: Cursor's Agent CLI uses camelCase
+(`inputTokens`, `outputTokens`, `cacheReadTokens`, `cacheWriteTokens`); the
+Claude Code CLI uses snake_case (`input_tokens`, `output_tokens`,
+`cache_read_input_tokens`, `cache_creation_input_tokens`). `agent_cursor.py` and
+`agent_claude.py` both normalize these into the snake_case names above.
+
+On agent failure (non-zero CLI exit, unparseable JSON, missing `usage` object,
+etc.), `agent_status` is set to `"fail"` and all four token counters are
+reported as `0`; the recorded `runtime_seconds` is still the actual elapsed
+time between the agent launching and the failure.
 
 ### Pipeline Logs
 
@@ -354,7 +351,6 @@ The same output is still printed to the terminal in real time.
 | `repair_rate`            | `removed_violations / original_violations` | Fraction of original violations eliminated                                                                                                                                                                                                                                                                             |
 | `new_violation_rate`     | `new_violations / original_violations`     | New violations introduced relative to original count                                                                                                                                                                                                                                                                   |
 | `connectivity_preserved` | boolean                                    | Whether all original electrical connections remain (cell/block only). Uses shape-aware DFS with per-path visited vias, directional search rule, redundant via pruning, and full polygon shape identity. Golden connectivity is stored as JSON in `testcase/asap7/{cell,block}/connectivity/`. |
-| `iteration_used`         | integer                                    | Total number of repair iterations actually run                                                                                                                                                                                                                                                                         |
 
 
 ### Detection Metrics (Geometry-Based)
@@ -460,20 +456,44 @@ The pipeline uses `.drc.json` for both golden and repaired reports. After KLayou
 Each pipeline run produces `.json` and `.csv` files at:
 
 ```
-score/<model_name>/<design_type>/<task_type>/<case_name>_score.json
-score/<model_name>/<design_type>/<task_type>/<case_name>_score.csv
+score/<run_id>/<design_type>/<task_type>/<case_name>_score.json
+score/<run_id>/<design_type>/<task_type>/<case_name>_score.csv
 ```
 
-The score JSON also contains `runtime_seconds` (agent wall-clock time) and `total_runtime_seconds` (full pipeline time).
+For claude pipeline runs, `run_id` is `<model_name>-<effort>` (e.g. `claude-sonnet-4-6-medium`) so different effort tiers produce distinct output folders; for cursor runs, `run_id` is just `<model_name>`.
+
+**Both repair and detection** include:
+
+
+| Key | Description |
+|-----|-------------|
+| `agent_status` | `"success"` or `"fail"` |
+| `runtime_seconds` | Agent wall-clock runtime |
+| `input_tokens` | New input tokens |
+| `output_tokens` | Output tokens (includes reasoning) |
+| `cache_read_tokens` | Cache read tokens |
+| `cache_write_tokens` | Cache creation tokens |
+
 
 **Repair tasks** additionally include:
 
 
-| Key                 | Description                                     |
-| ------------------- | ----------------------------------------------- |
-| `best_iteration`    | 1-based index of the iteration selected as best |
-| `iteration_used`    | Number of iterations actually run               |
-| `iteration_history` | Array of per-iteration score summaries          |
+| Key | Description |
+|-----|-------------|
+| `sanity_passed` | Overall result of structural sanity checks (`true` / `false`) |
+| `sanity_details` | Human-readable summary of any failed sanity checks |
+| `top_cell_exists` | Modified GDS has a top cell matching the original |
+| `gds_not_empty` | Modified GDS contains at least one shape |
+| `critical_layers_preserved` | All ASAP7 critical layers (nwell / fin / gate / active / v0 / m1) present |
+| `cell_structure_intact` | No original cell definitions were deleted |
+| `outline_boundary_respected` | (cell/block) All shapes within the original outline region |
+| `protruding_layers` | (cell/block, only on failure) List of layers with shapes outside the original outline, including layer/datatype and the enclosing bbox |
+| `instance_placements_unchanged` | (cell/block) Subcell instance placements match the original |
+| `missing_instances` | (cell/block, only on failure) Subcell instances from the original that are missing or moved in the modified layout |
+| `extra_instances` | (cell/block, only on failure) Subcell instances present in the modified layout but not in the original |
+| `polygon_shape_counts_ok` | (polygon) Per-layer shape counts unchanged vs. original |
+| `shape_count_mismatches` | (polygon, only on failure) Per-layer delta between original and modified shape counts |
+| `connectivity_preserved` | (cell/block) All original electrical connections remain |
 
 
 **Detection tasks** additionally include:

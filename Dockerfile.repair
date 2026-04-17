@@ -235,8 +235,6 @@ echo '  Logs:    /workspace/logs/'; \
 echo ''; \
 echo 'Environment variables:'; \
 echo '  WORKSPACE               (default: /workspace)'; \
-echo '  MAX_ITERATIONS          (default: 5)'; \
-echo '  AGENT_INITIAL_BUDGET    (default: 600s)'; \
-echo '  AGENT_REMINDER_BUDGET   (default: 120s)'; \
 echo '  SKIP_DRC                (set to 1 to skip KLayout DRC step)'; \
+echo '  CLAUDE_EFFORT           (Claude Code effort level, e.g. high/medium/low)'; \
 echo ''"]

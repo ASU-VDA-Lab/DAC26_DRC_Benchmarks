@@ -30,26 +30,18 @@
 #################################################################################
 # Unified LLM Agent for DRC tasks. Calls models via the Claude Code CLI.
 #
-# The agent writes its output directly to the file path specified in the prompt
-# (via the {output_path} placeholder). agent_claude.py does NOT capture or parse
-# the agent's stdout -- it only manages invocation, timeouts, and runtime
-# tracking.
+# The agent runs to completion under the Claude Code CLI with no artificial
+# timeout. It writes its output directly to the file path passed via the
+# prompt. This wrapper parses the CLI's stdout JSON to recover token usage,
+# then emits STATUS=/TOKENS_JSON=/RUNTIME_SECONDS= markers on stderr for the
+# pipeline shell script to consume.
 #
-# Fallback: for repair tasks, if --fallback is given (path to the original layout
-#   script), it is copied to the output file *before* calling the agent.  If the
-#   agent fails or times out, the original script remains so the pipeline can
-#   still render and score it.
-#
-# Two-phase timeout (default: 10 min + 2 min):
-#   1. Initial phase (--reminder_timeout, default 600s): agent works normally.
-#   2. If the initial phase times out, a *reminder* prompt is sent asking the
-#      agent to immediately write its best output to the output path within
-#      --final_timeout (default 120s).  The reminder text includes the actual
-#      timeout values and the output path.
-#   3. If the reminder phase also times out, the agent is force-killed and the
-#      pipeline continues with the fallback output (exit 0).
+# Fallback: for repair tasks, the original script is copied to the output
+# path before the agent runs. For detection tasks, an empty JSON array is
+# written. If the agent fails, those fallback files remain.
 
 import argparse
+import json
 import os
 import shutil
 import subprocess
@@ -61,20 +53,21 @@ AGENT_CMD = "claude"
 LONG_PROMPT_THRESHOLD = 100000
 
 
-def call_claude_agent(prompt_text, model_name, workspace=None, timeout=1200,
-                      effort=None):
-    # Invoke the Claude Code CLI.
+def call_claude_agent(prompt_text, model_name, workspace=None, effort=None):
+    # Invoke the Claude Code CLI with --output-format json and no timeout.
     #
-    # The agent writes output files directly (as instructed in the prompt).
-    # This function only tracks the subprocess lifecycle.
+    # Returns a dict with normalized snake_case token keys:
+    #   input_tokens, output_tokens, cache_read_tokens, cache_write_tokens
     #
-    # Raises subprocess.TimeoutExpired if the agent does not finish within
-    # *timeout* seconds (the process is killed before re-raising).
+    # Raises:
+    #   RuntimeError if the CLI exits non-zero.
+    #   json.JSONDecodeError / KeyError / TypeError if stdout cannot be parsed
+    #   into the expected {"usage": {...}} shape.
 
     base_cmd = [
         AGENT_CMD,
         "--model", model_name,
-        "--output-format", "text",
+        "--output-format", "json",
         "--allowedTools", "Bash(*)", "Read", "Write", "Edit",
             "Glob", "Grep", "Agent", "NotebookEdit",
         "-p",                           # print mode (non-interactive)
@@ -99,12 +92,7 @@ def call_claude_agent(prompt_text, model_name, workspace=None, timeout=1200,
                     stderr=subprocess.PIPE,
                     cwd=cwd,
                 )
-                try:
-                    stdout, stderr = proc.communicate(timeout=timeout)
-                except subprocess.TimeoutExpired:
-                    proc.kill()
-                    proc.communicate()  # drain pipes
-                    raise
+                stdout, stderr = proc.communicate()
         else:
             cmd = base_cmd + [prompt_text]
             proc = subprocess.Popen(
@@ -113,12 +101,7 @@ def call_claude_agent(prompt_text, model_name, workspace=None, timeout=1200,
                 stderr=subprocess.PIPE,
                 cwd=cwd,
             )
-            try:
-                stdout, stderr = proc.communicate(timeout=timeout)
-            except subprocess.TimeoutExpired:
-                proc.kill()
-                proc.communicate()  # drain pipes
-                raise
+            stdout, stderr = proc.communicate()
     finally:
         if tmp_path and os.path.exists(tmp_path):
             os.unlink(tmp_path)
@@ -132,52 +115,16 @@ def call_claude_agent(prompt_text, model_name, workspace=None, timeout=1200,
                 proc.returncode, stderr_text.strip(), stdout_text.strip())
         )
 
+    # Parse stdout JSON and extract token usage.
+    data = json.loads(stdout_text)
+    usage = data["usage"]
 
-def continue_claude_agent(message, model_name, workspace=None, timeout=120,
-                          effort=None):
-    # Continue the most recent Claude Code conversation with a follow-up message.
-    #
-    # Uses `claude --continue -p "message"` to resume the session that was
-    # killed during Phase 1, preserving all prior context.
-    #
-    # Raises subprocess.TimeoutExpired if the agent does not finish within
-    # *timeout* seconds (the process is killed before re-raising).
-
-    cmd = [
-        AGENT_CMD,
-        "--model", model_name,
-        "--output-format", "text",
-        "--allowedTools", "Bash(*)", "Read", "Write", "Edit",
-        "Glob", "Grep", "Agent", "NotebookEdit",
-        "--continue",
-        "-p", message,
-    ]
-    if effort:
-        cmd.extend(["--effort", effort])
-
-    cwd = workspace if workspace else None
-
-    proc = subprocess.Popen(
-        cmd,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        cwd=cwd,
-    )
-    try:
-        stdout, stderr = proc.communicate(timeout=timeout)
-    except subprocess.TimeoutExpired:
-        proc.kill()
-        proc.communicate()
-        raise
-
-    stdout_text = stdout.decode("utf-8", errors="replace")
-    stderr_text = stderr.decode("utf-8", errors="replace")
-
-    if proc.returncode != 0:
-        raise RuntimeError(
-            "Agent CLI (continue) exited with code {}.\nstderr: {}\nstdout: {}".format(
-                proc.returncode, stderr_text.strip(), stdout_text.strip())
-        )
+    return {
+        "input_tokens":       int(usage["input_tokens"]),
+        "output_tokens":      int(usage["output_tokens"]),
+        "cache_read_tokens":  int(usage.get("cache_read_input_tokens", 0)),
+        "cache_write_tokens": int(usage.get("cache_creation_input_tokens", 0)),
+    }
 
 
 if __name__ == "__main__":
@@ -197,10 +144,6 @@ if __name__ == "__main__":
                         help="Model name (e.g. claude-opus-4-6, claude-sonnet-4-6)")
     parser.add_argument("--task_type", default="repair",
                         choices=["repair", "detection"])
-    parser.add_argument("--reminder_timeout", type=int, default=600,
-                        help="Seconds before sending reminder (default: 600 = 10 min)")
-    parser.add_argument("--final_timeout", type=int, default=120,
-                        help="Seconds after reminder before force-kill (default: 120 = 2 min)")
     parser.add_argument("--fallback", default=None,
                         help="Path to original layout script; copied to output_file "
                              "as fallback before calling the agent (repair only)")
@@ -211,9 +154,6 @@ if __name__ == "__main__":
     parser.add_argument("--temp_dir", default=None,
                         help="Directory for intermediate/scratch files; "
                              "created before the agent runs")
-    parser.add_argument("--reminder_prompt_file", default=None,
-                        help="Path to pre-formatted reminder prompt file "
-                             "(used for Phase 2 --continue call)")
     args = parser.parse_args()
 
     # -- Ensure temp directory exists -------------------------------------------
@@ -240,61 +180,29 @@ if __name__ == "__main__":
         prompt_text = f.read()
 
     sys.stdout.write("Calling model: {}\n".format(args.model))
-    sys.stdout.write("Timeout: {}s initial + {}s after reminder\n".format(
-        args.reminder_timeout, args.final_timeout))
+
+    zero_tokens = {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+    }
+
     t_start = time.monotonic()
-
-    # -- Phase 1: initial call with reminder_timeout --------------------------
     try:
-        call_claude_agent(
+        tokens = call_claude_agent(
             prompt_text, args.model,
-            workspace=args.workspace, timeout=args.reminder_timeout,
-            effort=args.effort,
+            workspace=args.workspace, effort=args.effort,
         )
-    except subprocess.TimeoutExpired:
-        elapsed_so_far = time.monotonic() - t_start
-        sys.stderr.write(
-            "REMINDER: Agent timed out after {:.0f}s. "
-            "Sending reminder with {}s deadline...\n".format(
-                elapsed_so_far, args.final_timeout))
-
-        # -- Phase 2: continue the killed session with a reminder ---------------
-        if args.reminder_prompt_file and os.path.isfile(args.reminder_prompt_file):
-            with open(args.reminder_prompt_file) as rf:
-                reminder_message = rf.read()
-        else:
-            reminder_message = (
-                "URGENT: Time is up. Write your best output to {} immediately."
-            ).format(args.output_file)
-
-        try:
-            continue_claude_agent(
-                reminder_message, args.model,
-                workspace=args.workspace, timeout=args.final_timeout,
-                effort=args.effort,
-            )
-            sys.stderr.write("  Reminder call completed.\n")
-        except subprocess.TimeoutExpired:
-            elapsed_so_far = time.monotonic() - t_start
-            sys.stderr.write(
-                "WARNING: Agent did not respond to reminder within {}s. "
-                "Total elapsed: {:.0f}s. Keeping fallback output.\n".format(
-                    args.final_timeout, elapsed_so_far))
-        except Exception as exc:
-            elapsed_so_far = time.monotonic() - t_start
-            sys.stderr.write("ERROR during reminder call: {}\n".format(exc))
-            sys.stderr.write("RUNTIME_SECONDS={:.3f}\n".format(elapsed_so_far))
-            sys.stderr.write("  Keeping fallback output.\n")
-            sys.exit(1)
-
+        status = "success"
     except Exception as exc:
-        elapsed = time.monotonic() - t_start
         sys.stderr.write("ERROR: {}\n".format(exc))
-        sys.stderr.write("RUNTIME_SECONDS={:.3f}\n".format(elapsed))
-        sys.stderr.write("  Keeping fallback output.\n")
-        sys.exit(1)
+        tokens = zero_tokens
+        status = "fail"
 
     elapsed = time.monotonic() - t_start
+    sys.stderr.write("STATUS={}\n".format(status))
+    sys.stderr.write("TOKENS_JSON={}\n".format(json.dumps(tokens)))
     sys.stderr.write("RUNTIME_SECONDS={:.3f}\n".format(elapsed))
 
     # Check if agent wrote the output file
@@ -303,3 +211,6 @@ if __name__ == "__main__":
     else:
         sys.stdout.write("WARNING: Output file not found: {}\n".format(
             args.output_file))
+
+    # Always exit 0 — pipeline keys off the STATUS= marker, not the exit code.
+    sys.exit(0)

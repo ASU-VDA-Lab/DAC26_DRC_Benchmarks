@@ -54,6 +54,7 @@
 # Matching algorithm: Hopcroft-Karp maximum bipartite matching.
 # Supports KLayout (.lyrpt XML) and processed JSON (.drc.json) formats.
 
+import argparse
 import json
 import re
 import sys
@@ -486,16 +487,38 @@ def score_detection(detection_path, golden_report_path):
     }
 
 
+def _load_tokens(raw: str) -> dict:
+    # Parse a tokens-json argument.  Accepts either a raw JSON string or a
+    # path to a JSON file.
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        with open(raw) as f:
+            return json.load(f)
+
+
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print(
-            "Usage: python score_detection.py <detection.json> <golden_report>",
-            file=sys.stderr,
-        )
-        sys.exit(1)
+    parser = argparse.ArgumentParser(description="Score DRC detection")
+    parser.add_argument("detection_path")
+    parser.add_argument("golden_report_path")
+    parser.add_argument("--agent-status", choices=["success", "fail"], required=True)
+    parser.add_argument(
+        "--tokens-json", required=True,
+        help="JSON string or path to JSON file with 4 token fields",
+    )
+    parser.add_argument("--agent-runtime-seconds", type=float, required=True)
+    args = parser.parse_args()
 
-    detection_path = sys.argv[1]
-    golden_path = sys.argv[2]
+    tokens = _load_tokens(args.tokens_json)
 
-    result = score_detection(detection_path, golden_path)
+    result = score_detection(args.detection_path, args.golden_report_path)
+
+    # Attach new fields common to repair and detection scoring.
+    result["agent_status"]          = args.agent_status
+    result["runtime_seconds"]       = args.agent_runtime_seconds
+    result["input_tokens"]          = int(tokens.get("input_tokens", 0))
+    result["output_tokens"]         = int(tokens.get("output_tokens", 0))
+    result["cache_read_tokens"]     = int(tokens.get("cache_read_tokens", 0))
+    result["cache_write_tokens"]    = int(tokens.get("cache_write_tokens", 0))
+
     print(json.dumps(result, indent=2))

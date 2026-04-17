@@ -30,33 +30,48 @@
 # Append a row to the runtime CSV log.
 #
 # Usage:
-#     python3 src/log_runtime.py <csv_path> <model> <task_type> <design_type> \
-#         <case_name> <agent_runtime> <total_runtime> <agent_initial_budget> <timestamp>
+#     python3 src/log_runtime.py <csv_path> <model> <effort> <task_type> <design_type> \
+#         <case_name> <agent_status> <agent_runtime> \
+#         <tokens_json> <timestamp>
+#
+# <tokens_json> is either a JSON string or a path to a JSON file containing
+# the four token fields (input_tokens, output_tokens, cache_read_tokens,
+# cache_write_tokens).
 
 import csv
+import json
 import os
 import sys
 
 
 FIELDNAMES = [
-    "model", "task_type", "design_type", "case_name",
-    "agent_runtime_seconds", "total_runtime_seconds",
-    "agent_initial_budget", "timestamp",
+    "model", "effort", "task_type", "design_type", "case_name",
+    "agent_status",
+    "agent_runtime_seconds",
+    "input_tokens", "output_tokens",
+    "cache_read_tokens", "cache_write_tokens",
+    "timestamp",
 ]
 
 
 def main():
-    if len(sys.argv) != 10:
+    if len(sys.argv) != 11:
         print(
-            "Usage: python3 log_runtime.py <csv_path> <model> <task_type> "
-            "<design_type> <case_name> <agent_runtime> <total_runtime> "
-            "<agent_initial_budget> <timestamp>",
+            "Usage: python3 log_runtime.py <csv_path> <model> <effort> <task_type> "
+            "<design_type> <case_name> <agent_status> <agent_runtime> "
+            "<tokens_json> <timestamp>",
             file=sys.stderr,
         )
         sys.exit(1)
 
-    (csv_path, model, task_type, design_type, case_name,
-     agent_rt, total_rt, agent_budget, ts) = sys.argv[1:]
+    (csv_path, model, effort, task_type, design_type, case_name,
+     agent_status, agent_rt, tokens_raw, ts) = sys.argv[1:]
+
+    try:
+        tokens = json.loads(tokens_raw)
+    except json.JSONDecodeError:
+        with open(tokens_raw) as f:
+            tokens = json.load(f)
 
     write_header = not os.path.exists(csv_path)
 
@@ -66,12 +81,16 @@ def main():
             writer.writeheader()
         writer.writerow({
             "model": model,
+            "effort": effort,
             "task_type": task_type,
             "design_type": design_type,
             "case_name": case_name,
+            "agent_status": agent_status,
             "agent_runtime_seconds": agent_rt,
-            "total_runtime_seconds": total_rt,
-            "agent_initial_budget": agent_budget,
+            "input_tokens":       int(tokens.get("input_tokens", 0)),
+            "output_tokens":      int(tokens.get("output_tokens", 0)),
+            "cache_read_tokens":  int(tokens.get("cache_read_tokens", 0)),
+            "cache_write_tokens": int(tokens.get("cache_write_tokens", 0)),
             "timestamp": ts,
         })
 

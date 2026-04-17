@@ -10,7 +10,7 @@ The pipeline always reads from `src/` at runtime -- files in `example/` are **no
 
 - [*info.json*](./info.json): Shows all required keys for info.json. For single-case runs, prepare your own info.json based on this template. For paper experiments, `src/build_case_info.py` generates it automatically.
 - [*build_case_info.py*](./build_case_info.py): Reference copy of the info.json generator used by `evaluate_cursor.sh` for paper experiments. Uses argparse named arguments. Customize to change how info.json is built (e.g., different system prompts, custom paths).
-- [*agent_cursor.py*](./agent_cursor.py): Reference copy of the Cursor Agent CLI wrapper. Customize to change how LLM models are invoked (e.g., different CLI tools, API calls, custom timeout behavior).
+- [*agent_cursor.py*](./agent_cursor.py): Reference copy of the Cursor Agent CLI wrapper. Customize to change how LLM models are invoked (e.g., different CLI tools, alternative API calls, custom token accounting).
 - [*agent_claude.py*](./agent_claude.py): Reference copy of the Claude Code CLI wrapper. Same interface as `agent_cursor.py` but uses Claude Code CLI.
 - [*skill.md*](./skill.md): ASAP7 DRC knowledge document -- layer mapping, rule categories, repair/detection strategies, and connectivity verification instructions. Referenced by prompt templates via `{path_to_skill}`.
 - [*prompt_repair_cell.md*](./prompt_repair_cell.md): Repair prompt template for cell designs. Constrains edits to M1 and V0 only; M0 polygons must not be modified. Includes `{path_to_connectivity_file}` and `check_connectivity.py` verification.

@@ -44,8 +44,6 @@ ALLOWED_KEYS = {
     "path_to_connectivity_file",
     "output_path",
     "temp_dir",
-    "agent_initial_budget",
-    "agent_reminder_budget",
 }
 
 

@@ -79,9 +79,6 @@ CASES=(
     "Block7 block"
 )
 
-AGENT_INITIAL_BUDGET="${AGENT_INITIAL_BUDGET:-600}"
-AGENT_REMINDER_BUDGET="${AGENT_REMINDER_BUDGET:-300}"
-
 # ===========================================================================
 # Main loop
 # ===========================================================================
@@ -218,8 +215,6 @@ for task_type in "${TASK_TYPES[@]}"; do
 
                 echo "Running full repair pipeline..."
                 docker exec \
-                    -e "AGENT_INITIAL_BUDGET=${AGENT_INITIAL_BUDGET}" \
-                    -e "AGENT_REMINDER_BUDGET=${AGENT_REMINDER_BUDGET}" \
                     "${container_name}" \
                     bash src/run_pipeline_cursor.sh /workspace/task/info.json \
                 || echo "WARNING: Repair pipeline failed for ${case_name}. Continuing." >&2
@@ -227,8 +222,6 @@ for task_type in "${TASK_TYPES[@]}"; do
             else
                 echo "Running agent (detection, no golden report visible)..."
                 if docker exec \
-                    -e "AGENT_INITIAL_BUDGET=${AGENT_INITIAL_BUDGET}" \
-                    -e "AGENT_REMINDER_BUDGET=${AGENT_REMINDER_BUDGET}" \
                     "${container_name}" \
                     bash src/run_pipeline_cursor.sh --agent-only /workspace/task/info.json; then
 
@@ -241,8 +234,6 @@ for task_type in "${TASK_TYPES[@]}"; do
 
                     echo "Running scoring phase..."
                     docker exec \
-                        -e "AGENT_INITIAL_BUDGET=${AGENT_INITIAL_BUDGET:-1800}" \
-                        -e "AGENT_REMINDER_BUDGET=${AGENT_REMINDER_BUDGET:-120}" \
                         "${container_name}" \
                         bash src/run_pipeline_cursor.sh --score-only /workspace/task/info.json \
                     || echo "WARNING: Scoring failed for ${case_name}. Continuing." >&2

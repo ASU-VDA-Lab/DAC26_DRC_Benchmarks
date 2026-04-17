@@ -27,37 +27,65 @@
 #OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 #OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #################################################################################
-# Append runtime_seconds and total_runtime_seconds fields to a score JSON.
+# Merge sanity check fields into a score JSON file.
 #
 # Usage:
-#     python3 src/append_runtime.py <score_json> <agent_runtime> <total_runtime>
+#     python3 src/merge_score_sanity.py <score_json> <sanity_json>
 
 import json
 import sys
 
 
+STRUCTURAL_KEYS = [
+    "top_cell_exists",
+    "gds_not_empty",
+    "critical_layers_preserved",
+    "cell_structure_intact",
+    "outline_boundary_respected",
+    "instance_placements_unchanged",
+    "polygon_shape_counts_ok",
+]
+
+OPTIONAL_DETAIL_KEYS = [
+    "protruding_layers",
+    "missing_instances",
+    "extra_instances",
+    "shape_count_mismatches",
+]
+
+
 def main():
-    if len(sys.argv) != 4:
+    if len(sys.argv) != 3:
         print(
-            "Usage: python3 append_runtime.py <score_json> <agent_runtime> <total_runtime>",
+            "Usage: python3 merge_score_sanity.py <score_json> <sanity_json>",
             file=sys.stderr,
         )
         sys.exit(1)
 
     score_path = sys.argv[1]
-    agent_rt = float(sys.argv[2])
-    total_rt = float(sys.argv[3])
+    sanity_path = sys.argv[2]
 
     with open(score_path) as f:
-        data = json.load(f)
+        score_data = json.load(f)
 
-    data.setdefault("runtime_seconds", agent_rt)
-    data["total_runtime_seconds"] = total_rt
+    with open(sanity_path) as f:
+        sanity_data = json.load(f)
+
+    score_data["sanity_passed"]  = sanity_data.get("passed")
+    score_data["sanity_details"] = sanity_data.get("details")
+
+    for key in STRUCTURAL_KEYS:
+        if key in sanity_data:
+            score_data[key] = sanity_data[key]
+
+    for key in OPTIONAL_DETAIL_KEYS:
+        if sanity_data.get(key):
+            score_data[key] = sanity_data[key]
 
     with open(score_path, "w") as f:
-        json.dump(data, f, indent=2)
+        json.dump(score_data, f, indent=2)
 
-    print(f"  Runtime fields added: agent={agent_rt}s, total={total_rt}s")
+    print("  Sanity fields merged into score JSON.")
 
 
 if __name__ == "__main__":

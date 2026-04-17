@@ -22,16 +22,11 @@ All scripts for the KLayout DRC benchmark evaluation pipeline.
 - [*check_connectivity.py*](./check_connectivity.py): Connectivity verifier -- checks electrical connections are preserved after LLM edits using shape-aware DFS with per-path visited vias, directional search rule, redundant via pruning, and full polygon shape identity. Reads golden connectivity from JSON files in `testcase/asap7/{cell,block}/connectivity/`.
 - [*prepare_render_script.py*](./prepare_render_script.py): Rewrites `layout.write()` path in LLM output script for GDS rendering.
 - [*merge_score_connectivity.py*](./merge_score_connectivity.py): Merges connectivity check fields into a score JSON file.
-- [*unify_iteration_score.py*](./unify_iteration_score.py): Adds iteration number, runtime, and connectivity status to per-iteration score.
-- [*select_best_iteration.py*](./select_best_iteration.py): Selects the best iteration from per-iteration scores, writes final score JSON.
 - [*write_score_csv.py*](./write_score_csv.py): Converts a score JSON to a single-row CSV file.
-- [*append_runtime.py*](./append_runtime.py): Appends `runtime_seconds` and `total_runtime_seconds` to score JSON.
 - [*log_runtime.py*](./log_runtime.py): Appends a row to the runtime CSV log.
 - [*parse_info_json.py*](./parse_info_json.py): Parses info.json and outputs shell variable assignments (`task_type`, `model_name`, `case_name`, `design_type`) with `shlex.quote`.
 - [*postprocess_info_json.py*](./postprocess_info_json.py): Rewrites info.json paths for the container perspective (layout script, screenshot, DRC report, DRM images, output path, temp dir, and connectivity file).
-- [*summarize_drc_report.py*](./summarize_drc_report.py): Prints a human-readable summary of a `.drc.json` report (total violations, per-rule counts).
 - [*read_score_field.py*](./read_score_field.py): Reads a single field from a score JSON file; supports `--default` for missing fields.
-- [*shell_math.py*](./shell_math.py): Safe shell-friendly math operations (`max`, `add`, `sub`, `gte`, `div`, `fmt`) without `eval`/`exec`.
 - [*skill.md*](./skill.md): ASAP7 DRC knowledge document -- layer mapping, rule categories, repair/detection strategies, and connectivity verification instructions. Referenced by prompt templates via `{path_to_skill}`.
 - [*prompt_repair_cell.md*](./prompt_repair_cell.md): Repair prompt for cell designs. Includes `{path_to_connectivity_file}` placeholder for the golden connectivity JSON and instructs the agent to verify connectivity using `check_connectivity.py`.
 - [*prompt_repair_block.md*](./prompt_repair_block.md): Repair prompt for block designs. Includes `{path_to_connectivity_file}` placeholder for the golden connectivity JSON and instructs the agent to verify connectivity using `check_connectivity.py`.
@@ -86,17 +81,16 @@ Each invocation processes exactly one model. Results are stored under `result/<m
 | Step | Script | Description |
 |------|--------|-------------|
 | 1 | `prompt_format.py` | Post-process info.json (rewrite paths to container perspective), then format prompt from template + info.json; DRC report points to `.drc.json` |
-| 2 | `agent_cursor.py` or `agent_claude.py` | Call LLM model via Cursor CLI or Claude Code CLI with `--model <model_name>` |
+| 2 | `agent_cursor.py` or `agent_claude.py` | Call LLM model once via Cursor CLI or Claude Code CLI with `--model <model_name>` and `--output-format json`; the wrapper parses token usage from stdout and emits `STATUS=` / `TOKENS_JSON=` / `RUNTIME_SECONDS=` markers on stderr |
 | 2.5 (repair) | KLayout batch | Render GDS from LLM's modified layout script |
 | 3 (repair) | `run_klayout_drc.py` | Run KLayout DRC on the LLM-produced GDS, producing `.lyrpt` report |
 | 3.5 (repair) | `process_klayout_reports.py` | Convert `.lyrpt` DRC report to structured `.drc.json` for consistent comparison |
-| 4 (repair) | `sanity_check.py` | Validate GDS integrity; for polygon designs, verify shape count per layer matches original |
-| 4.5 (repair) | `check_connectivity.py` | Verify connectivity preservation (cell/block only) |
-| 5 | `score_repair.py` or `score_detection.py` | Score: repair compares golden `.drc.json` vs repaired `.drc.json`; detection compares detected `.json` vs golden `.drc.json` |
-| 6 | `select_best_iteration.py` | Select best iteration (repair only), write final score JSON |
-| 7 | `write_score_csv.py`, `append_runtime.py`, `log_runtime.py` | Write CSV, append runtime to score JSON, log to `logs/runtime.csv` |
+| 4 (repair) | `sanity_check.py` + `check_connectivity.py` | Validate GDS integrity (all repair designs); verify connectivity preservation (cell/block only). Each writes a JSON file in `temp_dir/` |
+| 5 | `score_repair.py` or `score_detection.py` | Score: also writes `agent_status`, `runtime_seconds`, and the 4 token fields directly into the score JSON |
+| 5.5 (repair) | `merge_score_sanity.py`, `merge_score_connectivity.py` | Merge sanity (and connectivity, cell/block only) fields into the score JSON |
+| 6 | `write_score_csv.py`, `log_runtime.py` | Write per-case CSV and append a row to `logs/runtime.csv` |
 
-All console output (stdout + stderr) is also captured to `logs/<model_name>_<design_type>_<task_type>_<case_name>.log` via `tee`.
+All console output (stdout + stderr) is also captured to `logs/<run_id>_<design_type>_<task_type>_<case_name>.log` via `tee`, where `run_id` is `<model_name>-<effort>` for claude pipeline runs (e.g. `claude-sonnet-4-6-medium`) and `<model_name>` for cursor runs.
 
 **Environment variables:**
 
@@ -104,36 +98,40 @@ All console output (stdout + stderr) is also captured to `logs/<model_name>_<des
 |----------|---------|-------------|
 | `WORKSPACE` | `/workspace` | Root workspace directory (set by Docker image ENV) |
 | `SKIP_DRC` | `0` | Set to `1` to skip KLayout DRC step (repair only) |
-| `AGENT_INITIAL_BUDGET` | `600` | Total agent time budget in seconds across all repair iterations (timer paused during KLayout DRC and scoring) |
-| `AGENT_REMINDER_BUDGET` | `120` | Time in seconds given to agent after initial budget is exhausted to write its best output |
-| `MAX_ITERATIONS` | `5` | Maximum number of repair iterations per case |
+| `CLAUDE_EFFORT` | unset | Claude Code reasoning effort level (e.g. `high`, `medium`, `low`); passed as `--effort` to the CLI |
 
 ---
 
 ## Agent (`agent_cursor.py` / `agent_claude.py`)
 
-CLI wrappers that invoke LLM models. `agent_cursor.py` uses the Cursor Agent CLI; `agent_claude.py` uses the Claude Code CLI. Both share the same interface and two-phase timeout logic. The agent writes its output directly to the file path specified in the prompt (via the `{output_path}` placeholder) -- neither script captures or parses the agent's stdout.
+CLI wrappers that invoke LLM models. `agent_cursor.py` uses the Cursor Agent CLI; `agent_claude.py` uses the Claude Code CLI. The agent writes its output directly to the file path specified in the prompt (via the `{output_path}` placeholder). Each wrapper parses the CLI's JSON stdout for token usage and emits stderr markers for the pipeline shell script to consume.
 
 ```bash
 # Cursor Agent CLI
 python3 src/agent_cursor.py <prompt_file> <output_file> --model <model_name> --task_type <repair|detection> \
-    [--reminder_timeout 600] [--final_timeout 120] [--temp_dir <path>]
+    [--workspace <dir>] [--fallback <path>] [--temp_dir <path>]
 
 # Claude Code CLI
 python3 src/agent_claude.py <prompt_file> <output_file> --model <model_name> --task_type <repair|detection> \
-    [--reminder_timeout 600] [--final_timeout 120] [--temp_dir <path>]
+    [--workspace <dir>] [--fallback <path>] [--temp_dir <path>] [--effort <level>]
 ```
 
 - `output_file`: the expected output path (agent writes here directly as instructed by the prompt)
 - `--temp_dir`: directory for intermediate/scratch files; created (via `os.makedirs`) before the agent runs
+- `--fallback`: path to the original layout script (repair only); copied to `output_file` before the agent runs so the pipeline can still render/score if the agent fails
 
-**Two-phase timeout** (default: 10 min + 2 min). For repair tasks, the budget is **global across all iterations** (not per-iteration); the timer pauses during KLayout DRC, scoring, and other intermediate steps. Detection tasks use a single-shot 10 min + 2 min timeout.
+**Single-call execution**
 
-1. **Initial budget** (`--reminder_timeout`, default 600s): the agent works across all repair iterations; timer only runs while `agent_cursor.py` is executing.
-2. **Reminder phase** (`--final_timeout`, default 120s): when the cumulative agent time reaches the initial budget, a new agent call is made with an urgent reminder prepended to the original prompt, asking the agent to immediately write its best output to the output path. The reminder ends when 2 minutes pass or the agent finishes and KLayout DRC starts. No further iterations run after the reminder.
-3. **Force-kill**: if the reminder phase also times out, the agent is killed and the iteration is recorded as failed.
+The agent runs once to completion with no timeout or reminder. After the CLI
+returns:
 
-Prints `RUNTIME_SECONDS=<float>` to stderr so that `run_pipeline_cursor.sh` can capture agent wall-clock time.
+- `STATUS=success` or `STATUS=fail` is written to stderr.
+- `TOKENS_JSON={...}` carries the 4 normalized token counters.
+- `RUNTIME_SECONDS=<float>` carries the wall-clock runtime.
+
+The process always exits 0; failure mode is conveyed via the `STATUS=` marker.
+On failure, all four token counters are reported as 0 while `RUNTIME_SECONDS`
+remains the real elapsed time.
 
 ---
 
@@ -234,17 +232,17 @@ info.json (includes model_name, temp_dir) + prompt_*.md
   v    v         v                   v
 sanity conn.  score_repair.py   score_detection.py
 check  check  (golden .drc.json (golden .drc.json
-               vs repaired       vs detection
-               .drc.json)        .json + geometry
-        |                        edge-aware matching)
-        v                            |
-  Best iter .lyrpt + .drc.json       v
-  copied to result_dir/        score/<model_name>/...
-        |                     (+ runtime_seconds)
-        v
-  score/<model_name>/...
-  (+ runtime_seconds)
-        |
-        v
-  logs/runtime.csv
+  \    /       vs repaired       vs detection
+   \  /        .drc.json)        .json + geometry
+ merge into                       edge-aware matching)
+ score JSON                            |
+        |                              |
+        v                              v
+  score/<run_id>/...            score/<run_id>/...
+  (+ agent_status, runtime_seconds, (+ agent_status, runtime_seconds,
+   input/output/cache_*_tokens)   input/output/cache_*_tokens)
+        |                            |
+        +--------------+-------------+
+                       v
+                 logs/runtime.csv
 ```

@@ -71,6 +71,8 @@ RUN yum downgrade -y \
     && yum clean all \
     && rm -rf /var/cache/yum
 
+RUN alternatives --set iptables /usr/sbin/iptables-legacy 2>/dev/null || true
+
 # ---------------------------------------------------------------------------
 # Install shapely via pip (needed for connectivity check), then scrub pip.
 # We keep python3 + site-packages but remove the pip binary so the agent
