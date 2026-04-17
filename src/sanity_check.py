@@ -512,11 +512,11 @@ def sanity_check(
 
 def _parse_inputs():
     # Parse arguments from standard CLI or KLayout `-rd` defines.
-    if len(sys.argv) in (3, 6):
+    if len(sys.argv) in (3, 4, 6, 7):
         original_gds_path = sys.argv[1]
         modified_gds_path = sys.argv[2]
 
-        if len(sys.argv) == 6:
+        if len(sys.argv) in (6, 7):
             original_script_path = sys.argv[3]
             modified_script_path = sys.argv[4]
             design_type = sys.argv[5]
@@ -525,12 +525,20 @@ def _parse_inputs():
             modified_script_path = None
             design_type = None
 
+        if len(sys.argv) == 4:
+            sanity_json_out = sys.argv[3]
+        elif len(sys.argv) == 7:
+            sanity_json_out = sys.argv[6]
+        else:
+            sanity_json_out = None
+
         return (
             original_gds_path,
             modified_gds_path,
             original_script_path,
             modified_script_path,
             design_type,
+            sanity_json_out,
         )
 
     original_gds_path = globals().get("original_gds_path")
@@ -538,6 +546,7 @@ def _parse_inputs():
     original_script_path = globals().get("original_script_path")
     modified_script_path = globals().get("modified_script_path")
     design_type = globals().get("design_type")
+    sanity_json_out = globals().get("sanity_json_out")
 
     if original_gds_path and modified_gds_path:
         if any(
@@ -561,17 +570,20 @@ def _parse_inputs():
             original_script_path,
             modified_script_path,
             design_type,
+            sanity_json_out,
         )
 
     print(
         "Usage: python sanity_check.py <original.gds> <modified.gds> "
-        "[<original_script.py> <modified_script.py> <cell|block>]\n"
+        "[<original_script.py> <modified_script.py> <cell|block>] "
+        "[<sanity_json_out>]\n"
         "   or: klayout -b -r sanity_check.py "
         "-rd original_gds_path=<original.gds> "
         "-rd modified_gds_path=<modified.gds> "
         "[-rd original_script_path=<original_script.py> "
         "-rd modified_script_path=<modified_script.py> "
-        "-rd design_type=<cell|block>]",
+        "-rd design_type=<cell|block>] "
+        "[-rd sanity_json_out=<sanity.json>]",
         file=sys.stderr,
     )
     sys.exit(1)
@@ -584,6 +596,7 @@ if __name__ == "__main__":
         original_script_path,
         modified_script_path,
         design_type,
+        sanity_json_out,
     ) = _parse_inputs()
 
     result = sanity_check(
@@ -593,5 +606,17 @@ if __name__ == "__main__":
         modified_script_path,
         design_type,
     )
-    print(json.dumps(result, indent=2))
+    result_json = json.dumps(result, indent=2)
+    print(result_json)
+
+    if sanity_json_out:
+        try:
+            with open(sanity_json_out, "w") as f:
+                f.write(result_json)
+        except OSError as exc:
+            print(
+                f"WARNING: could not write sanity JSON to {sanity_json_out}: {exc}",
+                file=sys.stderr,
+            )
+
     sys.exit(0 if result["passed"] else 1)

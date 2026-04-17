@@ -49,7 +49,7 @@
 #   - Claude Code CLI must be logged in on the host:
 #       curl -fsSL https://claude.ai/install.sh | bash
 #       claude login
-
+sleep 16560
 set -euo pipefail
 
 # ===========================================================================
@@ -59,11 +59,10 @@ set -euo pipefail
 
 TASK_TYPES=(
     repair
-    detection
 )
 
 MODEL_NAMES=(
-    "claude-sonnet-4-6 medium"
+
     "claude-opus-4-6 high"
 )
 
@@ -75,9 +74,6 @@ CASES=(
     "Block5 block"
     "Block7 block"
 )
-
-AGENT_INITIAL_BUDGET="${AGENT_INITIAL_BUDGET:-600}"
-AGENT_REMINDER_BUDGET="${AGENT_REMINDER_BUDGET:-300}"
 
 # ===========================================================================
 # Main loop
@@ -172,7 +168,7 @@ for task_type in "${TASK_TYPES[@]}"; do
             # -----------------------------------------------------------------
             # Docker container setup
             # -----------------------------------------------------------------
-            container_name="drc-${model_name}-${design_type}-${task_type}-${case_name}-$$"
+            container_name="drc-${model_name}-${claude_effort}-${design_type}-${task_type}-${case_name}-$$"
             container_name=$(echo "${container_name}" | tr -c 'a-zA-Z0-9_.-' '-')
 
             # Pick the correct image and extra docker flags based on task_type.
@@ -221,8 +217,7 @@ for task_type in "${TASK_TYPES[@]}"; do
                 echo "Running full repair pipeline..."
                 docker exec \
                     -e "CLAUDE_EFFORT=${claude_effort}" \
-                    -e "AGENT_INITIAL_BUDGET=${AGENT_INITIAL_BUDGET}" \
-                    -e "AGENT_REMINDER_BUDGET=${AGENT_REMINDER_BUDGET}" \
+                    -e "CLAUDE_CODE_MAX_OUTPUT_TOKENS=${CLAUDE_CODE_MAX_OUTPUT_TOKENS:-64000}" \
                     "${container_name}" \
                     bash src/run_pipeline_claude.sh /workspace/task/info.json \
                 || echo "WARNING: Repair pipeline failed for ${case_name}. Continuing." >&2
@@ -231,8 +226,7 @@ for task_type in "${TASK_TYPES[@]}"; do
                 echo "Running agent (detection, no golden report visible)..."
                 if docker exec \
                     -e "CLAUDE_EFFORT=${claude_effort}" \
-                    -e "AGENT_INITIAL_BUDGET=${AGENT_INITIAL_BUDGET}" \
-                    -e "AGENT_REMINDER_BUDGET=${AGENT_REMINDER_BUDGET}" \
+                    -e "CLAUDE_CODE_MAX_OUTPUT_TOKENS=${CLAUDE_CODE_MAX_OUTPUT_TOKENS:-64000}" \
                     "${container_name}" \
                     bash src/run_pipeline_claude.sh --agent-only /workspace/task/info.json; then
 
@@ -246,8 +240,6 @@ for task_type in "${TASK_TYPES[@]}"; do
                     echo "Running scoring phase..."
                     docker exec \
                         -e "CLAUDE_EFFORT=${claude_effort}" \
-                        -e "AGENT_INITIAL_BUDGET=${AGENT_INITIAL_BUDGET:-1800}" \
-                        -e "AGENT_REMINDER_BUDGET=${AGENT_REMINDER_BUDGET:-120}" \
                         "${container_name}" \
                         bash src/run_pipeline_claude.sh --score-only /workspace/task/info.json \
                     || echo "WARNING: Scoring failed for ${case_name}. Continuing." >&2

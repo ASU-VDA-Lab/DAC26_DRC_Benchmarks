@@ -1,3 +1,4 @@
+#!/bin/bash
 #BSD 3-Clause License
 #
 #Copyright (c) 2026, ASU-VDA-Lab
@@ -27,7 +28,6 @@
 #OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 #OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#!/bin/bash
 # Resolve each domain in blocklist.txt to its current IP(s) and add REJECT
 # OUTPUT rules in iptables.  Then exec whatever command was passed to the
 # container.

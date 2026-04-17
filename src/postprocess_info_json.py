@@ -50,8 +50,6 @@ def main():
     parser.add_argument("--output_path", required=True, help="Output path for results")
     parser.add_argument("--temp_dir", required=True, help="Temporary directory path")
     parser.add_argument("--task_type", required=True, help="Task type (predict/repair)")
-    parser.add_argument("--agent_initial_budget", default="600", help="Agent initial time budget in seconds")
-    parser.add_argument("--agent_reminder_budget", default="120", help="Agent reminder time budget in seconds")
 
     args = parser.parse_args()
 
@@ -84,8 +82,6 @@ def main():
         )
     data["output_path"] = args.output_path
     data["temp_dir"] = args.temp_dir
-    data["agent_initial_budget"] = args.agent_initial_budget
-    data["agent_reminder_budget"] = args.agent_reminder_budget
 
     with open(args.output, "w") as f:
         json.dump(data, f, indent=2)

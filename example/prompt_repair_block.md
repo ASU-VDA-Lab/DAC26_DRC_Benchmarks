@@ -6,20 +6,6 @@ process design kit (PDK) and are proficient with KLayout's Python scripting
 API (pya). Your task is to analyze a set of DRC violations reported by KLayout DRC and
 produce a corrected KLayout Python layout script that resolves all violations.
 
-**Time constraint:** You have a strict time budget of **{agent_initial_budget} seconds** to
-complete this task. Work efficiently — read inputs quickly, prioritize writing your output
-file early, then refine if time permits. Do not spend excessive time on analysis before
-producing output. If you have not finished when time runs out, you will receive a brief
-**{agent_reminder_budget}-second** grace period to write your final output before being
-terminated. A partial result written to disk is always better than no result at all.
-
-**Work log (MANDATORY):** You MUST write to `temp/{model_name}_{case_name}_{task_type}_{agent_initial_budget}.md`
-after every significant step. Update it when you read a file, make a decision, or change
-code. Your session WILL be killed and resumed — this log is the ONLY way to recover your
-progress. On resumption, read this log first and immediately write your output without
-re-reading files or re-doing analysis. Failure to maintain this log means all your work
-is lost on session kill.
-
 ---
 
 ## Input Files
@@ -132,39 +118,32 @@ to confirm that no new violations are introduced. Pay special attention to:
 Observe the following constraints at all times. Violating any of these invalidates
 your output regardless of DRC cleanliness.
 
-1. **Do not delete layers that carry net connectivity.** Shapes on routing layers
-   (M0, M1, M2, ..., LIG, LISD, SDT) that are labeled with a net name must not be
-   removed. You may resize or reshape them.
-
-2. **Maintain logical connectivity.** Every wire segment that connects two pins or
-   vias in the original layout must remain connected after your edits. Do not
-   introduce open circuits by shrinking shapes so that they no longer overlap with
-   adjacent vias or contacts.
-   After making changes, verify connectivity is preserved by running:
-   `python3 src/check_connectivity.py {path_to_connectivity_file} <your_modified_script> block`
-   All seeds must be found and endpoint counts per layer must match.
-
-3. **Preserve the top cell name.** The `layout.create_cell(...)` call that defines
+1. **Preserve the top cell name.** The `layout.create_cell(...)` call that defines
    the top-level cell must not be renamed or removed.
 
-4. **Preserve the database unit (dbu).** The line `layout.dbu = 0.00025` (or whatever
+2. **Preserve the database unit (dbu).** The line `layout.dbu = 0.00025` (or whatever
    value is set in the original script) must not be changed.
 
-5. **Do not add layers not present in the original design.**
+3. **Do not add layers not present in the original design.**
 
-6. **Produce syntactically valid Python.** The output script must execute without
+4. **Produce syntactically valid Python.** The output script must execute without
    errors under KLayout's `pya` environment.
 
-7. **Do not modify non-routing layers.** All shapes on layers that are not metal (M)
+5. **Do not modify non-routing layers.** All shapes on layers that are not metal (M)
    or via (V) must remain exactly as in the original script. This includes WELL, FIN,
    GATE, GCUT, ACTIVE, NSELECT, PSELECT, LIG, LISD, SDT, and DUMMY layers. You may
    only modify shapes on metal layers (M1-M5) and via layers (V0-V4).
 
-8. **Do not place any polygon outside the design outline.** The layout contains an
+6. **Do not place any polygon outside the design outline.** The layout contains an
    outline boundary on `pya.LayerInfo(235, 0)`. All polygons you create or modify
    must remain entirely within this outline region. Do not extend, move, or add any
-   shape beyond the outline boundary.
+   shape beyond the outline boundary..
 
+7. **Maintain connectivity.** You can edit polygons on (M1, V1, M2, V2, M3, V3, M4, V4,
+M5, V5, M6, V6, M7, V7, M8, V8, M9, V9) layers, as long as the design passes the
+connectivity check. Verify connectivity is preserved by running:
+`python3 src/check_connectivity.py {path_to_connectivity_file} <your_modified_script> block`
+All seeds must be found and endpoint counts per layer must match.
 ---
 
 ## File Output Rules

@@ -19,20 +19,6 @@ coordinate system used by the layout script (1 dbu = 0.00025 um). No unit conver
 
 Aim for high precision and recall across all rule categories.
 
-**Time constraint:** You have a strict time budget of **{agent_initial_budget} seconds** to
-complete this task. Work efficiently — read inputs quickly, prioritize writing your output
-file early, then refine if time permits. Do not spend excessive time on analysis before
-producing output. If you have not finished when time runs out, you will receive a brief
-**{agent_reminder_budget}-second** grace period to write your final output before being
-terminated. A partial result written to disk is always better than no result at all.
-
-**Work log (MANDATORY):** You MUST write to `temp/{model_name}_{case_name}_{task_type}_{agent_initial_budget}.md`
-after every significant step. Update it when you read a file, make a decision, or identify
-a violation. Your session WILL be killed and resumed — this log is the ONLY way to recover
-your progress. On resumption, read this log first and immediately write your output without
-re-reading files or re-doing analysis. Failure to maintain this log means all your work
-is lost on session kill.
-
 ---
 
 ## Input Files

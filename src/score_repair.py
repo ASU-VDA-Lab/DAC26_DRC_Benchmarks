@@ -34,7 +34,9 @@
 #
 # Supports KLayout DRC reports (.lyrpt XML) and processed JSON (.drc.json).
 
+import argparse
 import json
+import os
 import sys
 import xml.etree.ElementTree as et
 
@@ -158,16 +160,58 @@ def _serialize_result(result: dict) -> dict:
     return serializable
 
 
+def _load_tokens(raw: str) -> dict:
+    # Parse a tokens-json argument.  Accepts either a raw JSON string or a
+    # path to a JSON file.  Returns a dict; missing keys are left to the
+    # caller to default.
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        with open(raw) as f:
+            return json.load(f)
+
+
+def _zero_repair_result() -> dict:
+    # Placeholder result for runs where no repaired report exists (e.g. the
+    # repair failed to render a GDS).  Mirrors the legacy inline JSON that
+    # the shell pipeline used to emit in that situation.
+    return {
+        "repair_rate": 0,
+        "new_violation_rate": "inf",
+        "original_violations": 0,
+        "final_violations": 0,
+        "removed_violations": 0,
+        "new_violations": 0,
+        "original_rules_violated": 0,
+        "final_rules_violated": 0,
+    }
+
+
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print(
-            "Usage: python score_repair.py <original.lyrpt|.drc.json> <repaired.lyrpt|.drc.json>",
-            file=sys.stderr,
-        )
-        sys.exit(1)
+    parser = argparse.ArgumentParser(description="Score DRC repair")
+    parser.add_argument("original_report")
+    parser.add_argument("repaired_report", nargs="?", default="")
+    parser.add_argument("--agent-status", choices=["success", "fail"], required=True)
+    parser.add_argument(
+        "--tokens-json", required=True,
+        help="JSON string or path to JSON file with 4 token fields",
+    )
+    parser.add_argument("--agent-runtime-seconds", type=float, required=True)
+    args = parser.parse_args()
 
-    original_path = sys.argv[1]
-    repaired_path = sys.argv[2]
+    tokens = _load_tokens(args.tokens_json)
 
-    result = score_repair(original_path, repaired_path)
+    if not args.repaired_report or not os.path.isfile(args.repaired_report):
+        result = _zero_repair_result()
+    else:
+        result = score_repair(args.original_report, args.repaired_report)
+
+    # Attach new fields common to repair and detection scoring.
+    result["agent_status"]          = args.agent_status
+    result["runtime_seconds"]       = args.agent_runtime_seconds
+    result["input_tokens"]          = int(tokens.get("input_tokens", 0))
+    result["output_tokens"]         = int(tokens.get("output_tokens", 0))
+    result["cache_read_tokens"]     = int(tokens.get("cache_read_tokens", 0))
+    result["cache_write_tokens"]    = int(tokens.get("cache_write_tokens", 0))
+
     print(json.dumps(_serialize_result(result), indent=2))
