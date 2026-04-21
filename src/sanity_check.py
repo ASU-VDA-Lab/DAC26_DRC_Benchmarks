@@ -60,6 +60,36 @@ CRITICAL_LAYERS = {
     19: "m1",
 }
 
+# Subcells whose name starts with this prefix are considered VIA cells and are
+# exempt from the locked-layer exact-match check and the non-VIA instance check
+# (repair is allowed to move / alter via placements).
+VIA_CELL_PREFIX = "VIA_"
+
+# Layers (layer, datatype) on which shapes must remain bit-exact vs the
+# original. For cell: only M0. For block: the structural + non-vertical-metal
+# stack (m0 is absent in block testcases).
+CELL_LOCKED_LAYERS = {(0, 0)}
+
+BLOCK_LOCKED_LAYERS = {
+    (1, 0),   # nwell
+    (2, 0),   # fin
+    (7, 0),   # gate
+    (8, 0),   # dummy
+    (10, 0),  # gcut
+    (11, 0),  # active
+    (12, 0),  # nselect
+    (13, 0),  # pselect
+    (16, 0),  # lig
+    (17, 0),  # lisd
+    (18, 0),  # v0
+    (19, 0),  # m1
+    (88, 0),  # sdt
+    (97, 0),  # slvt
+    (98, 0),  # lvt
+    (99, 0),  # sramdrc
+    (110, 0), # sramvt
+}
+
 
 def _load_layout(gds_path: str) -> pya.Layout:
     # Load a GDS file into a KLayout Layout object.
@@ -221,9 +251,119 @@ def _check_outline_boundary(
     return {"passed": True, "details": "", "protruding_layers": []}
 
 
-def _collect_instance_set(layout: pya.Layout) -> set:
+def _is_via_cell(cell_name: str) -> bool:
+    # True iff cell_name designates a VIA subcell (exempt from locked-layer /
+    # non-VIA instance checks).
+    return cell_name.startswith(VIA_CELL_PREFIX)
+
+
+def _canonicalize_polygon_points(polygon) -> tuple:
+    # Canonicalize a pya.Polygon into a rotation/orientation-stable tuple of
+    # integer (x, y) point tuples. Rotate so the lexicographically-smallest
+    # point is first, then flip direction if signed area is negative (force
+    # CCW). Mirrors check_connectivity.canonicalize_points, but takes a
+    # pya.Polygon instead of a list.
+    pts = [(int(p.x), int(p.y)) for p in polygon.each_point_hull()]
+    n = len(pts)
+    if n < 3:
+        return tuple(pts)
+    min_idx = min(range(n), key=lambda i: pts[i])
+    rotated = list(pts[min_idx:]) + list(pts[:min_idx])
+    area = 0
+    for i in range(n):
+        x1, y1 = rotated[i]
+        x2, y2 = rotated[(i + 1) % n]
+        area += x1 * y2 - x2 * y1
+    if area < 0:
+        rotated = [rotated[0]] + list(reversed(rotated[1:]))
+    return tuple(rotated)
+
+
+def _shape_to_polygon(shape):
+    # Convert a pya.Shape (polygon/box/path) into a pya.Polygon, or None if
+    # the shape type isn't supported.
+    try:
+        if shape.is_polygon():
+            return shape.polygon
+        if shape.is_box():
+            return pya.Polygon(shape.box)
+        if shape.is_path():
+            return shape.path.polygon()
+    except Exception:
+        return None
+    return None
+
+
+def _collect_shapes_per_cell(
+    layout: pya.Layout,
+    locked_layers: set,
+    exclude_via: bool,
+) -> set:
+    # Collect shapes on the given locked layers from every cell in the layout
+    # in its OWN local coordinate system (no flattening). Each record is a
+    # (cell_name, layer, datatype, canonical_points_tuple) tuple.  When
+    # exclude_via is True, cells whose name starts with VIA_CELL_PREFIX are
+    # skipped entirely — their contents are exempt from exact-match.
+    result = set()
+    for cell_index in range(layout.cells()):
+        cell = layout.cell(cell_index)
+        name = cell.name
+        if exclude_via and _is_via_cell(name):
+            continue
+        for layer_info in layout.layer_infos():
+            key = (layer_info.layer, layer_info.datatype)
+            if key not in locked_layers:
+                continue
+            li = layout.find_layer(layer_info)
+            if li is None:
+                continue
+            for shape in cell.shapes(li).each():
+                poly = _shape_to_polygon(shape)
+                if poly is None:
+                    continue
+                pts = _canonicalize_polygon_points(poly)
+                if not pts:
+                    continue
+                result.add((name, key[0], key[1], pts))
+    return result
+
+
+def _check_locked_layers_exact_match(
+    original_layout: pya.Layout,
+    modified_layout: pya.Layout,
+    locked_layers: set,
+    exclude_via: bool,
+) -> tuple:
+    # Compare locked-layer shapes (per-cell, local coords, canonicalized) as
+    # multisets. Returns (passed, shape_count_mismatches) where
+    # shape_count_mismatches maps layer_num -> {"original": K, "modified": L}.
+    # K = shapes in original that have no exact match in modified.
+    # L = shapes in modified that have no exact match in original.
+    # This detects both count mismatches AND same-count-different-coords cases.
+    orig_set = _collect_shapes_per_cell(original_layout, locked_layers, exclude_via)
+    mod_set = _collect_shapes_per_cell(modified_layout, locked_layers, exclude_via)
+
+    missing = orig_set - mod_set
+    extra = mod_set - orig_set
+
+    shape_count_mismatches = {}
+    for (_cell, layer, _dt, _pts) in missing:
+        shape_count_mismatches.setdefault(
+            layer, {"original": 0, "modified": 0})["original"] += 1
+    for (_cell, layer, _dt, _pts) in extra:
+        shape_count_mismatches.setdefault(
+            layer, {"original": 0, "modified": 0})["modified"] += 1
+
+    passed = not shape_count_mismatches
+    return passed, shape_count_mismatches
+
+
+def _collect_instance_set(layout: pya.Layout, exclude_via: bool = False) -> set:
     # Collect all CellInstArray placements from the top cell as a set of
     # (cell_name, rot, disp_x, disp_y) tuples. Order-independent.
+    # rot is 0-7 (pya.Trans encodes mirror in rot 4-7), so no separate mirror
+    # field is needed.  When exclude_via is True, instances referencing cells
+    # with the VIA_ prefix are skipped (they are allowed to move).
     top_cell = layout.top_cell()
     if top_cell is None:
         return set()
@@ -231,6 +371,8 @@ def _collect_instance_set(layout: pya.Layout) -> set:
     instances = set()
     for inst in top_cell.each_inst():
         cell_name = layout.cell(inst.cell_index).name
+        if exclude_via and _is_via_cell(cell_name):
+            continue
         trans = inst.trans
         instances.add((cell_name, trans.rot, trans.disp.x, trans.disp.y))
 
@@ -240,6 +382,7 @@ def _collect_instance_set(layout: pya.Layout) -> set:
 def _check_instance_placements(
     original_layout: pya.Layout,
     modified_layout: pya.Layout,
+    exclude_via: bool = False,
 ) -> dict:
     # Check that all subcell instance placements in the modified layout match
     # the original exactly (order-independent). No instance may be moved,
@@ -247,8 +390,8 @@ def _check_instance_placements(
     #
     # Returns {"passed": bool, "details": str,
     #          "missing_instances": list, "extra_instances": list}
-    orig_set = _collect_instance_set(original_layout)
-    mod_set = _collect_instance_set(modified_layout)
+    orig_set = _collect_instance_set(original_layout, exclude_via)
+    mod_set = _collect_instance_set(modified_layout, exclude_via)
 
     missing = orig_set - mod_set
     extra = mod_set - orig_set
@@ -386,15 +529,22 @@ def sanity_check(
             failures.append(outline_result["details"])
 
     # --- Check 6: instance_placements_unchanged (cell/block only) ---
+    # For block, exclude VIA_ subcells (they are allowed to move during repair).
     instance_placements_unchanged = True
     instance_result = None
     if design_type in ("cell", "block"):
-        instance_result = _check_instance_placements(original_layout, modified_layout)
+        instance_result = _check_instance_placements(
+            original_layout, modified_layout,
+            exclude_via=(design_type == "block"),
+        )
         instance_placements_unchanged = instance_result["passed"]
         if not instance_placements_unchanged:
             failures.append(instance_result["details"])
 
-    # --- Check 7: polygon_shape_counts (polygon design type only) ---
+    # --- Check 7: shape-level structural check ---
+    # polygon  -> per-layer shape count must match (existing behavior)
+    # cell     -> M0 shapes must exactly match (per-cell, local coords)
+    # block    -> 17 locked layers must exactly match in all non-VIA cells
     polygon_shape_counts_ok = True
     shape_count_mismatches = {}
     if design_type == "polygon":
@@ -417,6 +567,40 @@ def sanity_check(
             )
             failures.append(
                 "Polygon shape count mismatch: " + mismatch_details + "."
+            )
+    elif design_type == "cell":
+        polygon_shape_counts_ok, shape_count_mismatches = (
+            _check_locked_layers_exact_match(
+                original_layout, modified_layout,
+                CELL_LOCKED_LAYERS, exclude_via=False,
+            )
+        )
+        if not polygon_shape_counts_ok:
+            mismatch_details = ", ".join(
+                "layer {} (unmatched original={}, unmatched modified={})".format(
+                    ln, info["original"], info["modified"])
+                for ln, info in sorted(shape_count_mismatches.items())
+            )
+            failures.append(
+                "M0 locked-layer shape mismatch (cell): "
+                + mismatch_details + "."
+            )
+    elif design_type == "block":
+        polygon_shape_counts_ok, shape_count_mismatches = (
+            _check_locked_layers_exact_match(
+                original_layout, modified_layout,
+                BLOCK_LOCKED_LAYERS, exclude_via=True,
+            )
+        )
+        if not polygon_shape_counts_ok:
+            mismatch_details = ", ".join(
+                "layer {} (unmatched original={}, unmatched modified={})".format(
+                    ln, info["original"], info["modified"])
+                for ln, info in sorted(shape_count_mismatches.items())
+            )
+            failures.append(
+                "Locked-layer shape mismatch (block, non-VIA cells): "
+                + mismatch_details + "."
             )
 
     # --- Check 8: connectivity_preserved (optional) ---
