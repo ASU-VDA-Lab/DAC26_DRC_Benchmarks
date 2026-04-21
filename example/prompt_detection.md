@@ -120,9 +120,28 @@ Return your detections as a JSON list.
 
 3. **violation_count must be a positive integer.** Must be >= 1.
 
-4. **Provide DRV regions.** Each violation must include geometry:
-   - Spacing violations (`.S.` rules): `"type": "edge_pair"` with `edge1` and `edge2`.
-   - Other violations: `"type": "bbox"` with `bbox`.
+4. **Strict schema — any other structure scores 0.** Each violation object must
+   use exactly these key names. The scorer parses *only* these keys; any
+   variation (missing `"type"`, nesting edges under a single `"edge_pair"` key,
+   renaming `edge1`/`edge2`, using `"rule"` instead of `"rule_name"`, etc.) is
+   ignored, and the rule receives **tp=0, precision=0, recall=0, f1=0**.
+
+   Spacing violations (`.S.` rules):
+   ```json
+   {
+     "type": "edge_pair",
+     "edge1": [x1, y1, x2, y2],
+     "edge2": [x3, y3, x4, y4]
+   }
+   ```
+
+   Other violations:
+   ```json
+   {
+     "type": "bbox",
+     "bbox": [xmin, ymin, xmax, ymax]
+   }
+   ```
 
 5. **Coordinates in dbu.** All coordinates must be in dbu (database units), the same
    integer coordinate system used by the layout script.
@@ -169,8 +188,8 @@ Example format:
     "violations": [
       {
         "type": "edge_pair",
-        "edge1": [0.0, 0.050, 0.020, 0.050],
-        "edge2": [0.0, 0.078, 0.020, 0.078]
+        "edge1": [0, 200, 80, 200],
+        "edge2": [0, 312, 80, 312]
       }
     ]
   },
@@ -180,7 +199,7 @@ Example format:
     "violations": [
       {
         "type": "bbox",
-        "bbox": [0.0, 0.0, 0.0675, 0.0675]
+        "bbox": [0, 0, 270, 270]
       }
     ]
   },
@@ -190,11 +209,11 @@ Example format:
     "violations": [
       {
         "type": "bbox",
-        "bbox": [0.064, 0.035, 0.066, 0.053]
+        "bbox": [256, 140, 264, 212]
       },
       {
         "type": "bbox",
-        "bbox": [0.064, 0.215, 0.066, 0.233]
+        "bbox": [256, 860, 264, 932]
       }
     ]
   }
