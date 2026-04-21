@@ -56,8 +56,10 @@ LONG_PROMPT_THRESHOLD = 100000
 def call_cursor_agent(prompt_text, model_name, workspace=None):
     # Invoke the Cursor Agent CLI with --output-format json and no timeout.
     #
-    # Returns a dict with normalized snake_case token keys:
-    #   input_tokens, output_tokens, cache_read_tokens, cache_write_tokens
+    # Returns a tuple (tokens, raw_data):
+    #   tokens:   dict with normalized snake_case token keys:
+    #             input_tokens, output_tokens, cache_read_tokens, cache_write_tokens
+    #   raw_data: the full parsed CLI JSON with the "result" key popped.
     #
     # Raises:
     #   RuntimeError if the CLI exits non-zero.
@@ -113,12 +115,18 @@ def call_cursor_agent(prompt_text, model_name, workspace=None):
     data = json.loads(stdout_text)
     usage = data["usage"]
 
-    return {
+    tokens = {
         "input_tokens":       int(usage["inputTokens"]),
         "output_tokens":      int(usage["outputTokens"]),
         "cache_read_tokens":  int(usage.get("cacheReadTokens", 0)),
         "cache_write_tokens": int(usage.get("cacheWriteTokens", 0)),
     }
+
+    # Strip the "result" key (LLM final text) before returning raw data.
+    raw_data = dict(data)
+    raw_data.pop("result", None)
+
+    return tokens, raw_data
 
 
 if __name__ == "__main__":
@@ -146,6 +154,9 @@ if __name__ == "__main__":
     parser.add_argument("--temp_dir", default=None,
                         help="Directory for intermediate/scratch files; "
                              "created before the agent runs")
+    parser.add_argument("--raw-json-out", dest="raw_json_out", default=None,
+                        help="Path to dump full CLI JSON (minus 'result' key) "
+                             "for out-of-band token/metric inspection")
     args = parser.parse_args()
 
     # -- Ensure temp directory exists -------------------------------------------
@@ -181,8 +192,10 @@ if __name__ == "__main__":
     }
 
     t_start = time.monotonic()
+    raw_data = None
+    agent_error = None
     try:
-        tokens = call_cursor_agent(
+        tokens, raw_data = call_cursor_agent(
             prompt_text, args.model,
             workspace=args.workspace,
         )
@@ -191,11 +204,27 @@ if __name__ == "__main__":
         sys.stderr.write("ERROR: {}\n".format(exc))
         tokens = zero_tokens
         status = "fail"
+        agent_error = str(exc)
 
     elapsed = time.monotonic() - t_start
     sys.stderr.write("STATUS={}\n".format(status))
     sys.stderr.write("TOKENS_JSON={}\n".format(json.dumps(tokens)))
     sys.stderr.write("RUNTIME_SECONDS={:.3f}\n".format(elapsed))
+
+    # Dump the raw CLI JSON (or a failure stub) for out-of-band inspection.
+    if args.raw_json_out:
+        if status == "success" and raw_data is not None:
+            payload = raw_data
+        else:
+            payload = {"status": "fail", "error": agent_error or "unknown"}
+        try:
+            os.makedirs(os.path.dirname(os.path.abspath(args.raw_json_out)),
+                        exist_ok=True)
+            with open(args.raw_json_out, "w") as f:
+                json.dump(payload, f, indent=2)
+        except Exception as exc:
+            sys.stderr.write("WARNING: failed to dump raw JSON to {}: {}\n".format(
+                args.raw_json_out, exc))
 
     # Check if agent wrote the output file
     if os.path.isfile(args.output_file):

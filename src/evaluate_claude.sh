@@ -49,7 +49,7 @@
 #   - Claude Code CLI must be logged in on the host:
 #       curl -fsSL https://claude.ai/install.sh | bash
 #       claude login
-sleep 16560
+
 set -euo pipefail
 
 # ===========================================================================
@@ -59,10 +59,11 @@ set -euo pipefail
 
 TASK_TYPES=(
     repair
+    detection
 )
 
 MODEL_NAMES=(
-
+    "claude-sonnet-4-6 medium"
     "claude-opus-4-6 high"
 )
 
