@@ -377,7 +377,7 @@ Predicted violations are matched to golden violations using **geometry-based mat
 
 ## Results
 
-| Task | Metric | (Claude Code) Claude 4.6 Opus | | | | | | (Claude Code) Claude 4.6 Sonnet | | | | | | (Cursor) Claude 4.6 Opus | | | | | | (Cursor) Claude 4.6 Sonnet | | | | | | (Cursor) GPT 5.4 | | | | | | (Cursor) Gemini 3.1 Pro | | | | | | (Cursor) Grok 4-20 | | | | | | (Cursor) Kimi K2.5 | | | | | |
+| Task | Metric | (Claude Code) Claude 4.6 Opus - High Effort | | | | | | (Claude Code) Claude 4.6 Sonnet - Medium Effort | | | | | | (Cursor) Claude 4.6 Opus - High Effort | | | | | | (Cursor) Claude 4.6 Sonnet - Medium Effort | | | | | | (Cursor) GPT 5.4 - High Effort | | | | | | (Cursor) Gemini 3.1 Pro | | | | | | (Cursor) Grok 4-20 | | | | | | (Cursor) Kimi K2.5 | | | | | |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | | | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 |
 | Detect | Precision | 0.12 | 0.01 | 0.00 | 0.25 | 1.00 | 1.00 | 0.03 | 1.00 | 1.00 | 0.30 | 1.00 | 1.00 | 0.07 | 0.00 | 0.39 | 0.87 | 1.00 | 1.00 | 0.00 | 0.95 | 1.00 | 1.00 | 1.00 | 0.00 | 0.78 | 0.95 | 1.00 | 0.26 | 1.00 | 1.00 | 0.00 | 0.00 | 0.00 | 1.00 | 1.00 | 1.00 | 0.00 | 0.78 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.83 | 0.18 | 0.50 | 0.00 |
