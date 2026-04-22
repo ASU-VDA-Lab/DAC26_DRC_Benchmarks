@@ -6,7 +6,7 @@ A benchmark framework for evaluating LLM models on chip physical design tasks --
 
 This benchmark runs inside a self-contained Docker container. KLayout 0.30.1 and the Cursor/Claude Code CLIs are pre-installed in the image. No host KLayout installation or commercial EDA licenses are required.
 
-Shortcut: [Table of Contents](#table-of-contents) | [Benchmark Tasks](#benchmark-tasks) | [Quick Start](#quick-start) | [Pipeline Architecture](#pipeline-architecture) | [Detection Isolation](#detection-isolation) | [Scoring Methodology](#scoring-methodology) | [Processed DRC Reports](#processed-drc-reports) | [Detection Output Format](#detection-output-format) | [Score Output](#score-output) | [Design Types](#design-types)
+Shortcut: [Table of Contents](#table-of-contents) | [Benchmark Tasks](#benchmark-tasks) | [Quick Start](#quick-start) | [Pipeline Architecture](#pipeline-architecture) | [Detection Isolation](#detection-isolation) | [Scoring Methodology](#scoring-methodology) | [Results](#results) | [Processed DRC Reports](#processed-drc-reports) | [Detection Output Format](#detection-output-format) | [Score Output](#score-output) | [Design Types](#design-types) 
 
 ---
 
@@ -95,7 +95,7 @@ The LLM agent receives the same layout inputs **except** the DRC report. It must
 2. Golden `.drc.json` report is parsed (contains both violation counts and per-violation geometry)
 3. Predicted violations are matched to golden violations using **geometry-based matching**:
   - **Polygon** golden bbox (non-zero area): overlap + area ratio within `[0.81, 1.21]` (linear ±10% squared)
-  - **Edge** golden bbox (degenerate line, one dim = 0): both edge endpoints must lie inside the predicted bbox AND the predicted bbox's longest side must not exceed `edge_length × 1.1`
+  - **Edge** golden bbox (degenerate line, one dim = 0): both edge endpoints lie inside the predicted bbox AND the predicted bbox's longest side must not exceed `edge_length × 1.1`
   - Both criteria must be met for a match
 4. TP (matched), FP (unmatched predicted), FN (unmatched golden) are computed per rule
 5. Aggregate and per-rule precision/recall/F1 metrics are calculated
@@ -373,6 +373,63 @@ Predicted violations are matched to golden violations using **geometry-based mat
 | `Recall`    | `sum(TP) / (sum(TP) + sum(FN))`       | Aggregate recall         |
 | `F1`        | Harmonic mean of precision and recall | Aggregate F1             |
 
+---
+
+## Results
+
+| Task | Metric | (CC) Claude 4.6 Opus | | | | | | (CC) Claude 4.6 Sonnet | | | | | | (Cu) Claude 4.6 Opus | | | | | | (Cu) Claude 4.6 Sonnet | | | | | | (Cu) GPT 5.4 | | | | | | (Cu) Gemini 3.1 Pro | | | | | | (Cu) Grok 4-20 | | | | | | (Cu) Kimi K2.5 | | | | | |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| | | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 |
+| Detect | Precision | 0.12 | 0.01 | 0.00 | 0.25 | 1.00 | 1.00 | 0.03 | 1.00 | 1.00 | 0.30 | 1.00 | 1.00 | 0.07 | 0.00 | 0.39 | 0.87 | 1.00 | 1.00 | 0.00 | 0.95 | 1.00 | 1.00 | 1.00 | 0.00 | 0.78 | 0.95 | 1.00 | 0.26 | 1.00 | 1.00 | 0.00 | 0.00 | 0.00 | 1.00 | 1.00 | 1.00 | 0.00 | 0.78 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.83 | 0.18 | 0.50 | 0.00 |
+| | Recall | 0.10 | 0.03 | 0.00 | 0.15 | 1.00 | 1.00 | 0.04 | 0.01 | 0.95 | 1.00 | 1.00 | 1.00 | 0.01 | 0.00 | 0.95 | 1.00 | 1.00 | 1.00 | 0.00 | 0.52 | 0.95 | 0.15 | 1.00 | 0.00 | 0.68 | 0.59 | 1.00 | 1.00 | 1.00 | 1.00 | 0.00 | 0.00 | 0.00 | 1.00 | 1.00 | 1.00 | 0.00 | 0.52 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.53 | 0.85 | 0.50 | 0.00 |
+| | F1 | 0.11 | 0.02 | 0.00 | 0.19 | 1.00 | 1.00 | 0.04 | 0.03 | 0.97 | 0.46 | 1.00 | 1.00 | 0.03 | 0.00 | 0.55 | 0.93 | 1.00 | 1.00 | 0.00 | 0.67 | 0.97 | 0.27 | 1.00 | 0.00 | 0.73 | 0.73 | 1.00 | 0.41 | 1.00 | 1.00 | 0.00 | 0.00 | 0.00 | 1.00 | 1.00 | 1.00 | 0.00 | 0.62 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.65 | 0.30 | 0.50 | 0.00 |
+| | Runtime (s) | 3,023 | 1,246 | 3,915 | 3,102 | 217 | 908 | 1,065 | 703 | 557 | 733 | 140 | 430 | 4,618 | 1,614 | 845 | 1,015 | 153 | 460 | 5,841 | 626 | 641 | 504 | 140 | 311 | 2,347 | 1,084 | 248 | 582 | 117 | 202 | 228 | 51 | 22 | 450 | 49 | 127 | 32 | 78 | 32 | 96 | 37 | 38 | 216 | 203 | 177 | 133 | 35 | 115 |
+| | Input Token | 169(79) | 321K(318K) | 166K(164K) | 2.8K(18) | 2.8K(14) | 2.8K(14) | 73(73) | 42(42) | 33(33) | 7.6K(7.6K) | 19(19) | 15K(15K) | 222 | 106 | 31 | 30 | 19 | 19 | 82 | 17 | 27 | 31 | 22 | 19 | 214K | 145K | 90K | 85K | 98K | 75K | 123K | 51K | 34K | 238K | 48K | 109K | 112K | 74K | 77K | 85K | 139K | 126K | 0 | 0 | 0 | 0 | 0 | 0 |
+| | Cache Read | 7.4M(5.5M) | 6.2M(6.2M) | 810K(810K) | 1.3M(1.3M) | 400K(400K) | 1.1M(1.1M) | 6.2M(6.2M) | 2.1M(2.1M) | 2.1M(2.1M) | 2.2M(2.2M) | 382K(382K) | 698K(698K) | 19M | 8.7M | 2.8M | 2.8M | 1.2M | 1.1M | 5.8M | 1.2M | 2.2M | 2.5M | 1.3M | 1.0M | 4.6M | 1.3M | 974K | 521K | 513K | 488K | 0 | 0 | 0 | 0 | 0 | 0 | 1.2M | 2.7M | 837K | 2.4M | 1.2M | 1.0M | 1.4M | 2.9M | 1.6M | 797K | 328K | 755K |
+| | Cache Write | 627K(436K) | 397K(397K) | 140K(140K) | 140K(140K) | 38K(38K) | 120K(120K) | 395K(395K) | 386K(386K) | 131K(131K) | 135K(135K) | 40K(40K) | 80K(80K) | 740K | 386K | 124K | 132K | 79K | 172K | 624K | 220K | 127K | 123K | 67K | 94K | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | 514K | 1.1M | 862K | 582K | 124K | 477K |
+| | Output Token | 152K(129K) | 65K(65K) | 232K(232K) | 129K(129K) | 12K(12K) | 54K(54K) | 85K(85K) | 54K(54K) | 48K(48K) | 58K(58K) | 8K(8K) | 28K(28K) | 177K | 66K | 52K | 60K | 6K | 23K | 57K | 4K | 57K | 42K | 9K | 20K | 35K | 18K | 11K | 28K | 5.6K | 10K | 503 | 301 | 271 | 4.5K | 814 | 482 | 938 | 6.9K | 1.1K | 9.0K | 1.2K | 2.3K | 17K | 21K | 25K | 22K | 4.1K | 14K |
+| Repair | Repair Rate | 0.30 | -- | 1.00 | 1.00 | 1.00 | 1.00 | 0.63 | 0.46 | 0.26 | 1.00 | 1.00 | 1.00 | -- | 0.44 | 1.00 | 1.00 | 1.00 | 1.00 | 0.31 | -- | 1.00 | 1.00 | 1.00 | 1.00 | 0.20 | 0.35 | 1.00 | 1.00 | 1.00 | 1.00 | -- | -- | 0.16 | 1.00 | 1.00 | 1.00 | -- | -- | 0.16 | 0.15 | 0.50 | 0.00 | -- | -- | 0.05 | 0.92 | 1.00 | 0.00 |
+| | New Violation Rate | 0.36 | -- | 0.00 | 0.00 | 0.00 | 0.00 | 0.14 | 2.12 | 0.00 | 0.00 | 0.00 | 0.00 | -- | 0.43 | 0.00 | 0.00 | 0.00 | 0.00 | 9.34 | -- | 0.00 | 0.00 | 0.00 | 0.00 | 0.11 | 0.24 | 0.00 | 0.00 | 0.00 | 0.00 | -- | -- | 0.05 | 0.00 | 0.00 | 3.00 | -- | -- | 0.42 | 1.62 | 0.00 | 1.00 | -- | -- | 0.00 | 4.23 | 0.50 | 1.00 |
+| | Runtime (s) | 5,281 | 7,879 | 1,684 | 1,055 | 225 | 1,146 | 1,740 | 1,493 | 3,852 | 3,121 | 182 | 1,003 | 7,211 | 2,496 | 995 | 983 | 167 | 572 | 1,840 | 4,303 | 1,025 | 794 | 128 | 301 | 2,342 | 820 | 438 | 428 | 192 | 385 | 658 | 3,931 | 161 | 540 | 86 | 125 | 99 | 76 | 101 | 86 | 39 | 46 | 2,532 | 3,170 | 76 | 264 | 39 | 28 |
+| | Input Token | 2.4K(2K) | 8.2K(8.2K) | 16(16) | 6.8K(6.8K) | 13(13) | 9(9) | 167K(167K) | 109K(109K) | 294K(294K) | 18(18) | 14(14) | 10(10) | 250 | 101 | 44 | 47 | 17 | 26 | 19 | 130 | 36 | 36 | 17 | 18 | 167K | 279K | 145K | 134K | 57K | 82K | 191K | 21K | 125K | 143K | 70K | 65K | 229K | 142K | 132K | 119K | 55K | 83K | 0 | 0 | 0 | 0 | 0 | 0 |
+| | Cache Read | 9.3M(7M) | 11.5M(11.5M) | 1.5M(1.5M) | 1.1M(1.1M) | 251K(251K) | 382K(382K) | 1.1M(1.1M) | 1.5M(289K) | 1.5M(1.5M) | 940K(940K) | 336K(336K) | 520K(520K) | 19M | 9.4M | 5.4M | 5.3M | 474K | 1.2M | 515K | 10.6M | 3.7M | 4.3M | 932K | 1.1M | 5.6M | 4.6M | 1.2M | 1.4M | 472K | 410K | 0 | 0 | 0 | 0 | 0 | 0 | 1.4M | 882K | 781K | 1.3M | 1.1M | 506K | 6.3M | 2.8M | 1.1M | 1.1M | 398K | 209K |
+| | Cache Write | 1M(724K) | 1.5M(1.5M) | 152K(152K) | 127K(127K) | 32K(32K) | 87K(87K) | 169K(169K) | 151K(82K) | 208K(208K) | 134K(134K) | 29K(29K) | 88K(88K) | 1.7M | 619K | 174K | 289K | 25K | 68K | 50K | 217K | 293K | 235K | 67K | 93K | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | 1.8M | 1.1M | 679K | 561K | 192K | 119K |
+| | Output Token | 311K(261K) | 464K(464K) | 100K(100K) | 66K(66K) | 11K(11K) | 58K(58K) | 108K(108K) | 111K(104K) | 244K(244K) | 210K(210K) | 14K(14K) | 64K(64K) | 290K | 110K | 49K | 48K | 7K | 27K | 4K | 122K | 81K | 60K | 8K | 20K | 46K | 42K | 26K | 27K | 9.3K | 12K | 1.9K | 197 | 9.9K | 9.5K | 2K | 2.4K | 13K | 10K | 15K | 11K | 2.0K | 4.1K | 28K | 109K | 13K | 49K | 5.5K | 2.6K |
+
+**Notes:** Cases: B = Block, C = Cell, P = Polygon. **--**: Failed to produce a valid GDSII or preserve connectivity. CC = Claude Code, Cu = Cursor. Claude Code hardcodes the subagent to Claude 4.5 Haiku; in each token-count entry, the first number is the total and the number in parentheses is the Opus/Sonnet count. Cache write tokens are not available for Gemini, Grok, and GPT models.
+
+
+---
+
+## Processed DRC Reports
+
+Golden DRC reports are pre-processed from KLayout's native `.lyrpt` XML format into structured JSON files stored at `testcase/asap7/{cell,polygon,block}/drc_report/<case_name>.drc.json`.
+
+**JSON format:**
+
+```json
+{
+  "case_name": "Cell1",
+  "design_type": "cell",
+  "total_violations": 20,
+  "total_rules_violated": 2,
+  "rules": {
+    "M1.S.4": {
+      "violation_count": 1,
+      "description": "Minimum spacing of M1 on same track is 18 nm.",
+      "violations": [
+        {
+          "type": "edge_pair",
+          "edges": [[1768, 832, 1840, 832], [1768, 944, 1840, 944]],
+          "bbox": [1768, 832, 1840, 944]
+        }
+      ]
+    }
+  }
+}
+```
+
+The pipeline uses `.drc.json` for both golden and repaired reports. After KLayout DRC runs on a repaired GDS, the `.lyrpt` results are converted to JSON for consistent comparison.
 
 ---
 
@@ -416,38 +473,6 @@ All coordinates are in **dbu (database units)** -- integer coordinates from the 
 ```
 
 If no violations are detected, the agent writes an empty array `[]`.
-
----
-
-## Processed DRC Reports
-
-Golden DRC reports are pre-processed from KLayout's native `.lyrpt` XML format into structured JSON files stored at `testcase/asap7/{cell,polygon,block}/drc_report/<case_name>.drc.json`.
-
-**JSON format:**
-
-```json
-{
-  "case_name": "Cell1",
-  "design_type": "cell",
-  "total_violations": 20,
-  "total_rules_violated": 2,
-  "rules": {
-    "M1.S.4": {
-      "violation_count": 1,
-      "description": "Minimum spacing of M1 on same track is 18 nm.",
-      "violations": [
-        {
-          "type": "edge_pair",
-          "edges": [[1768, 832, 1840, 832], [1768, 944, 1840, 944]],
-          "bbox": [1768, 832, 1840, 944]
-        }
-      ]
-    }
-  }
-}
-```
-
-The pipeline uses `.drc.json` for both golden and repaired reports. After KLayout DRC runs on a repaired GDS, the `.lyrpt` results are converted to JSON for consistent comparison.
 
 ---
 
@@ -518,5 +543,3 @@ For claude pipeline runs, `run_id` is `<model_name>-<effort>` (e.g. `claude-sonn
 | `cell`    | 255   | `asap7_cell.lydrc` | Standard-cell layouts (10-50 polygons, 5-15 violations)                                                                                                                     |
 | `polygon` | 332   | `asap7.lydrc`      | Isolated polygon constructs testing specific DRC rules. Repair is restricted to resizing (width/length) or moving polygons; deletion and adding new polygons are forbidden. |
 | `block`   | 7     | `asap7.lydrc`      | Larger block-level layouts with routing and vias (100+ polygons)                                                                                                            |
-
-
