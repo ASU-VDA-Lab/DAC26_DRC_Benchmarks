@@ -255,6 +255,7 @@ if [[ "${task_type}" == "repair" ]]; then
         --task_type "repair" \
         --temp_dir "${temp_dir}" \
         --fallback "${original_script}" \
+        --raw-json-out "${score_dir}/${case_name}_agent_raw.json" \
         ${claude_effort:+--effort "${claude_effort}"} \
         2>"${agent_stderr_tmp}" || true
     cat "${agent_stderr_tmp}" >&2
@@ -372,6 +373,7 @@ else
             --model "${model_name}" \
             --task_type "detection" \
             --temp_dir "${temp_dir}" \
+            --raw-json-out "${score_dir}/${case_name}_agent_raw.json" \
             ${claude_effort:+--effort "${claude_effort}"} \
             2>"${agent_stderr_tmp}" || true
         cat "${agent_stderr_tmp}" >&2
