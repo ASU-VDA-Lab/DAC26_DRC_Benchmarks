@@ -8,12 +8,15 @@ All scripts for the KLayout DRC benchmark evaluation pipeline.
 
 - [*run_pipeline_cursor.sh*](./run_pipeline_cursor.sh): **In-container** pipeline orchestrator (Cursor) -- accepts info.json, post-processes paths, runs prompt formatting, LLM model, DRC, scoring.
 - [*run_pipeline_claude.sh*](./run_pipeline_claude.sh): **In-container** pipeline orchestrator (Claude Code) -- same as `run_pipeline_cursor.sh` but uses `agent_claude.py`.
+- [*run_pipeline_codex.sh*](./run_pipeline_codex.sh): **In-container** pipeline orchestrator (Codex) -- same as `run_pipeline_claude.sh` but uses `agent_codex.py`. **Requires `CODEX_EFFORT`** (e.g. `high` / `medium` / `low`); the `run_id` is always `<model_name>-<effort>`.
 - [*evaluate_cursor.sh*](./evaluate_cursor.sh): **Paper experiment runner** (Cursor) -- batch orchestrator that iterates over task_type × model_name × case, generates info.json via `build_case_info.py`, manages Docker containers, and injects golden DRC reports.
-- [*evaluate_claude.sh*](./evaluate_claude.sh): **Paper experiment runner** (Claude Code) -- same as `evaluate_cursor.sh` but uses `run_pipeline_claude.sh`.
+- [*evaluate_claude.sh*](./evaluate_claude.sh): **Paper experiment runner** (Claude Code) -- same as `evaluate_cursor.sh` but uses `run_pipeline_claude.sh`. `MODEL_NAMES` entries are `"<model> <effort>"` pairs.
+- [*evaluate_codex.sh*](./evaluate_codex.sh): **Paper experiment runner** (Codex) -- same as `evaluate_claude.sh` but uses `run_pipeline_codex.sh` and bind-mounts `~/.codex/auth.json`. `MODEL_NAMES` entries are `"<model> <effort>"` pairs.
 - [*agent_cursor.py*](./agent_cursor.py): Cursor Agent CLI wrapper -- invokes any LLM model via Cursor Agent CLI.
 - [*agent_claude.py*](./agent_claude.py): Claude Code CLI wrapper -- invokes any LLM model via Claude Code CLI.
+- [*agent_codex.py*](./agent_codex.py): Codex CLI wrapper -- invokes any OpenAI model via `codex exec`. Parses Codex JSONL events for token usage; accepts `--effort <level>` and `--raw-json-out <path>` (dumps the raw Codex JSONL for debugging).
 - [*prompt_format.py*](./prompt_format.py): Template engine -- fills `{placeholder}` tokens in prompt templates with values from info.json. Allowed keys include `path_to_connectivity_file` (golden connectivity JSON for cell/block repair).
-- [*build_case_info.py*](./build_case_info.py): Builds per-case info.json with paths and prompt configuration (used by `evaluate_cursor.sh` for paper experiments). For cell/block cases, also generates the `path_to_connectivity_file` key pointing to the golden connectivity JSON.
+- [*build_case_info.py*](./build_case_info.py): Builds per-case info.json with paths and prompt configuration (used by `evaluate_cursor.sh` / `evaluate_claude.sh` / `evaluate_codex.sh` for paper experiments). For cell/block cases, also generates the `path_to_connectivity_file` key pointing to the golden connectivity JSON.
 - [*run_klayout_drc.py*](./run_klayout_drc.py): KLayout DRC runner -- invokes KLayout in batch mode with `.lydrc` rule files, produces `.lyrpt` reports.
 - [*process_klayout_reports.py*](./process_klayout_reports.py): KLayout DRC report converter -- converts `.lyrpt` XML to structured `.drc.json` (batch or single-file).
 - [*score_repair.py*](./score_repair.py): Repair scorer -- compares original vs repaired DRC reports (`repair_rate`, `new_violation_rate`).
@@ -37,35 +40,43 @@ All scripts for the KLayout DRC benchmark evaluation pipeline.
 
 The example `info.json` template (showing all required keys) is located in `example/info.json`. The JSON includes both pipeline control fields (`model_name`, `case_name`, `design_type`, `task_type`) and prompt placeholder keys.
 
-For paper experiments, `evaluate_cursor.sh` calls `build_case_info.py` (argparse named args) on the host to generate a per-case info.json. For single-case runs, prepare your own info.json manually (see `example/info.json` for required keys). Inside the container, `run_pipeline_cursor.sh` post-processes the JSON to rewrite all paths to the container perspective.
+For paper experiments, `evaluate_cursor.sh` / `evaluate_claude.sh` / `evaluate_codex.sh` call `build_case_info.py` (argparse named args) on the host to generate a per-case info.json. For single-case runs, prepare your own info.json manually (see `example/info.json` for required keys). Inside the container, `run_pipeline_cursor.sh` / `run_pipeline_claude.sh` / `run_pipeline_codex.sh` post-process the JSON to rewrite all paths to the container perspective.
 
-**Note:** `output_path` and `temp_dir` in info.json are **automatically overwritten** by `run_pipeline_cursor.sh` / `run_pipeline_claude.sh` with computed container paths. You can leave them empty or set them to any placeholder value -- the pipeline will replace them before use.
+**Note:** `output_path` and `temp_dir` in info.json are **automatically overwritten** by `run_pipeline_cursor.sh` / `run_pipeline_claude.sh` / `run_pipeline_codex.sh` with computed container paths. You can leave them empty or set them to any placeholder value -- the pipeline will replace them before use.
 
 ---
 
 ## Pipeline Flow
 
-### `run_pipeline_cursor.sh` (in-container, primary entry point)
+### `run_pipeline_{cursor,claude,codex}.sh` (in-container, primary entry point)
 
-To run a single case, prepare an `info.json` and call `run_pipeline_cursor.sh` directly inside the container:
+To run a single case, prepare an `info.json` and call the appropriate pipeline script directly inside the container:
 
 ```bash
 bash src/run_pipeline_cursor.sh /workspace/task/info.json
+bash src/run_pipeline_claude.sh /workspace/task/info.json
+CODEX_EFFORT=high bash src/run_pipeline_codex.sh /workspace/task/info.json
 ```
 
-### `evaluate_cursor.sh` (host-side, paper experiments only)
+`CODEX_EFFORT` is **required** for `run_pipeline_codex.sh` (unset → `exit 1`). `CLAUDE_EFFORT` is optional for `run_pipeline_claude.sh`.
+
+### `evaluate_{cursor,claude,codex}.sh` (host-side, paper experiments only)
 
 ```bash
-# Edit the CASES array in evaluate_cursor.sh, then run:
+# Edit the CASES array in the appropriate script, then run one of:
 bash src/evaluate_cursor.sh
+bash src/evaluate_claude.sh
+bash src/evaluate_codex.sh
 ```
 
-Batch orchestrator that iterates over task_type × model_name × case. Generates `info.json` via `build_case_info.py`, manages Docker container lifecycle, and injects golden DRC reports at the right time via `docker cp`. For detection, the golden report is injected **after** the agent finishes (so the agent cannot see the answers). For repair, it is injected **before** the agent runs. Used to reproduce the paper's experiment table.
+Batch orchestrators that iterate over task_type × model_name × case. Generate `info.json` via `build_case_info.py`, manage Docker container lifecycle, and inject golden DRC reports at the right time via `docker cp`. For detection, the golden report is injected **after** the agent finishes (so the agent cannot see the answers). For repair, it is injected **before** the agent runs. `evaluate_claude.sh` and `evaluate_codex.sh` expect `MODEL_NAMES` entries to be `"<model> <effort>"` pairs; `evaluate_cursor.sh` uses plain model names. Used to reproduce the paper's experiment table.
 
-### `run_pipeline_cursor.sh` details
+### `run_pipeline_*.sh` details
 
 ```bash
 bash src/run_pipeline_cursor.sh [--agent-only|--score-only] <info.json>
+bash src/run_pipeline_claude.sh [--agent-only|--score-only] <info.json>
+CODEX_EFFORT=<level> bash src/run_pipeline_codex.sh [--agent-only|--score-only] <info.json>
 ```
 
 The `info.json` must contain `task_type`, `model_name`, `case_name`, `design_type`, and all prompt placeholder keys (see `example/info.json`).
@@ -81,7 +92,7 @@ Each invocation processes exactly one model. Results are stored under `result/<m
 | Step | Script | Description |
 |------|--------|-------------|
 | 1 | `prompt_format.py` | Post-process info.json (rewrite paths to container perspective), then format prompt from template + info.json; DRC report points to `.drc.json` |
-| 2 | `agent_cursor.py` or `agent_claude.py` | Call LLM model once via Cursor CLI or Claude Code CLI with `--model <model_name>` and `--output-format json`; the wrapper parses token usage from stdout and emits `STATUS=` / `TOKENS_JSON=` / `RUNTIME_SECONDS=` markers on stderr |
+| 2 | `agent_cursor.py`, `agent_claude.py`, or `agent_codex.py` | Call LLM model once via Cursor CLI, Claude Code CLI, or Codex CLI with `--model <model_name>`; the wrapper parses token usage from stdout (JSON for Cursor/Claude, JSONL for Codex) and emits `STATUS=` / `TOKENS_JSON=` / `RUNTIME_SECONDS=` markers on stderr. `agent_codex.py` additionally accepts `--effort <level>` and `--raw-json-out <path>` (raw JSONL dump for debugging) |
 | 2.5 (repair) | KLayout batch | Render GDS from LLM's modified layout script |
 | 3 (repair) | `run_klayout_drc.py` | Run KLayout DRC on the LLM-produced GDS, producing `.lyrpt` report |
 | 3.5 (repair) | `process_klayout_reports.py` | Convert `.lyrpt` DRC report to structured `.drc.json` for consistent comparison |
@@ -90,7 +101,7 @@ Each invocation processes exactly one model. Results are stored under `result/<m
 | 5.5 (repair) | `merge_score_sanity.py`, `merge_score_connectivity.py` | Merge sanity (and connectivity, cell/block only) fields into the score JSON |
 | 6 | `write_score_csv.py`, `log_runtime.py` | Write per-case CSV and append a row to `logs/runtime.csv` |
 
-All console output (stdout + stderr) is also captured to `logs/<run_id>_<design_type>_<task_type>_<case_name>.log` via `tee`, where `run_id` is `<model_name>-<effort>` for claude pipeline runs (e.g. `claude-sonnet-4-6-medium`) and `<model_name>` for cursor runs.
+All console output (stdout + stderr) is also captured to `logs/<run_id>_<design_type>_<task_type>_<case_name>.log` via `tee`, where `run_id` is `<model_name>-<effort>` for claude and codex pipeline runs (e.g. `claude-sonnet-4-6-medium`, `gpt-5.4-high`) and `<model_name>` for cursor runs.
 
 **Environment variables:**
 
@@ -99,12 +110,13 @@ All console output (stdout + stderr) is also captured to `logs/<run_id>_<design_
 | `WORKSPACE` | `/workspace` | Root workspace directory (set by Docker image ENV) |
 | `SKIP_DRC` | `0` | Set to `1` to skip KLayout DRC step (repair only) |
 | `CLAUDE_EFFORT` | unset | Claude Code reasoning effort level (e.g. `high`, `medium`, `low`); passed as `--effort` to the CLI |
+| `CODEX_EFFORT` | unset | **Required** for `run_pipeline_codex.sh`. Codex reasoning effort level (e.g. `high`, `medium`, `low`); passed to `agent_codex.py` via `--effort` and becomes part of `run_id` (`<model_name>-<effort>`) |
 
 ---
 
-## Agent (`agent_cursor.py` / `agent_claude.py`)
+## Agent (`agent_cursor.py` / `agent_claude.py` / `agent_codex.py`)
 
-CLI wrappers that invoke LLM models. `agent_cursor.py` uses the Cursor Agent CLI; `agent_claude.py` uses the Claude Code CLI. The agent writes its output directly to the file path specified in the prompt (via the `{output_path}` placeholder). Each wrapper parses the CLI's JSON stdout for token usage and emits stderr markers for the pipeline shell script to consume.
+CLI wrappers that invoke LLM models. `agent_cursor.py` uses the Cursor Agent CLI; `agent_claude.py` uses the Claude Code CLI; `agent_codex.py` uses the Codex CLI. The agent writes its output directly to the file path specified in the prompt (via the `{output_path}` placeholder). Each wrapper parses the CLI's stdout for token usage (JSON for Cursor/Claude, JSONL events for Codex) and emits stderr markers for the pipeline shell script to consume.
 
 ```bash
 # Cursor Agent CLI
@@ -114,7 +126,16 @@ python3 src/agent_cursor.py <prompt_file> <output_file> --model <model_name> --t
 # Claude Code CLI
 python3 src/agent_claude.py <prompt_file> <output_file> --model <model_name> --task_type <repair|detection> \
     [--workspace <dir>] [--fallback <path>] [--temp_dir <path>] [--effort <level>]
+
+# Codex CLI
+python3 src/agent_codex.py <prompt_file> <output_file> --model <model_name> --task_type <repair|detection> \
+    [--workspace <dir>] [--fallback <path>] [--temp_dir <path>] [--effort <level>] \
+    [--raw-json-out <path>]
 ```
+
+`agent_codex.py` extras:
+- `--effort <level>`: forwarded to `codex exec` to set reasoning effort.
+- `--raw-json-out <path>`: dumps the raw Codex CLI JSONL stream to this path. The pipeline writes it to `score/<run_id>/<design_type>/<task_type>/<case_name>_agent_raw.json` for debugging / auditing.
 
 - `output_file`: the expected output path (agent writes here directly as instructed by the prompt)
 - `--temp_dir`: directory for intermediate/scratch files; created (via `os.makedirs`) before the agent runs
@@ -210,7 +231,7 @@ info.json (includes model_name, temp_dir) + prompt_*.md
         |                (DRC report = .drc.json from drc_report/)
         |                ({temp_dir} = workspace/temp/ for intermediate files)
         v
-  agent_cursor.py / agent_claude.py --model <model_name> --temp_dir <path>
+  agent_cursor.py / agent_claude.py / agent_codex.py --model <model_name> --temp_dir <path>
         |
   +-----+----------------------------+
   | REPAIR                           | DETECTION

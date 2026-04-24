@@ -28,17 +28,17 @@
 #OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 #OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #################################################################################
-# evaluate_claude.sh -- Batch experiment runner for reproducing the paper's results
+# evaluate_codex.sh -- Batch experiment runner for reproducing the paper's results
 #
-# Iterates over task_type × model_name × (case_name, design_type) and runs
+# Iterates over task_type x model_name x (case_name, design_type) and runs
 # the full Docker-based pipeline for each combination sequentially.
 #
 # This script is used to reproduce the experiment table in the paper.
-# To run a single case, use run_pipeline_claude.sh with your own info.json instead.
+# To run a single case, use run_pipeline_codex.sh with your own info.json instead.
 #
 # IMPORTANT: Run this script from the DAC26_DRC_Benchmarks/ project root:
 #   cd DAC26_DRC_Benchmarks/
-#   bash src/evaluate_claude.sh
+#   bash src/evaluate_codex.sh
 #
 # Prerequisites:
 #   - Two Docker images must be built first:
@@ -46,9 +46,9 @@
 #       docker build -f Dockerfile.detection -t drc-benchmark-detection .
 #     (Detection uses a locked-down image with no KLayout and an iptables
 #     blocklist to prevent the agent from installing / invoking KLayout.)
-#   - Claude Code CLI must be logged in on the host:
-#       curl -fsSL https://claude.ai/install.sh | bash
-#       claude login
+#   - Codex CLI must be logged in on the host:
+#       npm install -g @openai/codex@0.124.0
+#       codex login
 
 set -euo pipefail
 
@@ -56,17 +56,22 @@ set -euo pipefail
 # Configuration -- edit these lists to control which runs to execute
 # ===========================================================================
 
-
 TASK_TYPES=(
     repair
+    detection
 )
 
 MODEL_NAMES=(
-    "claude-sonnet-4-6 medium"
+    "gpt-5.4 high"
 )
 
 CASES=(
+    "Polygon69 polygon"
     "Polygon263 polygon"
+    "Cell1 cell"
+    "Cell228 cell"
+    "Block5 block"
+    "Block7 block"
 )
 
 # ===========================================================================
@@ -81,18 +86,25 @@ CASES=(
 #                               KLayout DRC to verify its own output).
 DETECTION_IMAGE="${DETECTION_IMAGE:-drc-benchmark-detection}"
 REPAIR_IMAGE="${REPAIR_IMAGE:-drc-benchmark-repair}"
+CODEX_AUTH_FILE="${CODEX_AUTH_FILE:-${HOME}/.codex/auth.json}"
 host_dir="$(pwd)"
 testcase_base="${host_dir}/testcase/asap7"
 skill_file="${host_dir}/src/skill.md"
 
-total=${#TASK_TYPES[@]}*${#MODEL_NAMES[@]}*${#CASES[@]}
+if [[ ! -f "${CODEX_AUTH_FILE}" ]]; then
+    echo "ERROR: Codex auth file not found: ${CODEX_AUTH_FILE}" >&2
+    echo "Run 'codex login' on the host, or set CODEX_AUTH_FILE." >&2
+    exit 1
+fi
+
+total=$(( ${#TASK_TYPES[@]} * ${#MODEL_NAMES[@]} * ${#CASES[@]} ))
 run_idx=0
 
 for task_type in "${TASK_TYPES[@]}"; do
     for model_entry in "${MODEL_NAMES[@]}"; do
         # Extract model_name and effort level from the pair
         model_name="${model_entry%% *}"
-        claude_effort="${model_entry##* }"
+        codex_effort="${model_entry##* }"
 
         for case_entry in "${CASES[@]}"; do
 
@@ -103,7 +115,7 @@ for task_type in "${TASK_TYPES[@]}"; do
             run_idx=$((run_idx + 1))
             echo ""
             echo "=========================================================="
-            echo "  Run ${run_idx}: ${task_type} | ${model_name} | ${case_name} (${design_type}) | effort=${claude_effort}"
+            echo "  Run ${run_idx}/${total}: ${task_type} | ${model_name} | ${case_name} (${design_type}) | effort=${codex_effort}"
             echo "=========================================================="
 
             # Validate design_type
@@ -140,7 +152,7 @@ for task_type in "${TASK_TYPES[@]}"; do
             # -----------------------------------------------------------------
             info_dir="${host_dir}/temp/info"
             mkdir -p "${info_dir}"
-            info_json="${info_dir}/${model_name}_${design_type}_${task_type}_${case_name}.json"
+            info_json="${info_dir}/${model_name}_${codex_effort}_${design_type}_${task_type}_${case_name}.json"
 
             python3 "${host_dir}/src/build_case_info.py" \
                 --model_name "${model_name}" \
@@ -154,7 +166,7 @@ for task_type in "${TASK_TYPES[@]}"; do
                 --path_to_design_rule "${design_rule}" \
                 --path_to_drm_jpg "${testcase_base}/drm_jpg" \
                 --path_to_skill "${skill_file}" \
-                --temp_dir "temp/${model_name}_${design_type}_${task_type}_${case_name}" \
+                --temp_dir "temp/${model_name}_${codex_effort}_${design_type}_${task_type}_${case_name}" \
                 --json_output_path "${info_json}"
 
             echo "Generated info.json: ${info_json}"
@@ -162,13 +174,13 @@ for task_type in "${TASK_TYPES[@]}"; do
             # -----------------------------------------------------------------
             # Docker container setup
             # -----------------------------------------------------------------
-            container_name="drc-${model_name}-${claude_effort}-${design_type}-${task_type}-${case_name}-$$"
+            container_name="drc-${model_name}-${codex_effort}-${design_type}-${task_type}-${case_name}-$$"
             container_name=$(echo "${container_name}" | tr -c 'a-zA-Z0-9_.-' '-')
 
             # Pick the correct image and extra docker flags based on task_type.
             # Detection uses a locked-down image with an iptables blocklist; the
             # entrypoint requires NET_ADMIN to program iptables at container
-            # start.  Repair uses the full image with KLayout available.
+            # start. Repair uses the full image with KLayout available.
             if [[ "${task_type}" == "detection" ]]; then
                 IMAGE_TO_USE="${DETECTION_IMAGE}"
                 EXTRA_DOCKER_FLAGS=("--cap-add=NET_ADMIN")
@@ -182,7 +194,7 @@ for task_type in "${TASK_TYPES[@]}"; do
             docker create \
                 --name "${container_name}" \
                 "${EXTRA_DOCKER_FLAGS[@]}" \
-                -v "${HOME}/.claude/.credentials.json:/root/.claude/.credentials.json:ro" \
+                -v "${CODEX_AUTH_FILE}:/root/.codex/auth.json:ro" \
                 -v "${host_dir}/result:/workspace/result" \
                 -v "${host_dir}/score:/workspace/score" \
                 -v "${host_dir}/logs:/workspace/logs" \
@@ -210,19 +222,17 @@ for task_type in "${TASK_TYPES[@]}"; do
 
                 echo "Running full repair pipeline..."
                 docker exec \
-                    -e "CLAUDE_EFFORT=${claude_effort}" \
-                    -e "CLAUDE_CODE_MAX_OUTPUT_TOKENS=${CLAUDE_CODE_MAX_OUTPUT_TOKENS:-64000}" \
+                    -e "CODEX_EFFORT=${codex_effort}" \
                     "${container_name}" \
-                    bash src/run_pipeline_claude.sh /workspace/task/info.json \
+                    bash src/run_pipeline_codex.sh /workspace/task/info.json \
                 || echo "WARNING: Repair pipeline failed for ${case_name}. Continuing." >&2
 
             else
                 echo "Running agent (detection, no golden report visible)..."
                 if docker exec \
-                    -e "CLAUDE_EFFORT=${claude_effort}" \
-                    -e "CLAUDE_CODE_MAX_OUTPUT_TOKENS=${CLAUDE_CODE_MAX_OUTPUT_TOKENS:-64000}" \
+                    -e "CODEX_EFFORT=${codex_effort}" \
                     "${container_name}" \
-                    bash src/run_pipeline_claude.sh --agent-only /workspace/task/info.json; then
+                    bash src/run_pipeline_codex.sh --agent-only /workspace/task/info.json; then
 
                     echo "Injecting golden DRC report into container for scoring..."
                     if [[ -n "${golden_report}" && -f "${golden_report}" ]]; then
@@ -233,17 +243,17 @@ for task_type in "${TASK_TYPES[@]}"; do
 
                     echo "Running scoring phase..."
                     docker exec \
-                        -e "CLAUDE_EFFORT=${claude_effort}" \
+                        -e "CODEX_EFFORT=${codex_effort}" \
                         "${container_name}" \
-                        bash src/run_pipeline_claude.sh --score-only /workspace/task/info.json \
+                        bash src/run_pipeline_codex.sh --score-only /workspace/task/info.json \
                     || echo "WARNING: Scoring failed for ${case_name}. Continuing." >&2
                 else
                     echo "WARNING: Agent failed for ${case_name}, skipping scoring. Continuing." >&2
                 fi
             fi
 
-            echo "  Results : result/${model_name}/${design_type}/${task_type}/${case_name}/"
-            echo "  Scores  : score/${model_name}/${design_type}/${task_type}/"
+            echo "  Results : result/${model_name}-${codex_effort}/${design_type}/${task_type}/${case_name}/"
+            echo "  Scores  : score/${model_name}-${codex_effort}/${design_type}/${task_type}/"
 
             # -----------------------------------------------------------------
             # Copy task directory (prompts, info.json) from container to host
