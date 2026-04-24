@@ -4,7 +4,7 @@
 
 A benchmark framework for evaluating LLM models on chip physical design tasks -- specifically **DRC repair** and **DRC detection** -- using the ASAP7 7nm PDK and KLayout DRC.
 
-This benchmark runs inside a self-contained Docker container. KLayout 0.30.1 and the Cursor/Claude Code CLIs are pre-installed in the image. No host KLayout installation or commercial EDA licenses are required.
+This benchmark runs inside a self-contained Docker container. KLayout 0.30.1 and the Cursor / Claude Code / Codex CLIs are pre-installed in the image. No host KLayout installation or commercial EDA licenses are required.
 
 Shortcut: [Table of Contents](#table-of-contents) | [Benchmark Tasks](#benchmark-tasks) | [Quick Start](#quick-start) | [Pipeline Architecture](#pipeline-architecture) | [Detection Isolation](#detection-isolation) | [Scoring Methodology](#scoring-methodology) | [Results](#results) | [Processed DRC Reports](#processed-drc-reports) | [Detection Output Format](#detection-output-format) | [Score Output](#score-output) | [Design Types](#design-types) 
 
@@ -12,8 +12,8 @@ Shortcut: [Table of Contents](#table-of-contents) | [Benchmark Tasks](#benchmark
 
 ## Table of Contents
 
-- *[Dockerfile.repair](./Dockerfile.repair)*: Repair-task image (AlmaLinux 8.10 + KLayout 0.30.1 + Cursor Agent CLI + Claude Code CLI).
-- *[Dockerfile.detection](./Dockerfile.detection)*: Detection-task image -- no KLayout, runtime iptables blocklist on klayout/package-index domains to prevent the agent from invoking or installing DRC tools.
+- *[Dockerfile.repair](./Dockerfile.repair)*: Repair-task image (AlmaLinux 8.10 + KLayout 0.30.1 + Cursor Agent CLI + Claude Code CLI + Codex CLI).
+- *[Dockerfile.detection](./Dockerfile.detection)*: Detection-task image (Cursor Agent CLI + Claude Code CLI + Codex CLI) -- no KLayout, runtime iptables blocklist on klayout/package-index domains to prevent the agent from invoking or installing DRC tools.
 - *[CLAUDE.md](./CLAUDE.md)*: Agent behavior contract read by the LLM inside the container (unattended-Docker rules: never ask, never wait, never abort).
 - *[docker/](./docker)*: Build-time helpers for the detection image (`entrypoint-blocklist.sh`).
 - *[case_stat.md](./case_stat.md)*: Test case statistics -- polygon target rules, block design details, and cell DRC violations.
@@ -119,6 +119,12 @@ The LLM agent receives the same layout inputs **except** the DRC report. It must
   claude login
   ```
   The login credentials at `~/.claude/` are bind-mounted (read-only) into the container at runtime.
+- **Codex CLI on the host** (for Codex pipeline) -- install and log in:
+  ```bash
+  npm install -g @openai/codex@0.124.0
+  codex login
+  ```
+  The login credentials at `~/.codex/auth.json` are bind-mounted (read-only) into the container at runtime.
 - **KLayout 0.30.1** -- pre-installed in the Docker image (downloaded from klayout.org during build)
 - **Python 3.6+** -- pre-installed in the Docker image (standard library only; no extra pip packages required)
 
@@ -135,7 +141,7 @@ docker build -f Dockerfile.repair    -t drc-benchmark-repair    .
 docker build -f Dockerfile.detection -t drc-benchmark-detection .
 ```
 
-Both images are AlmaLinux 8.10 with Cursor CLI + Claude Code CLI pre-installed. The repair image additionally has KLayout 0.30.1, Ruby, and Qt5. The detection image has Python 3.6 and `iptables` only; download tools (`wget`, `curl`, `pip`, `yum`, `rpm`, `gcc`, `git`, etc.) are stripped, and the entrypoint installs a runtime blocklist of klayout.org, pypi.org, github.com, etc. See [Detection Isolation](#detection-isolation) below.
+Both images are AlmaLinux 8.10 with Cursor CLI + Claude Code CLI + Codex CLI pre-installed. The repair image additionally has KLayout 0.30.1, Ruby, and Qt5. The detection image has Python 3.6 and `iptables` only; download tools (`wget`, `curl`, `pip`, `yum`, `rpm`, `gcc`, `git`, `npm`, etc.) are stripped, and the entrypoint installs a runtime blocklist of klayout.org, pypi.org, github.com, etc. See [Detection Isolation](#detection-isolation) below.
 
 ### 2. Run a Single Test Case
 
@@ -143,7 +149,7 @@ Both images are AlmaLinux 8.10 with Cursor CLI + Claude Code CLI pre-installed. 
 
 Use `drc-benchmark-repair` for repair tasks and `drc-benchmark-detection` for detection tasks. Detection additionally requires `--cap-add=NET_ADMIN` so the container entrypoint can program its iptables blocklist.
 
-Both examples mirror what `evaluate_cursor.sh` / `evaluate_claude.sh` do per case: bind-mount only the single credential file (not the whole credential directory), bind-mount the four runtime I/O directories (`result`, `score`, `logs`, `temp`), and inject the golden DRC report via `docker cp` rather than a volume mount so detection runs never see it on the filesystem before the scoring phase.
+Both examples mirror what `evaluate_cursor.sh` / `evaluate_claude.sh` / `evaluate_codex.sh` do per case: bind-mount only the single credential file (not the whole credential directory), bind-mount the four runtime I/O directories (`result`, `score`, `logs`, `temp`), and inject the golden DRC report via `docker cp` rather than a volume mount so detection runs never see it on the filesystem before the scoring phase. **For Codex, `CODEX_EFFORT` is required** (e.g. `high` / `medium` / `low`) and is passed via `docker exec -e CODEX_EFFORT=...`.
 
 **Cursor Agent CLI (repair example):**
 
@@ -205,26 +211,59 @@ docker exec "$CONTAINER" bash src/run_pipeline_claude.sh --score-only /workspace
 docker rm -f "$CONTAINER"
 ```
 
+**Codex CLI (repair example):**
+
+`CODEX_EFFORT` is required; it selects the Codex reasoning effort level and also becomes part of the `run_id` (`<model_name>-<effort>`) used for `result/`, `score/`, and log paths.
+
+```bash
+CASE=Cell1
+DESIGN=cell
+CONTAINER=drc-bench-$CASE
+
+docker create --name "$CONTAINER" \
+    -v "$HOME/.codex/auth.json:/root/.codex/auth.json:ro" \
+    -v "$(pwd)/result:/workspace/result" \
+    -v "$(pwd)/score:/workspace/score" \
+    -v "$(pwd)/logs:/workspace/logs" \
+    -v "$(pwd)/temp:/workspace/temp" \
+    drc-benchmark-repair \
+    sleep infinity
+docker start "$CONTAINER"
+
+docker cp info.json "$CONTAINER:/workspace/task/info.json"
+docker exec "$CONTAINER" mkdir -p "/workspace/testcase/asap7/$DESIGN/drc_report"
+docker cp "testcase/asap7/$DESIGN/drc_report/$CASE.drc.json" \
+    "$CONTAINER:/workspace/testcase/asap7/$DESIGN/drc_report/"
+
+docker exec -e CODEX_EFFORT=high "$CONTAINER" \
+    bash src/run_pipeline_codex.sh /workspace/task/info.json
+
+docker rm -f "$CONTAINER"
+```
+
+For Codex detection runs, use `drc-benchmark-detection` with `--cap-add=NET_ADMIN` and the same `--agent-only` / `--score-only` two-phase flow shown above for Claude.
+
 The `--agent-only` / `--score-only` phase flags exist exactly to gate when the golden DRC report becomes visible to the agent (see [Pipeline Architecture](#pipeline-architecture)).
 
 ### 3. Reproduce Paper Experiments
 
-`evaluate_cursor.sh` (Cursor) and `evaluate_claude.sh` (Claude Code) are provided to reproduce the experiments in the paper. They automate info.json generation, Docker container lifecycle, and golden DRC report injection across all task/model/case combinations. Most users do not need these scripts.
+`evaluate_cursor.sh` (Cursor), `evaluate_claude.sh` (Claude Code), and `evaluate_codex.sh` (Codex) are provided to reproduce the experiments in the paper. They automate info.json generation, Docker container lifecycle, and golden DRC report injection across all task/model/case combinations. Most users do not need these scripts.
 
 ```bash
 # Edit the CASES array, then run:
 bash src/evaluate_cursor.sh          # Cursor Agent CLI
-bash src/evaluate_claude.sh   # Claude Code CLI
+bash src/evaluate_claude.sh          # Claude Code CLI
+bash src/evaluate_codex.sh           # Codex CLI
 ```
 
 ---
 
 ## Pipeline Architecture
 
-The core pipeline runs inside a Docker container via `run_pipeline_cursor.sh` (Cursor) or `run_pipeline_claude.sh` (Claude Code). For paper experiments, `evaluate_cursor.sh` / `evaluate_claude.sh` wraps this with automated info.json generation and Docker container management:
+The core pipeline runs inside a Docker container via `run_pipeline_cursor.sh` (Cursor), `run_pipeline_claude.sh` (Claude Code), or `run_pipeline_codex.sh` (Codex). For paper experiments, `evaluate_cursor.sh` / `evaluate_claude.sh` / `evaluate_codex.sh` wrap this with automated info.json generation and Docker container management:
 
 ```
-evaluate_cursor.sh (paper experiments only)                             [HOST]
+evaluate_{cursor,claude,codex}.sh (paper experiments only)              [HOST]
   |
   +-- For each task_type × model_name × case:
   |     +-- Generate info.json (build_case_info.py)
@@ -235,14 +274,14 @@ evaluate_cursor.sh (paper experiments only)                             [HOST]
   |     +-- Clean up container
 ```
 
-Inside the container, `run_pipeline_cursor.sh` executes:
+Inside the container, `run_pipeline_{cursor,claude,codex}.sh` executes:
 
 ```
-run_pipeline_cursor.sh <info.json>                                      [CONTAINER]
+run_pipeline_{cursor,claude,codex}.sh <info.json>                       [CONTAINER]
   |
   +-- Step 1: Post-process info.json (rewrite paths to container perspective)
   +-- Step 2: Format prompt (prompt_format.py + prompt_repair/detection.md)
-  +-- Step 3: Call LLM model once (agent_cursor.py or agent_claude.py)
+  +-- Step 3: Call LLM model once (agent_cursor.py, agent_claude.py, or agent_codex.py)
   |            The agent runs to completion; no timeout, no reminder.
   |            The wrapper parses CLI JSON output for token usage and
   |            emits STATUS, TOKENS_JSON, and RUNTIME_SECONDS on stderr.
@@ -264,7 +303,7 @@ Each agent call is a **single invocation** that runs to natural completion; toke
 
 ### Supported Models
 
-Models are invoked via the Cursor Agent CLI (`src/agent_cursor.py`) or Claude Code CLI (`src/agent_claude.py`). The 6 default benchmark models (Cursor model names) are:
+Models are invoked via the Cursor Agent CLI (`src/agent_cursor.py`), the Claude Code CLI (`src/agent_claude.py`), or the Codex CLI (`src/agent_codex.py`). The 6 default benchmark models (Cursor model names) are:
 
 
 | Default Model              | Provider  | Description                |
@@ -277,11 +316,11 @@ Models are invoked via the Cursor Agent CLI (`src/agent_cursor.py`) or Claude Co
 | `kimi-k2.5`                | Moonshot  | Kimi K2.5                  |
 
 
-See [Cursor Models and Pricing](https://cursor.com/docs/models-and-pricing) for the full list of available models. Any model supported by the Cursor Agent CLI can be passed as `model_name`.
+See [Cursor Models and Pricing](https://cursor.com/docs/models-and-pricing) for the full list of available models. Any model supported by the Cursor Agent CLI can be passed as `model_name`. For the Codex CLI, any OpenAI model that `codex exec --model <model>` accepts (e.g. `gpt-5.4`) is valid; the reasoning effort is supplied separately via `CODEX_EFFORT` (`high` / `medium` / `low`).
 
 ### Intermediate Files
 
-LLM agents are instructed to place all intermediate/scratch files (test scripts, debug outputs, draft fixes) in the `temp/` directory at the project root. The `--temp_dir` flag passed to `agent_cursor.py` ensures this directory is created before the agent runs. The prompt templates embed the concrete `temp_dir` path via the `{temp_dir}` placeholder so the agent knows where to write. The `temp/` directory is automatically deleted at the end of each pipeline run.
+LLM agents are instructed to place all intermediate/scratch files (test scripts, debug outputs, draft fixes) in the `temp/` directory at the project root. The `--temp_dir` flag passed to `agent_cursor.py` / `agent_claude.py` / `agent_codex.py` ensures this directory is created before the agent runs. The prompt templates embed the concrete `temp_dir` path via the `{temp_dir}` placeholder so the agent knows where to write. The `temp/` directory is automatically deleted at the end of each pipeline run.
 
 ### Detection Isolation
 
@@ -289,9 +328,9 @@ Detection agents should predict DRC violations from the layout script alone, wit
 
 - Ships without `klayout`, `wget`, `curl`, `pip`, `yum`, `rpm`, `gcc`, `git`, `make`, `cpio`.
 - Has `iptables` pre-installed. The entrypoint resolves known DRC-install domains (`klayout.org`, `pypi.org`, `files.pythonhosted.org`, `github.com`, `gitlab.com`, `conda.anaconda.org`, `sourceforge.net`, `dl.fedoraproject.org`, ...) to IPs and installs `OUTPUT REJECT` rules for each.
-- Leaves the rest of the internet reachable so the agent can still call the Anthropic / Cursor API endpoints through Docker's default NAT.
+- Leaves the rest of the internet reachable so the agent can still call the Anthropic / Cursor / OpenAI API endpoints through Docker's default NAT.
 
-Running the image requires `--cap-add=NET_ADMIN` (both `evaluate_*.sh` scripts add this automatically for detection tasks). Repair tasks are unaffected and continue to run in `drc-benchmark-repair` with full KLayout available.
+Running the image requires `--cap-add=NET_ADMIN` (all three `evaluate_*.sh` scripts add this automatically for detection tasks). Repair tasks are unaffected and continue to run in `drc-benchmark-repair` with full KLayout available.
 
 ### Runtime Tracking
 
@@ -321,8 +360,12 @@ stdout:
 CLI-level field names differ by vendor: Cursor's Agent CLI uses camelCase
 (`inputTokens`, `outputTokens`, `cacheReadTokens`, `cacheWriteTokens`); the
 Claude Code CLI uses snake_case (`input_tokens`, `output_tokens`,
-`cache_read_input_tokens`, `cache_creation_input_tokens`). `agent_cursor.py` and
-`agent_claude.py` both normalize these into the snake_case names above.
+`cache_read_input_tokens`, `cache_creation_input_tokens`); the Codex CLI emits
+JSONL events whose usage fields may use snake_case (`input_tokens`,
+`output_tokens`, `cache_read_tokens`), camelCase (`inputTokens`,
+`outputTokens`), or OpenAI-style names (`prompt_tokens`, `completion_tokens`,
+`cached_tokens`). `agent_cursor.py`, `agent_claude.py`, and `agent_codex.py`
+all normalize these into the snake_case names above.
 
 On agent failure (non-zero CLI exit, unparseable JSON, missing `usage` object,
 etc.), `agent_status` is set to `"fail"` and all four token counters are
@@ -377,26 +420,26 @@ Predicted violations are matched to golden violations using **geometry-based mat
 
 ## Results
 
-| Task | Metric | (Claude Code) Claude 4.6 Opus - High Effort | | | | | | (Claude Code) Claude 4.6 Sonnet - Medium Effort | | | | | | (Cursor) Claude 4.6 Opus - High Effort | | | | | | (Cursor) Claude 4.6 Sonnet - Medium Effort | | | | | | (Cursor) GPT 5.4 - High Effort | | | | | | (Cursor) Gemini 3.1 Pro | | | | | | (Cursor) Grok 4-20 | | | | | | (Cursor) Kimi K2.5 | | | | | |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| | | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 |
-| Detect | Precision | 0.12 | 0.01 | 0.00 | 0.25 | 1.00 | 1.00 | 0.03 | 1.00 | 1.00 | 0.30 | 1.00 | 1.00 | 0.07 | 0.00 | 0.39 | 0.87 | 1.00 | 1.00 | 0.00 | 0.95 | 1.00 | 1.00 | 1.00 | 0.00 | 0.78 | 0.95 | 1.00 | 0.26 | 1.00 | 1.00 | 0.00 | 0.00 | 0.00 | 1.00 | 1.00 | 1.00 | 0.00 | 0.78 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.83 | 0.18 | 0.50 | 0.00 |
-| | Recall | 0.10 | 0.03 | 0.00 | 0.15 | 1.00 | 1.00 | 0.04 | 0.01 | 0.95 | 1.00 | 1.00 | 1.00 | 0.01 | 0.00 | 0.95 | 1.00 | 1.00 | 1.00 | 0.00 | 0.52 | 0.95 | 0.15 | 1.00 | 0.00 | 0.68 | 0.59 | 1.00 | 1.00 | 1.00 | 1.00 | 0.00 | 0.00 | 0.00 | 1.00 | 1.00 | 1.00 | 0.00 | 0.52 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.53 | 0.85 | 0.50 | 0.00 |
-| | F1 | 0.11 | 0.02 | 0.00 | 0.19 | 1.00 | 1.00 | 0.04 | 0.03 | 0.97 | 0.46 | 1.00 | 1.00 | 0.03 | 0.00 | 0.55 | 0.93 | 1.00 | 1.00 | 0.00 | 0.67 | 0.97 | 0.27 | 1.00 | 0.00 | 0.73 | 0.73 | 1.00 | 0.41 | 1.00 | 1.00 | 0.00 | 0.00 | 0.00 | 1.00 | 1.00 | 1.00 | 0.00 | 0.62 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.65 | 0.30 | 0.50 | 0.00 |
-| | Runtime (s) | 3,023 | 1,246 | 3,915 | 3,102 | 217 | 908 | 1,065 | 703 | 557 | 733 | 140 | 430 | 4,618 | 1,614 | 845 | 1,015 | 153 | 460 | 5,841 | 626 | 641 | 504 | 140 | 311 | 2,347 | 1,084 | 248 | 582 | 117 | 202 | 228 | 51 | 22 | 450 | 49 | 127 | 32 | 78 | 32 | 96 | 37 | 38 | 216 | 203 | 177 | 133 | 35 | 115 |
-| | Input Token | 169(79) | 321K(318K) | 166K(164K) | 2.8K(18) | 2.8K(14) | 2.8K(14) | 73(73) | 42(42) | 33(33) | 7.6K(7.6K) | 19(19) | 15K(15K) | 222 | 106 | 31 | 30 | 19 | 19 | 82 | 17 | 27 | 31 | 22 | 19 | 214K | 145K | 90K | 85K | 98K | 75K | 123K | 51K | 34K | 238K | 48K | 109K | 112K | 74K | 77K | 85K | 139K | 126K | 0 | 0 | 0 | 0 | 0 | 0 |
-| | Cache Read | 7.4M(5.5M) | 6.2M(6.2M) | 810K(810K) | 1.3M(1.3M) | 400K(400K) | 1.1M(1.1M) | 6.2M(6.2M) | 2.1M(2.1M) | 2.1M(2.1M) | 2.2M(2.2M) | 382K(382K) | 698K(698K) | 19M | 8.7M | 2.8M | 2.8M | 1.2M | 1.1M | 5.8M | 1.2M | 2.2M | 2.5M | 1.3M | 1.0M | 4.6M | 1.3M | 974K | 521K | 513K | 488K | 0 | 0 | 0 | 0 | 0 | 0 | 1.2M | 2.7M | 837K | 2.4M | 1.2M | 1.0M | 1.4M | 2.9M | 1.6M | 797K | 328K | 755K |
-| | Cache Write | 627K(436K) | 397K(397K) | 140K(140K) | 140K(140K) | 38K(38K) | 120K(120K) | 395K(395K) | 386K(386K) | 131K(131K) | 135K(135K) | 40K(40K) | 80K(80K) | 740K | 386K | 124K | 132K | 79K | 172K | 624K | 220K | 127K | 123K | 67K | 94K | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | 514K | 1.1M | 862K | 582K | 124K | 477K |
-| | Output Token | 152K(129K) | 65K(65K) | 232K(232K) | 129K(129K) | 12K(12K) | 54K(54K) | 85K(85K) | 54K(54K) | 48K(48K) | 58K(58K) | 8K(8K) | 28K(28K) | 177K | 66K | 52K | 60K | 6K | 23K | 57K | 4K | 57K | 42K | 9K | 20K | 35K | 18K | 11K | 28K | 5.6K | 10K | 503 | 301 | 271 | 4.5K | 814 | 482 | 938 | 6.9K | 1.1K | 9.0K | 1.2K | 2.3K | 17K | 21K | 25K | 22K | 4.1K | 14K |
-| Repair | Repair Rate | 0.30 | -- | 1.00 | 1.00 | 1.00 | 1.00 | 0.63 | 0.46 | 0.26 | 1.00 | 1.00 | 1.00 | -- | 0.44 | 1.00 | 1.00 | 1.00 | 1.00 | 0.31 | -- | 1.00 | 1.00 | 1.00 | 1.00 | 0.20 | 0.35 | 1.00 | 1.00 | 1.00 | 1.00 | -- | -- | 0.16 | 1.00 | 1.00 | 1.00 | -- | -- | 0.16 | 0.15 | 0.50 | 0.00 | -- | -- | 0.05 | 0.92 | 1.00 | 0.00 |
-| | New Violation Rate | 0.36 | -- | 0.00 | 0.00 | 0.00 | 0.00 | 0.14 | 2.12 | 0.00 | 0.00 | 0.00 | 0.00 | -- | 0.43 | 0.00 | 0.00 | 0.00 | 0.00 | 9.34 | -- | 0.00 | 0.00 | 0.00 | 0.00 | 0.11 | 0.24 | 0.00 | 0.00 | 0.00 | 0.00 | -- | -- | 0.05 | 0.00 | 0.00 | 3.00 | -- | -- | 0.42 | 1.62 | 0.00 | 1.00 | -- | -- | 0.00 | 4.23 | 0.50 | 1.00 |
-| | Runtime (s) | 5,281 | 7,879 | 1,684 | 1,055 | 225 | 1,146 | 1,740 | 1,493 | 3,852 | 3,121 | 182 | 1,003 | 7,211 | 2,496 | 995 | 983 | 167 | 572 | 1,840 | 4,303 | 1,025 | 794 | 128 | 301 | 2,342 | 820 | 438 | 428 | 192 | 385 | 658 | 3,931 | 161 | 540 | 86 | 125 | 99 | 76 | 101 | 86 | 39 | 46 | 2,532 | 3,170 | 76 | 264 | 39 | 28 |
-| | Input Token | 2.4K(2K) | 8.2K(8.2K) | 16(16) | 6.8K(6.8K) | 13(13) | 9(9) | 167K(167K) | 109K(109K) | 294K(294K) | 18(18) | 14(14) | 10(10) | 250 | 101 | 44 | 47 | 17 | 26 | 19 | 130 | 36 | 36 | 17 | 18 | 167K | 279K | 145K | 134K | 57K | 82K | 191K | 21K | 125K | 143K | 70K | 65K | 229K | 142K | 132K | 119K | 55K | 83K | 0 | 0 | 0 | 0 | 0 | 0 |
-| | Cache Read | 9.3M(7M) | 11.5M(11.5M) | 1.5M(1.5M) | 1.1M(1.1M) | 251K(251K) | 382K(382K) | 1.1M(1.1M) | 1.5M(289K) | 1.5M(1.5M) | 940K(940K) | 336K(336K) | 520K(520K) | 19M | 9.4M | 5.4M | 5.3M | 474K | 1.2M | 515K | 10.6M | 3.7M | 4.3M | 932K | 1.1M | 5.6M | 4.6M | 1.2M | 1.4M | 472K | 410K | 0 | 0 | 0 | 0 | 0 | 0 | 1.4M | 882K | 781K | 1.3M | 1.1M | 506K | 6.3M | 2.8M | 1.1M | 1.1M | 398K | 209K |
-| | Cache Write | 1M(724K) | 1.5M(1.5M) | 152K(152K) | 127K(127K) | 32K(32K) | 87K(87K) | 169K(169K) | 151K(82K) | 208K(208K) | 134K(134K) | 29K(29K) | 88K(88K) | 1.7M | 619K | 174K | 289K | 25K | 68K | 50K | 217K | 293K | 235K | 67K | 93K | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | 1.8M | 1.1M | 679K | 561K | 192K | 119K |
-| | Output Token | 311K(261K) | 464K(464K) | 100K(100K) | 66K(66K) | 11K(11K) | 58K(58K) | 108K(108K) | 111K(104K) | 244K(244K) | 210K(210K) | 14K(14K) | 64K(64K) | 290K | 110K | 49K | 48K | 7K | 27K | 4K | 122K | 81K | 60K | 8K | 20K | 46K | 42K | 26K | 27K | 9.3K | 12K | 1.9K | 197 | 9.9K | 9.5K | 2K | 2.4K | 13K | 10K | 15K | 11K | 2.0K | 4.1K | 28K | 109K | 13K | 49K | 5.5K | 2.6K |
+| Task | Metric | (Claude Code) Claude 4.6 Opus - High Effort | | | | | | (Claude Code) Claude 4.6 Sonnet - Medium Effort | | | | | | (Cursor) Claude 4.6 Opus - High Effort | | | | | | (Cursor) Claude 4.6 Sonnet - Medium Effort | | | | | | (Codex) GPT 5.4 - High Effort | | | | | | (Cursor) GPT 5.4 - High Effort | | | | | | (Cursor) Gemini 3.1 Pro | | | | | | (Cursor) Grok 4-20 | | | | | | (Cursor) Kimi K2.5 | | | | | |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| | | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 | B7 | B5 | C228 | C1 | P263 | P69 |
+| Detect | Precision | 0.12 | 0.01 | 0.00 | 0.25 | 1.00 | 1.00 | 0.03 | 1.00 | 1.00 | 0.30 | 1.00 | 1.00 | 0.07 | 0.00 | 0.39 | 0.87 | 1.00 | 1.00 | 0.00 | 0.95 | 1.00 | 1.00 | 1.00 | 0.00 | 0.56 | 0.70 | 1.00 | 1.00 | 1.00 | 1.00 | 0.78 | 0.95 | 1.00 | 0.26 | 1.00 | 1.00 | 0.00 | 0.00 | 0.00 | 1.00 | 1.00 | 1.00 | 0.00 | 0.78 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.83 | 0.18 | 0.50 | 0.00 |
+| | Recall | 0.10 | 0.03 | 0.00 | 0.15 | 1.00 | 1.00 | 0.04 | 0.01 | 0.95 | 1.00 | 1.00 | 1.00 | 0.01 | 0.00 | 0.95 | 1.00 | 1.00 | 1.00 | 0.00 | 0.52 | 0.95 | 0.15 | 1.00 | 0.00 | 0.58 | 0.65 | 0.84 | 0.85 | 1.00 | 1.00 | 0.68 | 0.59 | 1.00 | 1.00 | 1.00 | 1.00 | 0.00 | 0.00 | 0.00 | 1.00 | 1.00 | 1.00 | 0.00 | 0.52 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.53 | 0.85 | 0.50 | 0.00 |
+| | F1 | 0.11 | 0.02 | 0.00 | 0.19 | 1.00 | 1.00 | 0.04 | 0.03 | 0.97 | 0.46 | 1.00 | 1.00 | 0.03 | 0.00 | 0.55 | 0.93 | 1.00 | 1.00 | 0.00 | 0.67 | 0.97 | 0.27 | 1.00 | 0.00 | 0.57 | 0.67 | 0.91 | 0.92 | 1.00 | 1.00 | 0.73 | 0.73 | 1.00 | 0.41 | 1.00 | 1.00 | 0.00 | 0.00 | 0.00 | 1.00 | 1.00 | 1.00 | 0.00 | 0.62 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.65 | 0.30 | 0.50 | 0.00 |
+| | Runtime (s) | 3,023 | 1,246 | 3,915 | 3,102 | 217 | 908 | 1,065 | 703 | 557 | 733 | 140 | 430 | 4,618 | 1,614 | 845 | 1,015 | 153 | 460 | 5,841 | 626 | 641 | 504 | 140 | 311 | 821 | 683 | 372 | 385 | 146 | 279 | 2,347 | 1,084 | 248 | 582 | 117 | 202 | 228 | 51 | 22 | 450 | 49 | 127 | 32 | 78 | 32 | 96 | 37 | 38 | 216 | 203 | 177 | 133 | 35 | 115 |
+| | Input Token | 169(79) | 321K(318K) | 166K(164K) | 2.8K(18) | 2.8K(14) | 2.8K(14) | 73(73) | 42(42) | 33(33) | 7.6K(7.6K) | 19(19) | 15K(15K) | 222 | 106 | 31 | 30 | 19 | 19 | 82 | 17 | 27 | 31 | 22 | 19 | 3.5M | 4.3M | 1.3M | 1.2M | 682K | 854K | 214K | 145K | 90K | 85K | 98K | 75K | 123K | 51K | 34K | 238K | 48K | 109K | 112K | 74K | 77K | 85K | 139K | 126K | 0 | 0 | 0 | 0 | 0 | 0 |
+| | Cache Read | 7.4M(5.5M) | 6.2M(6.2M) | 810K(810K) | 1.3M(1.3M) | 400K(400K) | 1.1M(1.1M) | 6.2M(6.2M) | 2.1M(2.1M) | 2.1M(2.1M) | 2.2M(2.2M) | 382K(382K) | 698K(698K) | 19M | 8.7M | 2.8M | 2.8M | 1.2M | 1.1M | 5.8M | 1.2M | 2.2M | 2.5M | 1.3M | 1.0M | 3.2M | 4.1M | 1.1M | 1.0M | 555K | 753K | 4.6M | 1.3M | 974K | 521K | 513K | 488K | 0 | 0 | 0 | 0 | 0 | 0 | 1.2M | 2.7M | 837K | 2.4M | 1.2M | 1.0M | 1.4M | 2.9M | 1.6M | 797K | 328K | 755K |
+| | Cache Write | 627K(436K) | 397K(397K) | 140K(140K) | 140K(140K) | 38K(38K) | 120K(120K) | 395K(395K) | 386K(386K) | 131K(131K) | 135K(135K) | 40K(40K) | 80K(80K) | 740K | 386K | 124K | 132K | 79K | 172K | 624K | 220K | 127K | 123K | 67K | 94K | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | 514K | 1.1M | 862K | 582K | 124K | 477K |
+| | Output Token | 152K(129K) | 65K(65K) | 232K(232K) | 129K(129K) | 12K(12K) | 54K(54K) | 85K(85K) | 54K(54K) | 48K(48K) | 58K(58K) | 8K(8K) | 28K(28K) | 177K | 66K | 52K | 60K | 6K | 23K | 57K | 4K | 57K | 42K | 9K | 20K | 37K | 28K | 16K | 19K | 6.4K | 13K | 35K | 18K | 11K | 28K | 5.6K | 10K | 503 | 301 | 271 | 4.5K | 814 | 482 | 938 | 6.9K | 1.1K | 9.0K | 1.2K | 2.3K | 17K | 21K | 25K | 22K | 4.1K | 14K |
+| Repair | Repair Rate | 0.30 | -- | 1.00 | 1.00 | 1.00 | 1.00 | 0.63 | 0.46 | 0.26 | 1.00 | 1.00 | 1.00 | -- | 0.44 | 1.00 | 1.00 | 1.00 | 1.00 | 0.31 | -- | 1.00 | 1.00 | 1.00 | 1.00 | 0.32 | 0.26 | 0.05 | 1.00 | 1.00 | 1.00 | 0.20 | 0.35 | 1.00 | 1.00 | 1.00 | 1.00 | -- | -- | 0.16 | 1.00 | 1.00 | 1.00 | -- | -- | 0.16 | 0.15 | 0.50 | 0.00 | -- | -- | 0.05 | 0.92 | 1.00 | 0.00 |
+| | New Violation Rate | 0.36 | -- | 0.00 | 0.00 | 0.00 | 0.00 | 0.14 | 2.12 | 0.00 | 0.00 | 0.00 | 0.00 | -- | 0.43 | 0.00 | 0.00 | 0.00 | 0.00 | 9.34 | -- | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.07 | 0.00 | 0.00 | 0.00 | 0.00 | 0.11 | 0.24 | 0.00 | 0.00 | 0.00 | 0.00 | -- | -- | 0.05 | 0.00 | 0.00 | 3.00 | -- | -- | 0.42 | 1.62 | 0.00 | 1.00 | -- | -- | 0.00 | 4.23 | 0.50 | 1.00 |
+| | Runtime (s) | 5,281 | 7,879 | 1,684 | 1,055 | 225 | 1,146 | 1,740 | 1,493 | 3,852 | 3,121 | 182 | 1,003 | 7,211 | 2,496 | 995 | 983 | 167 | 572 | 1,840 | 4,303 | 1,025 | 794 | 128 | 301 | 2,039 | 1,517 | 965 | 688 | 174 | 648 | 2,342 | 820 | 438 | 428 | 192 | 385 | 658 | 3,931 | 161 | 540 | 86 | 125 | 99 | 76 | 101 | 86 | 39 | 46 | 2,532 | 3,170 | 76 | 264 | 39 | 28 |
+| | Input Token | 2.4K(2K) | 8.2K(8.2K) | 16(16) | 6.8K(6.8K) | 13(13) | 9(9) | 167K(167K) | 109K(109K) | 294K(294K) | 18(18) | 14(14) | 10(10) | 250 | 101 | 44 | 47 | 17 | 26 | 19 | 130 | 36 | 36 | 17 | 18 | 12.1M | 12.9M | 3.1M | 2.4M | 903K | 4.8M | 167K | 279K | 145K | 134K | 57K | 82K | 191K | 21K | 125K | 143K | 70K | 65K | 229K | 142K | 132K | 119K | 55K | 83K | 0 | 0 | 0 | 0 | 0 | 0 |
+| | Cache Read | 9.3M(7M) | 11.5M(11.5M) | 1.5M(1.5M) | 1.1M(1.1M) | 251K(251K) | 382K(382K) | 1.1M(1.1M) | 1.5M(289K) | 1.5M(1.5M) | 940K(940K) | 336K(336K) | 520K(520K) | 19M | 9.4M | 5.4M | 5.3M | 474K | 1.2M | 515K | 10.6M | 3.7M | 4.3M | 932K | 1.1M | 11.6M | 12.5M | 2.9M | 2.2M | 744K | 4.6M | 5.6M | 4.6M | 1.2M | 1.4M | 472K | 410K | 0 | 0 | 0 | 0 | 0 | 0 | 1.4M | 882K | 781K | 1.3M | 1.1M | 506K | 6.3M | 2.8M | 1.1M | 1.1M | 398K | 209K |
+| | Cache Write | 1M(724K) | 1.5M(1.5M) | 152K(152K) | 127K(127K) | 32K(32K) | 87K(87K) | 169K(169K) | 151K(82K) | 208K(208K) | 134K(134K) | 29K(29K) | 88K(88K) | 1.7M | 619K | 174K | 289K | 25K | 68K | 50K | 217K | 293K | 235K | 67K | 93K | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | 1.8M | 1.1M | 679K | 561K | 192K | 119K |
+| | Output Token | 311K(261K) | 464K(464K) | 100K(100K) | 66K(66K) | 11K(11K) | 58K(58K) | 108K(108K) | 111K(104K) | 244K(244K) | 210K(210K) | 14K(14K) | 64K(64K) | 290K | 110K | 49K | 48K | 7K | 27K | 4K | 122K | 81K | 60K | 8K | 20K | 68K | 59K | 47K | 28K | 6.6K | 21K | 46K | 42K | 26K | 27K | 9.3K | 12K | 1.9K | 197 | 9.9K | 9.5K | 2K | 2.4K | 13K | 10K | 15K | 11K | 2.0K | 4.1K | 28K | 109K | 13K | 49K | 5.5K | 2.6K |
 
-**Notes:** Cases: B = Block, C = Cell, P = Polygon. **--**: Failed to produce a valid GDSII or preserve connectivity. CC = Claude Code, Cu = Cursor. Claude Code hardcodes the subagent to Claude 4.5 Haiku; in each token-count entry, the first number is the total and the number in parentheses is the Opus/Sonnet count. Cache write tokens are not available for Gemini, Grok, and GPT models.
+**Notes:** Cases: B = Block, C = Cell, P = Polygon. **--**: Failed to produce a valid GDSII or preserve connectivity. Claude Code hardcodes the subagent to Claude 4.5 Haiku; in each token-count entry, the first number is the total and the number in parentheses is the Opus/Sonnet count. Cache write tokens are not available for Gemini, Grok, and GPT models (Cursor and Codex).
 
 
 ---
@@ -485,7 +528,15 @@ score/<run_id>/<design_type>/<task_type>/<case_name>_score.json
 score/<run_id>/<design_type>/<task_type>/<case_name>_score.csv
 ```
 
-For claude pipeline runs, `run_id` is `<model_name>-<effort>` (e.g. `claude-sonnet-4-6-medium`) so different effort tiers produce distinct output folders; for cursor runs, `run_id` is just `<model_name>`.
+For claude and codex pipeline runs, `run_id` is `<model_name>-<effort>` (e.g. `claude-sonnet-4-6-medium`, `gpt-5.4-high`) so different effort tiers produce distinct output folders; for cursor runs, `run_id` is just `<model_name>`. `CODEX_EFFORT` is required for `run_pipeline_codex.sh`; `CLAUDE_EFFORT` is optional for `run_pipeline_claude.sh`.
+
+**Codex pipeline additional output.** Codex runs also write the raw Codex CLI JSONL (for debugging / auditing token usage) to:
+
+```
+score/<run_id>/<design_type>/<task_type>/<case_name>_agent_raw.json
+```
+
+Cursor and Claude pipeline runs do not produce this file.
 
 **Both repair and detection** include:
 

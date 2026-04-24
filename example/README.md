@@ -12,6 +12,7 @@ The pipeline always reads from `src/` at runtime -- files in `example/` are **no
 - [*build_case_info.py*](./build_case_info.py): Reference copy of the info.json generator used by `evaluate_cursor.sh` for paper experiments. Uses argparse named arguments. Customize to change how info.json is built (e.g., different system prompts, custom paths).
 - [*agent_cursor.py*](./agent_cursor.py): Reference copy of the Cursor Agent CLI wrapper. Customize to change how LLM models are invoked (e.g., different CLI tools, alternative API calls, custom token accounting).
 - [*agent_claude.py*](./agent_claude.py): Reference copy of the Claude Code CLI wrapper. Same interface as `agent_cursor.py` but uses Claude Code CLI.
+- [*agent_codex.py*](./agent_codex.py): Reference copy of the Codex CLI wrapper. Same interface as `agent_cursor.py` / `agent_claude.py` but invokes `codex exec`; adds `--effort <level>` and `--raw-json-out <path>` (dumps raw Codex JSONL for debugging).
 - [*skill.md*](./skill.md): ASAP7 DRC knowledge document -- layer mapping, rule categories, repair/detection strategies, and connectivity verification instructions. Referenced by prompt templates via `{path_to_skill}`.
 - [*prompt_repair_cell.md*](./prompt_repair_cell.md): Repair prompt template for cell designs. Constrains edits to M1 and V0 only; M0 polygons must not be modified. Includes `{path_to_connectivity_file}` and `check_connectivity.py` verification.
 - [*prompt_repair_polygon.md*](./prompt_repair_polygon.md): Repair prompt template for polygon designs. Only resize or move polygons; deletion and adding new polygons are forbidden.
@@ -29,6 +30,7 @@ The pipeline always reads from `src/` at runtime -- files in `example/` are **no
    cp example/skill.md src/skill.md
    cp example/prompt_repair_cell.md src/prompt_repair_cell.md
    cp example/prompt_format.py src/prompt_format.py
+   cp example/agent_codex.py src/agent_codex.py
    # ... etc.
    ```
 3. Run the pipeline as usual -- it reads everything from `src/`.
@@ -39,7 +41,7 @@ The pipeline always reads from `src/` at runtime -- files in `example/` are **no
 
 Prompt templates use `{key}` syntax. `prompt_format.py` replaces each `{key}` with the corresponding value from `info.json`. Only these keys are allowed -- any other `{word}` pattern raises `ValueError`.
 
-`info.json` also contains `model_name`, `case_name`, `design_type`, and `task_type` fields. These are used by `run_pipeline_cursor.sh` to determine container paths and pipeline behavior, but are **not** used as template placeholders.
+`info.json` also contains `model_name`, `case_name`, `design_type`, and `task_type` fields. These are used by `run_pipeline_cursor.sh` / `run_pipeline_claude.sh` / `run_pipeline_codex.sh` to determine container paths and pipeline behavior, but are **not** used as template placeholders.
 
 | Placeholder | Repair | Detection | Description |
 |-------------|:------:|:----------:|-------------|

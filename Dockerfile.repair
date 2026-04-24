@@ -50,6 +50,10 @@
 #   curl -fsSL https://claude.ai/install.sh | bash
 #   claude login
 #
+# Prerequisites (Codex CLI):
+#   npm install -g @openai/codex@0.124.0
+#   codex login
+#
 # Run with Cursor (single case):
 #   docker run --rm \
 #       -v ~/.config/cursor:/root/.config/cursor:ro \
@@ -68,20 +72,38 @@
 #       -v $(pwd)/testcase/asap7/cell/drc_report:/workspace/testcase/asap7/cell/drc_report:ro \
 #       drc-benchmark bash src/run_pipeline_claude.sh /workspace/task/info.json
 #
+# Run with Codex (single case):
+#   docker run --rm \
+#       -e CODEX_EFFORT=high \
+#       -v ~/.codex/auth.json:/root/.codex/auth.json:ro \
+#       -v $(pwd)/result:/workspace/result \
+#       -v $(pwd)/score:/workspace/score \
+#       -v $(pwd)/logs:/workspace/logs \
+#       -v $(pwd)/testcase/asap7/cell/drc_report:/workspace/testcase/asap7/cell/drc_report:ro \
+#       drc-benchmark bash src/run_pipeline_codex.sh /workspace/task/info.json
+#
 # Paper experiments:
 #   bash src/evaluate_cursor.sh          # Cursor
-#   bash src/evaluate_claude.sh   # Claude Code
+#   bash src/evaluate_claude.sh          # Claude Code
+#   bash src/evaluate_codex.sh           # Codex
 
 FROM almalinux:8.10
 
 # ---------------------------------------------------------------------------
-# Install Cursor CLI and Claude Code CLI (must run before yum changes
-# that downgrade libcurl and break curl)
+# Install Cursor CLI, Claude Code CLI, and Codex CLI.
+# Cursor/Claude installers must run before yum changes that downgrade libcurl
+# and break curl.
 # ---------------------------------------------------------------------------
 RUN curl https://cursor.com/install -fsS | bash
 ENV PATH="/root/.local/bin:${PATH}"
 
 RUN curl -fsSL https://claude.ai/install.sh | bash
+
+RUN yum module enable -y nodejs:18 \
+    && yum install -y nodejs npm \
+    && npm install -g @openai/codex@0.124.0 \
+    && npm cache clean --force \
+    && mkdir -p /root/.codex
 
 # ---------------------------------------------------------------------------
 # Downgrade python3-libs to match pinned version (base image has 3.6.8-74)
@@ -209,24 +231,28 @@ RUN pip3 install --upgrade "pip==21.3.1" \
 # ---------------------------------------------------------------------------
 CMD ["bash", "-c", "\
 echo ''; \
-echo 'DRC Benchmark Container (KLayout 0.30.1 + Cursor CLI + Claude Code CLI)'; \
+echo 'DRC Benchmark Container (KLayout 0.30.1 + Cursor CLI + Claude Code CLI + Codex CLI)'; \
 echo '========================================================================'; \
 echo ''; \
 echo 'Prerequisites (choose one):'; \
 echo '  Cursor:      curl https://cursor.com/install -fsS | bash && cursor login'; \
 echo '  Claude Code:  curl -fsSL https://claude.ai/install.sh | bash && claude login'; \
+echo '  Codex:       npm install -g @openai/codex@0.124.0 && codex login'; \
 echo ''; \
 echo 'Single case:'; \
 echo '  Cursor:      bash src/run_pipeline_cursor.sh /workspace/task/info.json'; \
 echo '  Claude Code: bash src/run_pipeline_claude.sh /workspace/task/info.json'; \
+echo '  Codex:       CODEX_EFFORT=high bash src/run_pipeline_codex.sh /workspace/task/info.json'; \
 echo ''; \
 echo 'Paper experiments:'; \
 echo '  Cursor:      bash src/evaluate_cursor.sh'; \
 echo '  Claude Code: bash src/evaluate_claude.sh'; \
+echo '  Codex:       bash src/evaluate_codex.sh'; \
 echo ''; \
 echo 'Auth (bind-mount read-only from host):'; \
 echo '  Cursor:      -v ~/.config/cursor:/root/.config/cursor:ro'; \
 echo '  Claude Code: -v ~/.claude:/root/.claude:ro'; \
+echo '  Codex:       -v ~/.codex/auth.json:/root/.codex/auth.json:ro'; \
 echo ''; \
 echo 'Pipeline outputs (bind-mount these to retrieve from host):'; \
 echo '  Results: /workspace/result/<model_name>/<design_type>/<task_type>/<case_name>/'; \
@@ -237,4 +263,5 @@ echo 'Environment variables:'; \
 echo '  WORKSPACE               (default: /workspace)'; \
 echo '  SKIP_DRC                (set to 1 to skip KLayout DRC step)'; \
 echo '  CLAUDE_EFFORT           (Claude Code effort level, e.g. high/medium/low)'; \
+echo '  CODEX_EFFORT            (Codex effort level, e.g. high/medium/low)'; \
 echo ''"]

@@ -57,7 +57,7 @@ All files for a single test case share the same base name:
 
 The pipeline uses `<case_name>` (from info.json) and constructs all file paths from it. For cell/block repair tasks, the golden connectivity JSON is passed to the agent via the `{path_to_connectivity_file}` prompt placeholder so the agent can verify connections using `check_connectivity.py`.
 
-> **Note:** Golden DRC reports (`drc_report/`) are **not** included in the Docker image. For single-case runs, inject the `drc_report/` file into the container via `docker cp` (see `README.md` Quick Start). For paper experiments, `evaluate_cursor.sh` / `evaluate_claude.sh` inject them via `docker cp`. On the host filesystem, these files are present as listed above.
+> **Note:** Golden DRC reports (`drc_report/`) are **not** included in the Docker image. For single-case runs, inject the `drc_report/` file into the container via `docker cp` (see `README.md` Quick Start). For paper experiments, `evaluate_cursor.sh` / `evaluate_claude.sh` / `evaluate_codex.sh` inject them via `docker cp`. On the host filesystem, these files are present as listed above.
 
 ---
 
